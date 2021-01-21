@@ -1,0 +1,51 @@
+/*apply plugin: "java"
+apply plugin: "application"*/
+
+plugins {
+	id "java"
+	id "application"
+}
+
+sourceCompatibility = "1.8"
+[compileJava, compileTestJava]*.options*.encoding = "UTF-8"
+
+repositories {
+	mavenCentral()
+	jcenter()
+}
+
+dependencies {
+	// TODO
+	//implementation "com.google.code.gson:gson:2.8.6"
+	
+	//testImplementation "org.junit.jupiter:junit-jupiter-api:5.5.1"
+	//testCompile group: 'org.hamcrest', name: 'hamcrest', version: '2.1'
+	//testImplementation "org.hamcrest:hamcrest:2.1"
+	//testImplementation "org.testfx:testfx-junit5:4.0.16-alpha"
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ['src/main/java']
+		}
+
+		resources {
+			srcDirs = ['src/main/resources']
+		}
+	}
+	
+	test {
+		java {
+			srcDirs = ['src/test/java']
+		}
+
+		resources {
+			srcDirs = ['src/test/resources']
+		}
+	}
+}
+
+run {
+	mainClassName = "miniJava.Compiler"
+}
