@@ -35,7 +35,6 @@ public enum TokenType {
 	
 	/// Literals
 	NUM,		// number
-	STR,		// string
 	TRUE,		// true boolean value
 	FALSE,		// false boolean value
 	
