@@ -11,15 +11,15 @@ public class Compiler {
 		if(args.length == 0)
 			throw new IllegalArgumentException("Needs file to compile with!");
 		
-		FileInputStream input = null;
+		FileInputStream stream = null;
 		
 		try {
-			input = new FileInputStream(args[0]);
+			stream = new FileInputStream(args[0]);
 		}catch(FileNotFoundException e){
 			System.err.println("File " + args[0] + " not found!");
 			System.exit(4);
 		}
 		
-		Scanner scanner = new Scanner(input);
+		Scanner scanner = new Scanner(stream);
 	}
 }

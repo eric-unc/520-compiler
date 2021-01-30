@@ -1,5 +1,6 @@
 # Compiled class file
 bin/*
+build/*
 *.class
 
 # Log file
@@ -24,10 +25,11 @@ bin/*
 hs_err_pid*
 
 # Gradle
-.gradle/*
+/.gradle/
 
 # Eclipse
 .classpath
 .project
 *.settings
+
 

@@ -16,9 +16,13 @@ public class Scanner {
 		readChar();
 	}
 
+	// TODO: add comments support
 	public Token scan(){
 		while(!end && isWhitespace(curChar))
 			readChar();
+		
+		if(end)
+			return new Token(TokenType.END);
 
 		if(isValidIdentifierStartChar(curChar)){
 			StringBuilder word = new StringBuilder();
@@ -80,70 +84,89 @@ public class Scanner {
 				case '=':
 					readChar();
 
-					if(curChar == '=') // ==
+					if(curChar == '='){ // ==
+						readChar();
 						return new Token(TokenType.EQUALS_OP);
-					else // just =
+					}else // just =
 						return new Token(TokenType.EQUALS);
 				case ';':
+					readChar();
 					return new Token(TokenType.SEMI);
 				case '.':
+					readChar();
 					return new Token(TokenType.DOT);
 				case ',':
+					readChar();
 					return new Token(TokenType.COMMA);
 				case '(':
+					readChar();
 					return new Token(TokenType.L_PAREN);
 				case ')':
+					readChar();
 					return new Token(TokenType.R_PAREN);
 				case '{':
+					readChar();
 					return new Token(TokenType.L_BRACKET);
 				case '}':
+					readChar();
 					return new Token(TokenType.R_BRACKET);
 				case '[':
+					readChar();
 					return new Token(TokenType.L_SQ_BRACK);
 				case ']':
+					readChar();
 					return new Token(TokenType.R_SQ_BRACK);
 				case '>':
 					readChar();
 
-					if(curChar == '=') // >=
+					if(curChar == '='){ // >=
+						readChar();
 						return new Token(TokenType.MORE_EQUAL);
-					else // just >
+					}else // just >
 						return new Token(TokenType.MORE_THAN);
 				case '<':
 					readChar();
 
-					if(curChar == '=') // <=
+					if(curChar == '='){ // <=
+						readChar();
 						return new Token(TokenType.LESS_EQUAL);
-					else // just >
+					}else // just >
 						return new Token(TokenType.LESS_THAN);
 				case '!':
 					readChar();
 					
-					if(curChar == '=') // !=
+					if(curChar == '='){ // !=
+						readChar();
 						return new Token(TokenType.NOT_EQUALS);
-					else // just !
+					}else // just !
 						return new Token(TokenType.NEG);
 				case '&':
 					readChar();
 					
-					if(curChar == '&') // &&
+					if(curChar == '&'){ // &&
+						readChar();
 						return new Token(TokenType.AND_LOG);
-					else // just &
+					}else // just &
 						return new Token(TokenType.ERROR, "&"); // TODO: bitwise &
 				case '|':
 					readChar();
 					
-					if(curChar == '|') // ||
+					if(curChar == '|'){ // ||
+						readChar();
 						return new Token(TokenType.OR_LOG);
-					else // just |
+					}else // just |
 						return new Token(TokenType.ERROR, "|"); // TODO: bitwise |
 				case '+':
+					readChar();
 					return new Token(TokenType.PLUS);
 				case '-':
+					readChar();
 					return new Token(TokenType.MINUS);
 				case '*':
+					readChar();
 					return new Token(TokenType.TIMES);
 				case '/':
+					readChar();
 					return new Token(TokenType.DIV);
 				default:
 					return new Token(TokenType.ERROR, "" + curChar);
@@ -161,7 +184,7 @@ public class Scanner {
 			curChar = (char) c;
 		}catch(IOException e){
 			e.printStackTrace();
-			System.exit(-4);
+			System.exit(4);
 		}
 	}
 
@@ -182,6 +205,6 @@ public class Scanner {
 	}
 
 	private static boolean isWhitespace(char c){
-		return c == ' ' || c == '\n' || c == '\t';
+		return c == ' ' || c == '\n' || c == '\r' || c == '\t';
 	}
 }
