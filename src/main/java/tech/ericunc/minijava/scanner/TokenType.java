@@ -51,8 +51,8 @@ public enum TokenType {
 	R_PAREN,	// )
 	L_BRACKET,	// {
 	R_BRACKET,	// }
-	L_BLOCK,	// [
-	R_BLOCK,	// ]
+	L_SQ_BRACK,	// [
+	R_SQ_BRACK,	// ]
 	
 	// Relational operators
 	MORE_THAN,	// >
