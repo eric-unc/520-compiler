@@ -1,9 +1,9 @@
-package miniJava;
+package tech.ericunc.minijava;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import miniJava.SyntacticAnalyzer.Scanner;
+import tech.ericunc.minijava.scanner.Scanner;
 
 public class Compiler {
 
