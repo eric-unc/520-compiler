@@ -3,6 +3,8 @@ package tech.ericunc.minijava.scanner;
 import java.io.IOException;
 import java.io.InputStream;
 
+import tech.ericunc.minijava.MiniJavaCompiler;
+
 public class Scanner {
 	private InputStream stream;
 	private boolean end = false;
@@ -179,6 +181,7 @@ public class Scanner {
 						readChar();
 						
 						while(!end){
+							readChar();
 							if(curChar == '*'){ // looking for */
 								readChar();
 								if(curChar == '/'){
@@ -198,6 +201,8 @@ public class Scanner {
 	private void readChar(){
 		try{
 			int c = stream.read();
+			
+			//MiniJavaCompiler.debug((char)c);
 
 			if(c == -1)
 				end = true;
