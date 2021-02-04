@@ -1,17 +1,15 @@
 package tech.ericunc.minijava;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static tech.ericunc.minijava.scanner.TokenType.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
-import tech.ericunc.minijava.scanner.Scanner;
-import tech.ericunc.minijava.scanner.Token;
-import tech.ericunc.minijava.scanner.TokenType;
-
-import static tech.ericunc.minijava.scanner.TokenType.*;
+import tech.ericunc.minijava.scanner.*;
 
 class ScannerTest {
 	static final String RES = "src/test/resources/tech/ericunc/minijava/";
@@ -21,23 +19,24 @@ class ScannerTest {
 		assertEquals(type, token.getType(), "Type mismatch");
 		assertEquals(value, token.getValue(), "Value mismatch");
 	}
-	
+
 	static void assertScanType(TokenType type, Scanner scanner){
 		assertEquals(type, scanner.scan().getType(), "Type mismatch");
 	}
-	
+
 	@Test
+	@Timeout(5) // TODO: for whatever reason this timeout does not work
 	void test1(){
-		try {
+		try{
 			FileInputStream stream = new FileInputStream(RES + "Test1.mjava");
-			
+
 			Scanner scanner = new Scanner(stream);
-			
+
 			// Line 1
 			assertScanType(CLASS, scanner);
 			assertScan(IDEN, "Test1", scanner);
 			assertScanType(L_BRACKET, scanner);
-			
+
 			// Line 2
 			assertScanType(PUBLIC, scanner);
 			assertScanType(STATIC, scanner);
@@ -50,13 +49,56 @@ class ScannerTest {
 			assertScan(IDEN, "args", scanner);
 			assertScanType(R_PAREN, scanner);
 			assertScanType(L_BRACKET, scanner);
+
+			// Line 3
+			assertScanType(INT, scanner);
+			assertScan(IDEN, "x", scanner);
+			assertScanType(EQUALS, scanner);
+			assertScan(NUM, "5", scanner);
+			assertScanType(SEMI, scanner);
 			
-			// Line 3 TODO
+			System.out.println("made it to l3");
+
+			// Line 4
+			assertScanType(INT, scanner);
+			assertScan(IDEN, "y", scanner);
+			assertScanType(EQUALS, scanner);
+			assertScan(NUM, "2", scanner);
+			assertScanType(SEMI, scanner);
+
+			// Line 5
+			assertScanType(INT, scanner);
+			assertScan(IDEN, "z", scanner);
+			assertScanType(EQUALS, scanner);
+			assertScan(IDEN, "x", scanner);
+			assertScanType(MINUS, scanner);
+			assertScan(IDEN, "y", scanner);
+			assertScanType(SEMI, scanner);
+
+			// Line 11
+			assertScanType(BOOLEAN, scanner);
+			assertScan(IDEN, "a", scanner);
+			assertScanType(EQUALS, scanner);
+			assertScan(IDEN, "x", scanner);
+			assertScanType(MORE_THAN, scanner);
+			assertScan(IDEN, "z", scanner);
+			assertScanType(SEMI, scanner);
+
+			// Line 12
+			assertScanType(BOOLEAN, scanner);
+			assertScan(IDEN, "b", scanner);
+			assertScanType(EQUALS, scanner);
+			assertScanType(FALSE, scanner);
+			assertScanType(SEMI, scanner);
+			
+			// Line 13/14
+			assertScanType(R_BRACKET, scanner);
+			assertScanType(R_BRACKET, scanner);
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 			fail();
 		}
-		
+
 		assertEquals(true, true);
 	}
 

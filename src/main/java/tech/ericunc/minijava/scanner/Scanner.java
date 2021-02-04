@@ -167,7 +167,28 @@ public class Scanner {
 					return new Token(TokenType.TIMES);
 				case '/':
 					readChar();
-					return new Token(TokenType.DIV);
+					
+					if(curChar == '/'){ // // (single-line comment)
+						readChar();
+						
+						while(!end && !isNewline(curChar))
+							readChar();
+						
+						return scan(); // break, return whatever's next
+					}else if(curChar == '*'){ // /* (multiline comment)
+						readChar();
+						
+						while(!end){
+							if(curChar == '*'){ // looking for */
+								readChar();
+								if(curChar == '/'){
+									readChar();
+									return scan(); // break, return whatever's next
+								}
+							}
+						}
+					}else
+						return new Token(TokenType.DIV);
 				default:
 					return new Token(TokenType.ERROR, "" + curChar);
 			}
@@ -203,8 +224,12 @@ public class Scanner {
 	private static boolean isValidIdentifierStartChar(char c){
 		return isWordChar(c) | c == '$' | c == '_';
 	}
+	
+	private static boolean isNewline(char c){
+		return c == '\n' || c == '\r';
+	}
 
 	private static boolean isWhitespace(char c){
-		return c == ' ' || c == '\n' || c == '\r' || c == '\t';
+		return isNewline(c) || c == ' ' || c == '\t';
 	}
 }

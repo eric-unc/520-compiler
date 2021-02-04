@@ -1,8 +1,12 @@
 class Test1 {
 	public static void main(String[] args){
-		int x = 5;
+		int x = 5; // Test comment
 		int y = 2;
 		int z = x - y;
+		
+		/*
+		 * This is a multiline comment! // with an "inner" comment /*
+		 */
 		
 		boolean a = x > z;
 		boolean b = false;
