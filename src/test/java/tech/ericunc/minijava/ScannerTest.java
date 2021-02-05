@@ -94,6 +94,8 @@ class ScannerTest {
 			// Line 13/14
 			assertScanType(R_BRACKET, scanner);
 			assertScanType(R_BRACKET, scanner);
+			
+			assertScanType(END, scanner);
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 			fail();

@@ -7,18 +7,19 @@ import tech.ericunc.minijava.MiniJavaCompiler;
 
 public class Scanner {
 	private InputStream stream;
-	private boolean end = false;
+	private boolean end;
 
 	private char curChar;
-	// private StringBuilder currentText;
+	private int line;
 
 	public Scanner(InputStream stream){
 		this.stream = stream;
+		end = false;
+		line = 1;
 
 		readChar();
 	}
 
-	// TODO: add comments support
 	public Token scan(){
 		while(!end && isWhitespace(curChar))
 			readChar();
@@ -206,12 +207,19 @@ public class Scanner {
 
 			if(c == -1)
 				end = true;
+			
+			if(c == '\n')
+				line++;
 
 			curChar = (char) c;
 		}catch(IOException e){
 			e.printStackTrace();
 			System.exit(4);
 		}
+	}
+	
+	public int getLineNum(){
+		return line;
 	}
 
 	private static boolean isWordChar(char c){
