@@ -26,9 +26,55 @@ public class Parser {
 		}
 	}
 	
+	/** Program ::= Class* <em>end</em> */
 	public void parseProgram(){
-		// TODO
+		parseClass();
 		take(END);
+	}
+	
+	/** Class ::= <strong>class</strong> id <strong>{</strong> (Modifiers (Type Field|(<strong>void</strong>|Type) Method))* <strong>}</strong> */
+	private void parseClass(){
+		take(CLASS);
+		take(IDEN);
+		take(L_BRACKET);
+		
+		while(currToken.getType() != R_BRACKET){
+			parseModifiers();
+			
+			if(currToken.getType() == VOID){
+				takeIt();
+				
+			}else{
+				parseType();
+			}
+		}
+		
+		takeIt();
+	}
+	
+	/** Modifiers ::= (<strong>public</strong>|<strong>private</strong>)? <strong>static</strong>? */
+	private void parseModifiers(){
+		if(currToken.getType() == PUBLIC || currToken.getType() == PRIVATE)
+			takeIt();
+		
+		if(currToken.getType() == STATIC)
+			takeIt();
+	}
+	
+	private void parseType(){
+		// TODO
+	}
+	
+	/** Field ::= Type <em>id</em><strong>;</strong>*/
+	@SuppressWarnings("unused")
+	private void parseField(){
+		// TODO
+	}
+	
+	/** Method ::= (Type|<strong>void</strong>) <em>id</em><strong>(</strong>Parameters?<strong>){</strong>Statement*<strong>}</strong>*/
+	@SuppressWarnings("unused")
+	private void parseMethod(){
+		// TODO
 	}
 	
 	private void take(TokenType type) throws CompilerException {
@@ -36,5 +82,9 @@ public class Parser {
 			currToken = scanner.scan();
 		}else
 			throw new CompilerException();
+	}
+	
+	private void takeIt(){
+		currToken = scanner.scan();
 	}
 }
