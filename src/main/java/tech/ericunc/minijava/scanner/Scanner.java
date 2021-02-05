@@ -3,8 +3,6 @@ package tech.ericunc.minijava.scanner;
 import java.io.IOException;
 import java.io.InputStream;
 
-import tech.ericunc.minijava.MiniJavaCompiler;
-
 public class Scanner {
 	private InputStream stream;
 	private boolean end;
