@@ -3,6 +3,8 @@ package tech.ericunc.minijava.scanner;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static tech.ericunc.minijava.scanner.TokenType.*;
+
 public class Scanner {
 	private InputStream stream;
 	private boolean end;
@@ -23,7 +25,7 @@ public class Scanner {
 			readChar();
 		
 		if(end)
-			return new Token(TokenType.END);
+			return new Token(END);
 
 		if(isValidIdentifierStartChar(curChar)){
 			StringBuilder word = new StringBuilder();
@@ -36,40 +38,40 @@ public class Scanner {
 			switch(word.toString()){
 				// Keywords
 				case "class":
-					return new Token(TokenType.CLASS);
+					return new Token(CLASS);
 				case "this":
-					return new Token(TokenType.THIS);
+					return new Token(THIS);
 				case "return":
-					return new Token(TokenType.RETURN);
+					return new Token(RETURN);
 				case "new":
-					return new Token(TokenType.NEW);
+					return new Token(NEW);
 				case "int":
-					return new Token(TokenType.INT);
+					return new Token(INT);
 				case "boolean":
-					return new Token(TokenType.BOOLEAN);
+					return new Token(BOOLEAN);
 				case "if":
-					return new Token(TokenType.IF);
+					return new Token(IF);
 				case "else":
-					return new Token(TokenType.ELSE);
+					return new Token(ELSE);
 				case "while":
-					return new Token(TokenType.WHILE);
+					return new Token(WHILE);
 				case "public":
-					return new Token(TokenType.PUBLIC);
+					return new Token(PUBLIC);
 				case "private":
-					return new Token(TokenType.PRIVATE);
+					return new Token(PRIVATE);
 				case "static":
-					return new Token(TokenType.STATIC);
+					return new Token(STATIC);
 				case "void":
-					return new Token(TokenType.VOID);
+					return new Token(VOID);
 
 				// Word literals
 				case "true":
-					return new Token(TokenType.TRUE);
+					return new Token(TRUE);
 				case "false":
-					return new Token(TokenType.FALSE);
+					return new Token(FALSE);
 
 				default:
-					return new Token(TokenType.IDEN, word.toString());
+					return new Token(IDEN, word.toString());
 			}
 		}else if(isDigitChar(curChar)){
 			StringBuilder num = new StringBuilder();
@@ -79,7 +81,7 @@ public class Scanner {
 				readChar();
 			}
 
-			return new Token(TokenType.NUM, num.toString());
+			return new Token(NUM, num.toString());
 		}else{
 			switch(curChar){
 				case '=':
@@ -87,85 +89,85 @@ public class Scanner {
 
 					if(curChar == '='){ // ==
 						readChar();
-						return new Token(TokenType.EQUALS_OP);
+						return new Token(EQUALS_OP);
 					}else // just =
-						return new Token(TokenType.EQUALS);
+						return new Token(EQUALS);
 				case ';':
 					readChar();
-					return new Token(TokenType.SEMI);
+					return new Token(SEMI);
 				case '.':
 					readChar();
-					return new Token(TokenType.DOT);
+					return new Token(DOT);
 				case ',':
 					readChar();
-					return new Token(TokenType.COMMA);
+					return new Token(COMMA);
 				case '(':
 					readChar();
-					return new Token(TokenType.L_PAREN);
+					return new Token(L_PAREN);
 				case ')':
 					readChar();
-					return new Token(TokenType.R_PAREN);
+					return new Token(R_PAREN);
 				case '{':
 					readChar();
-					return new Token(TokenType.L_BRACKET);
+					return new Token(L_BRACKET);
 				case '}':
 					readChar();
-					return new Token(TokenType.R_BRACKET);
+					return new Token(R_BRACKET);
 				case '[':
 					readChar();
-					return new Token(TokenType.L_SQ_BRACK);
+					return new Token(L_SQ_BRACK);
 				case ']':
 					readChar();
-					return new Token(TokenType.R_SQ_BRACK);
+					return new Token(R_SQ_BRACK);
 				case '>':
 					readChar();
 
 					if(curChar == '='){ // >=
 						readChar();
-						return new Token(TokenType.MORE_EQUAL);
+						return new Token(MORE_EQUAL);
 					}else // just >
-						return new Token(TokenType.MORE_THAN);
+						return new Token(MORE_THAN);
 				case '<':
 					readChar();
 
 					if(curChar == '='){ // <=
 						readChar();
-						return new Token(TokenType.LESS_EQUAL);
+						return new Token(LESS_EQUAL);
 					}else // just >
-						return new Token(TokenType.LESS_THAN);
+						return new Token(LESS_THAN);
 				case '!':
 					readChar();
 					
 					if(curChar == '='){ // !=
 						readChar();
-						return new Token(TokenType.NOT_EQUALS);
+						return new Token(NOT_EQUALS);
 					}else // just !
-						return new Token(TokenType.NEG);
+						return new Token(NEG);
 				case '&':
 					readChar();
 					
 					if(curChar == '&'){ // &&
 						readChar();
-						return new Token(TokenType.AND_LOG);
+						return new Token(AND_LOG);
 					}else // just &
-						return new Token(TokenType.ERROR, "&"); // TODO: bitwise &
+						return new Token(ERROR, "&"); // TODO: bitwise &
 				case '|':
 					readChar();
 					
 					if(curChar == '|'){ // ||
 						readChar();
-						return new Token(TokenType.OR_LOG);
+						return new Token(OR_LOG);
 					}else // just |
-						return new Token(TokenType.ERROR, "|"); // TODO: bitwise |
+						return new Token(ERROR, "|"); // TODO: bitwise |
 				case '+':
 					readChar();
-					return new Token(TokenType.PLUS);
+					return new Token(PLUS);
 				case '-':
 					readChar();
-					return new Token(TokenType.MINUS);
+					return new Token(MINUS);
 				case '*':
 					readChar();
-					return new Token(TokenType.TIMES);
+					return new Token(TIMES);
 				case '/':
 					readChar();
 					
@@ -190,9 +192,9 @@ public class Scanner {
 							}
 						}
 					}else
-						return new Token(TokenType.DIV);
+						return new Token(DIV);
 				default:
-					return new Token(TokenType.ERROR, "" + curChar);
+					return new Token(ERROR, "" + curChar);
 			}
 		}
 	}

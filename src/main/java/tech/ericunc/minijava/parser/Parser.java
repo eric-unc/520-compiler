@@ -22,6 +22,7 @@ public class Parser {
 		try {
 			parseProgram();
 		}catch(CompilerException e){
+			System.err.println(e.getMessage());
 			System.exit(4);
 		}
 	}
@@ -32,24 +33,38 @@ public class Parser {
 		take(END);
 	}
 	
-	/** Class ::= <strong>class</strong> id <strong>{</strong> (Modifiers (Type Field|(<strong>void</strong>|Type) Method))* <strong>}</strong> */
+	/** Class ::= <strong>class</strong> id <strong>{</strong> ClassItem* <strong>}</strong> */
 	private void parseClass(){
 		take(CLASS);
 		take(IDEN);
 		take(L_BRACKET);
 		
 		while(currToken.getType() != R_BRACKET){
-			parseModifiers();
-			
-			if(currToken.getType() == VOID){
-				takeIt();
-				
-			}else{
-				parseType();
-			}
+			parseClassItem();
 		}
 		
 		takeIt();
+	}
+	
+	/** ClassItem ::= Modifiers (Type Field|(<strong>void</strong>|Type) Method) */
+	private void parseClassItem(){
+		parseModifiers();
+		
+		if(currToken.getType() == VOID){
+			takeIt();
+			parseMethod();
+		}else{
+			parseType();
+			// TODO: this should be part of parseField or parseMethod but that's too hard
+			take(IDEN);
+			
+			if(currToken.getType() == SEMI)
+				parseField();
+			else{
+				take(L_PAREN); // This too
+				parseMethod();
+			}
+		}
 	}
 	
 	/** Modifiers ::= (<strong>public</strong>|<strong>private</strong>)? <strong>static</strong>? */
@@ -61,19 +76,66 @@ public class Parser {
 			takeIt();
 	}
 	
+	/** Type ::= (<strong>int</strong>|<strong>boolean</strong>|Id)(<strong>[]</strong>)? */
 	private void parseType(){
-		// TODO
+		if(currToken.getType() != INT && currToken.getType() != BOOLEAN)
+			take(IDEN);
+		else
+			takeIt();
+		
+		if(currToken.getType() == L_SQ_BRACK){
+			takeIt();
+			take(R_SQ_BRACK);
+		}
 	}
 	
-	/** Field ::= Type <em>id</em><strong>;</strong>*/
-	@SuppressWarnings("unused")
+	/** Field ::= Id<strong>;</strong> */
 	private void parseField(){
+		takeIt();
+	}
+	
+	/** Method ::= Id<strong>(</strong>ParamList*<strong>){</strong>Statement*<strong>}</strong>*/
+	private void parseMethod(){
+		if(currToken.getType() != R_PAREN){
+			parseParamList();
+		}else
+			takeIt();
+		
+		take(L_BRACKET);
+		
+		while(currToken.getType() != R_BRACKET)
+			parseStatement();
+		
+		takeIt();
+	}
+	
+	/** ParamList ::= Type Id(, Type Id)* */
+	private void parseParamList(){
 		// TODO
 	}
 	
-	/** Method ::= (Type|<strong>void</strong>) <em>id</em><strong>(</strong>Parameters?<strong>){</strong>Statement*<strong>}</strong>*/
-	@SuppressWarnings("unused")
-	private void parseMethod(){
+	/** ArgList ::= Id(, Id)* **/
+	private void parseArgList(){
+		take(IDEN);
+		
+		while(currToken.getType() == COMMA){
+			takeIt();
+			take(IDEN);
+		}
+	}
+	
+	/** Reference ::= (Id|**this**)(**.**Id)* **/
+	private void parseReference(){
+		// TODO
+	}
+	
+	/** Statement ::= TODO */
+	private void parseStatement(){
+		// TODO
+	}
+	
+	/** Expression ::= TODO */
+	private void parseExpression(){
 		// TODO
 	}
 	
@@ -81,7 +143,7 @@ public class Parser {
 		if(currToken.getType() == type){
 			currToken = scanner.scan();
 		}else
-			throw new CompilerException();
+			throw new CompilerException(type, scanner);
 	}
 	
 	private void takeIt(){

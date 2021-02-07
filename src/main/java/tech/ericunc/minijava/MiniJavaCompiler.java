@@ -3,9 +3,8 @@ package tech.ericunc.minijava;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import tech.ericunc.minijava.parser.Parser;
 import tech.ericunc.minijava.scanner.Scanner;
-import tech.ericunc.minijava.scanner.Token;
-import tech.ericunc.minijava.scanner.TokenType;
 
 public class MiniJavaCompiler {
 	
@@ -26,14 +25,12 @@ public class MiniJavaCompiler {
 			stream = new FileInputStream(args[0]);
 		}catch(FileNotFoundException e){
 			System.err.println("File " + args[0] + " not found!");
-			System.exit(4);
+			System.exit(1);
 		}
 		
 		Scanner scanner = new Scanner(stream);
-		
-		for(Token t = scanner.scan(); t.getType() != TokenType.END; t = scanner.scan()){
-			debug(t.getType() + " " + t.getValue());
-		}
+		Parser parser = new Parser(scanner);
+		parser.parse();
 	}
 	
 	public static boolean debugMode(){
