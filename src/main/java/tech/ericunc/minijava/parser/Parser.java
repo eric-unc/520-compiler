@@ -153,7 +153,6 @@ public class Parser {
 			| Reference<strong>(</strong>ArgList?<strong>);</strong><br />
 	*/
 	private void parseStatement(){
-		// TODO: WIP
 		switch(currToken.getType()){
 			case L_BRACKET:
 				takeIt();
@@ -206,23 +205,94 @@ public class Parser {
 			case THIS:
 				parseReference();
 				
-				if(currToken.getType() == L_SQ_BRACK){ // second rule
+				if(currToken.getType() == L_SQ_BRACK){ // second rule with [] ::= Reference[Expression] = Expression;
 					takeIt();
 					parseExpression();
 					take(R_SQ_BRACK);
-				}else if(currToken.getType() == L_PAREN){ // third rule
+					take(EQUALS);
+					parseExpression();
+					take(SEMI);
+				}else if(currToken.getType() == L_PAREN){ // third rule ::= Reference(ArgList?);
 					takeIt();
 					
 					if(currToken.getType() == IDEN)
 						parseArgList();
 					
 					take(R_PAREN);
+					take(SEMI);
+				}else{ // second rule without [] ::= Reference = Expression;
+					take(EQUALS);
+					parseExpression();
+					take(SEMI);
 				}
 				
 				break;
 				
 			default:
-				// TODO this part is gonna be complex.
+				// assuming iden
+				take(IDEN);
+				
+				switch(currToken.getType()){
+					case IDEN: // first rule only
+						takeIt();
+						take(EQUALS);
+						parseExpression();
+						take(SEMI);
+						break;
+						
+					case L_SQ_BRACK: // second rule with []
+						takeIt();
+						parseExpression();
+						take(R_SQ_BRACK);
+						take(EQUALS);
+						parseExpression();
+						take(SEMI);
+						break;
+					
+					case DOT: // second or third rule
+						takeIt();
+						take(IDEN);
+						
+						while(currToken.getType() == DOT){
+							takeIt();
+							take(IDEN);
+						}
+						
+						if(currToken.getType() == L_SQ_BRACK){ // second rule with [
+							takeIt();
+							parseExpression();
+							take(R_SQ_BRACK);
+							take(EQUALS);
+							parseExpression();
+							take(SEMI);
+						}else if(currToken.getType() == EQUALS){ // second without [
+							takeIt();
+							parseExpression();
+							take(SEMI);
+						}else{ // third
+							take(L_PAREN);
+							parseArgList();
+							take(R_PAREN);
+							take(SEMI);
+						}
+						
+						break;
+					
+					case EQUALS:
+						takeIt();
+						parseExpression();
+						take(SEMI);
+						
+						break;
+					
+					// assume ( for final case)
+					case L_PAREN:
+					default:
+						take(L_PAREN);
+						parseArgList();
+						take(R_PAREN);
+						take(SEMI);
+				}
 		}
 	}
 	

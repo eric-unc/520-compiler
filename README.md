@@ -38,10 +38,10 @@ The compiler should be used through the command line, through arguments:
 * Biop ::= **>** | **<** | **==** | **<=** | **>=** | **!=** | **&&** | **||** | **+** | **-** | \* | **/**
 * Literal ::= \d(\d)+ | **true** | **false**
 
-The grammar above uses EBNF with some POSIX conventions sprinkled in to make my life easier.
+The grammar above uses EBNF with some POSIX conventions sprinkled in to make my life easier. Whitespace is generally insignificant but there must be spaces between words.
 
 ## License
-As you can see in the [license file](LICENSE), this project is under the "Unlicense" which effectively releases it into the public domain. Basically, do what you want with my code. However, I don't recommend using the code for reference for COMP 520; Professor Prins explicitly doesn't allow this, and the particular subset to implement will change year-to-year. Plus it is rather rewarding to create something by yourself from scratch.
+As you can see in the [license file](LICENSE), this project is under the "Unlicense" which effectively releases it into the public domain. Basically, do what you want with my code. However, I don't recommend using the code for reference for COMP 520; Professor Prins explicitly doesn't allow this, and the particular subset to implement will change year-to-year. And of course, you will find it more rewarding to create something by yourself from scratch.
 
 ## Credits
 * Eric Schneider
