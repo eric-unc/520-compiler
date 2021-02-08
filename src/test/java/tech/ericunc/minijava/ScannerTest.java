@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Timeout;
 import tech.ericunc.minijava.scanner.*;
 
 class ScannerTest {
-	static final String RES = "src/test/resources/tech/ericunc/minijava/";
-
 	static void assertScan(TokenType type, String value, Scanner scanner){
 		Token token = scanner.scan();
 		assertEquals(type, token.getType(), "Type mismatch");
@@ -27,8 +25,8 @@ class ScannerTest {
 	@Test
 	@Timeout(5) // TODO: for whatever reason this timeout does not work
 	void test1(){
-		try{
-			FileInputStream stream = new FileInputStream(RES + "Test1.mjava");
+		try {
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test1.mjava");
 
 			Scanner scanner = new Scanner(stream);
 

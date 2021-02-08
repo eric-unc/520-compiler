@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
 	testImplementation('org.junit.jupiter:junit-jupiter:5.7.0')
+	testImplementation('com.ginsberg:junit5-system-exit:1.0.0')
 }
 
 sourceSets {

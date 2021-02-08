@@ -190,6 +190,36 @@ public class Parser {
 				take(R_PAREN);
 				parseStatement();
 				break;
+			
+			// The following very messy parts are for the last three rules.
+			// int/bool part of first statement (missing iden)
+			case INT:
+			case BOOLEAN:
+				parseType();
+				take(IDEN);
+				take(EQUALS);
+				parseExpression();
+				take(SEMI);
+				break;
+			
+			// this part of second/third (missing iden)
+			case THIS:
+				parseReference();
+				
+				if(currToken.getType() == L_SQ_BRACK){ // second rule
+					takeIt();
+					parseExpression();
+					take(R_SQ_BRACK);
+				}else if(currToken.getType() == L_PAREN){ // third rule
+					takeIt();
+					
+					if(currToken.getType() == IDEN)
+						parseArgList();
+					
+					take(R_PAREN);
+				}
+				
+				break;
 				
 			default:
 				// TODO this part is gonna be complex.
