@@ -111,7 +111,14 @@ public class Parser {
 	
 	/** ParamList ::= Type Id(, Type Id)* */
 	private void parseParamList(){
-		// TODO
+		parseType();
+		take(IDEN);
+		
+		while(currToken.getType() == COMMA){
+			takeIt();
+			parseType();
+			take(IDEN);
+		}
 	}
 	
 	/** ArgList ::= Id(, Id)* **/
@@ -126,15 +133,77 @@ public class Parser {
 	
 	/** Reference ::= (Id|**this**)(**.**Id)* **/
 	private void parseReference(){
-		// TODO
+		if(currToken.getType() == THIS)
+			takeIt();
+		else
+			take(IDEN);
+		
+		while(currToken.getType() == DOT){
+			takeIt();
+			take(IDEN);
+		}
 	}
 	
-	/** Statement ::= TODO */
+	/** Statement ::= <strong>{</strong> Statement* <strong>}</strong><br />
+	 		| <strong>return</strong> Expression<strong>;</strong><br />
+			| <strong>if(</strong>Expression<strong>)</strong> Statement (<strong>else</strong> Statement)?<br />
+			| <strong>while(</strong>Expression<strong>)</strong> Statement<br />
+			| Type Id <strong>=</strong> Expression<strong>;</strong><br />
+			| Reference(<strong>[</strong>Expression<strong>]</strong>)? <strong>=</strong> Expression<strong>;</strong><br />
+			| Reference<strong>(</strong>ArgList?<strong>);</strong><br />
+	*/
 	private void parseStatement(){
-		// TODO
+		// TODO: WIP
+		switch(currToken.getType()){
+			case L_BRACKET:
+				takeIt();
+				
+				while(currToken.getType() != R_BRACKET)
+					parseStatement();
+				
+				break;
+				
+			case RETURN:
+				takeIt();
+				parseExpression();
+				take(SEMI);
+				break;
+				
+			case IF:
+				takeIt();
+				take(L_PAREN);
+				parseExpression();
+				take(R_PAREN);
+				parseStatement();
+				
+				if(currToken.getType() == ELSE){
+					takeIt();
+					parseStatement();
+				}
+				
+				break;
+				
+			case WHILE:
+				takeIt();
+				take(L_PAREN);
+				parseExpression();
+				take(R_PAREN);
+				parseStatement();
+				break;
+				
+			default:
+				// TODO this part is gonna be complex.
+		}
 	}
 	
-	/** Expression ::= TODO */
+	/** Expression ::= Reference(<strong>[</strong>Expression<strong>]</strong>|<strong>(</strong>ArgList?<strong>)</strong>)?<br />
+			| Unop Expression<br />
+			| <strong>(</strong>Expression<strong>)</strong><br />
+			| Literal<br />
+			| <strong>new</strong> (Id<strong>()</strong>|Type<strong>[</strong>Expression<strong>]</strong>)<br />
+			| Expression Biop Expression
+	*/
+	@SuppressWarnings("unused")
 	private void parseExpression(){
 		// TODO
 	}

@@ -21,22 +21,21 @@ The compiler should be used through the command line, through arguments:
 * ArgList ::= Id(, Id)*
 * Reference ::= (Id|**this**)(**.**Id)*
 * Statement ::= **{** Statement\* **}**
-			| Type Id **=** Expression**;**
-			| Reference **=** Expression**;**
-			| Reference**[**Expression**]** **=** Expression**;**
-			| Reference**(**ArgList?**);**
 			| **return** Expression**;**
 			| **if(**Expression**)** Statement (**else** Statement)?
 			| **while(**Expression**)** Statement
+			| Type Id **=** Expression**;**
+			| Reference(**[**Expression**]**)? **=** Expression**;**
+			| Reference**(**ArgList?**);**
 * Expression ::= Reference(**[**Expression**]**|**(**ArgList?**)**)?
 			| Unop Expression
-			| Expression Biop Expression
 			| **(**Expression**)**
 			| Literal
 			| **new** (Id**()**|Type**[**Expression**]**)
+			| Expression Biop Expression
 * Id ::= \[\w**$_**][\w\d]+
 * Unop ::= **!** | **-**
-* Biop ::= **>** | **<** | **==** | **<=** | **>=** | **!=** | **&&** | **||** | **+** | **-** | ***** | **/**
+* Biop ::= **>** | **<** | **==** | **<=** | **>=** | **!=** | **&&** | **||** | **+** | **-** | \* | **/**
 * Literal ::= \d(\d)+ | **true** | **false**
 
 The grammar above uses EBNF with some POSIX conventions sprinkled in to make my life easier.
