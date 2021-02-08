@@ -227,9 +227,9 @@ public class Parser {
 				}
 				
 				break;
-				
+			
+			case IDEN: // assuming iden
 			default:
-				// assuming iden
 				take(IDEN);
 				
 				switch(currToken.getType()){
@@ -296,16 +296,15 @@ public class Parser {
 		}
 	}
 	
-	/** Expression ::= Reference(<strong>[</strong>Expression<strong>]</strong>|<strong>(</strong>ArgList?<strong>)</strong>)?<br />
+	/** Expression ::= (Reference(<strong>[</strong>Expression<strong>]</strong>|<strong>(</strong>ArgList?<strong>)</strong>)?<br />
 			| Unop Expression<br />
 			| <strong>(</strong>Expression<strong>)</strong><br />
 			| Literal<br />
-			| <strong>new</strong> (Id<strong>()</strong>|Type<strong>[</strong>Expression<strong>]</strong>)<br />
-			| Expression Biop Expression
+			| <strong>new</strong> (Id<strong>()</strong>|Type<strong>[</strong>Expression<strong>]</strong>))
+			(Biop Expression)?
 	*/
-	@SuppressWarnings("unused")
 	private void parseExpression(){
-		// TODO
+		// TODO: WIP
 	}
 	
 	private void take(TokenType type) throws CompilerException {

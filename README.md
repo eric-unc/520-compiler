@@ -27,12 +27,12 @@ The compiler should be used through the command line, through arguments:
 			| Type Id **=** Expression**;**
 			| Reference(**[**Expression**]**)? **=** Expression**;**
 			| Reference**(**ArgList?**);**
-* Expression ::= Reference(**[**Expression**]**|**(**ArgList?**)**)?
+* Expression ::= (Reference(**[**Expression**]**|**(**ArgList?**)**)?
 			| Unop Expression
 			| **(**Expression**)**
 			| Literal
-			| **new** (Id**()**|Type**[**Expression**]**)
-			| Expression Biop Expression
+			| **new** (Id**()**|Type**[**Expression**]**))
+			(Biop Expression)?
 * Id ::= \[\w**$_**][\w\d]+
 * Unop ::= **!** | **-**
 * Biop ::= **>** | **<** | **==** | **<=** | **>=** | **!=** | **&&** | **||** | **+** | **-** | \* | **/**
