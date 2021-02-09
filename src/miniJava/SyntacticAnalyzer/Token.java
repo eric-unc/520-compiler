@@ -1,4 +1,4 @@
-package tech.ericunc.minijava.scanner;
+package miniJava.SyntacticAnalyzer;
 
 public class Token {
 	private final TokenType type;

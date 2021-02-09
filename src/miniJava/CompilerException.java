@@ -1,7 +1,7 @@
-package tech.ericunc.minijava.exceptions;
+package miniJava;
 
-import tech.ericunc.minijava.scanner.Scanner;
-import tech.ericunc.minijava.scanner.TokenType;
+import miniJava.SyntacticAnalyzer.Scanner;
+import miniJava.SyntacticAnalyzer.TokenType;
 
 public class CompilerException extends RuntimeException {
 

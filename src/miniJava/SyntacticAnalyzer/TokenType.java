@@ -1,4 +1,4 @@
-package tech.ericunc.minijava.scanner;
+package miniJava.SyntacticAnalyzer;
 
 public enum TokenType {
 	/// Main/misc types

@@ -1,11 +1,8 @@
-package tech.ericunc.minijava.parser;
+package miniJava.SyntacticAnalyzer;
 
-import tech.ericunc.minijava.exceptions.CompilerException;
-import tech.ericunc.minijava.scanner.Scanner;
-import tech.ericunc.minijava.scanner.Token;
-import tech.ericunc.minijava.scanner.TokenType;
+import static miniJava.SyntacticAnalyzer.TokenType.*;
 
-import static tech.ericunc.minijava.scanner.TokenType.*;
+import miniJava.CompilerException;
 
 public class Parser {
 	private Scanner scanner;

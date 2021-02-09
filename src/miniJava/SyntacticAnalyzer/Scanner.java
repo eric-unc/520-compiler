@@ -1,9 +1,9 @@
-package tech.ericunc.minijava.scanner;
+package miniJava.SyntacticAnalyzer;
+
+import static miniJava.SyntacticAnalyzer.TokenType.*;
 
 import java.io.IOException;
 import java.io.InputStream;
-
-import static tech.ericunc.minijava.scanner.TokenType.*;
 
 public class Scanner {
 	private InputStream stream;

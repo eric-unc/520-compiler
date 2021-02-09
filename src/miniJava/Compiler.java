@@ -1,12 +1,12 @@
-package tech.ericunc.minijava;
+package miniJava;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import tech.ericunc.minijava.parser.Parser;
-import tech.ericunc.minijava.scanner.Scanner;
+import miniJava.SyntacticAnalyzer.Parser;
+import miniJava.SyntacticAnalyzer.Scanner;
 
-public class MiniJavaCompiler {
+public class Compiler {
 	
 	private static boolean debug;
 
@@ -31,6 +31,8 @@ public class MiniJavaCompiler {
 		Scanner scanner = new Scanner(stream);
 		Parser parser = new Parser(scanner);
 		parser.parse();
+		
+		System.exit(0);
 	}
 	
 	public static boolean debugMode(){

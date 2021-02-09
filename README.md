@@ -1,8 +1,10 @@
 # 520-compiler
 A "miniJava" compiler, as created for COMP 520.
 
+Note that because of class requirements, my code is not as ideal as I want it to be. Please forgive me on this.
+
 ## Features supported
-Currently none!
+Currently can lex. Working on parsing.
 
 ## Usage
 The compiler should be used through the command line, through arguments:

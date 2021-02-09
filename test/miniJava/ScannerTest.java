@@ -1,7 +1,7 @@
-package tech.ericunc.minijava;
+package miniJava;
 
+import static miniJava.SyntacticAnalyzer.TokenType.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static tech.ericunc.minijava.scanner.TokenType.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,7 +9,9 @@ import java.io.FileNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-import tech.ericunc.minijava.scanner.*;
+import miniJava.SyntacticAnalyzer.Scanner;
+import miniJava.SyntacticAnalyzer.Token;
+import miniJava.SyntacticAnalyzer.TokenType;
 
 class ScannerTest {
 	static void assertScan(TokenType type, String value, Scanner scanner){

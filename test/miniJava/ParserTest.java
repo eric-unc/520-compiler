@@ -1,14 +1,14 @@
-package tech.ericunc.minijava;
+package miniJava;
 
 import org.junit.jupiter.api.Test;
 
 import com.ginsberg.junit.exit.ExpectSystemExitWithStatus;
 
-import tech.ericunc.minijava.parser.Parser;
-import tech.ericunc.minijava.scanner.Scanner;
+import miniJava.SyntacticAnalyzer.Parser;
+import miniJava.SyntacticAnalyzer.Scanner;
 
+import static miniJava.SyntacticAnalyzer.TokenType.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static tech.ericunc.minijava.scanner.TokenType.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
