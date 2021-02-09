@@ -26,8 +26,11 @@ public class Parser {
 	
 	/** Program ::= Class* <em>end</em> */
 	public void parseProgram(){
-		parseClass();
-		take(END);
+		while(currToken.getType() != END){
+			parseClass();
+		}
+		
+		takeIt();
 	}
 	
 	/** Class ::= <strong>class</strong> id <strong>{</strong> ClassItem* <strong>}</strong> */
@@ -160,11 +163,15 @@ public class Parser {
 				while(currToken.getType() != R_BRACKET)
 					parseStatement();
 				
+				takeIt();
 				break;
 				
 			case RETURN:
 				takeIt();
-				parseExpression();
+				
+				if(currToken.getType() != SEMI)
+					parseExpression();
+				
 				take(SEMI);
 				break;
 				

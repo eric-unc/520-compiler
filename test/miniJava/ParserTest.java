@@ -29,12 +29,20 @@ public class ParserTest {
 			e.printStackTrace();
 			fail();
 		}
-		
 	}
 	
 	@Test
 	@ExpectSystemExitWithStatus(EXPECTED_EXIT_CODE)
 	void test2(){
-		System.exit(EXPECTED_EXIT_CODE);
+		try {
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test2.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			parser.parse();
+			System.exit(EXPECTED_EXIT_CODE);
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
 	}
 }

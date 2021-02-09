@@ -1,0 +1,77 @@
+/**
+ * This test file was taken from Ben Dod and is licensed separately (see README).
+ */
+// this file should be parsed successfully
+
+class Test1 {
+
+    private void nestedBlocks() {
+        {
+            {
+                {
+                    {
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    private void conditionalFlow(int x, int y) {
+
+        // single statements without blocks are 
+        // valid to use with if and while statements
+        while (x + y > 3) 
+            x = x - y;
+
+        if (y > x) 
+            x = y;
+
+        // as are blocked statements
+        if (x) {
+            x = x - 1;
+        }
+
+        while (x) {
+            x = x / 8;
+        }
+    }
+
+    public static boolean b;
+    public static int terrible_int;
+
+    private void h(int a, boolean b, int c) {
+        terrible_int = terrible_int + 2;
+        int x = a * c / 6;
+        boolean t = b;
+
+        while (x > 7) {
+            while (false) {
+                x = 100;
+            }
+            if (x < 10) {
+                x = x - 5;
+            } else x = x - 2;
+        }
+
+        // dangling else???/??/???????
+        if (x > 1) if (x > 2) if (x > 3) if (x > 4) x = 5; else x = 65;
+
+        while (x < 100) x = x + 2;
+
+        return x;
+    }
+}
+
+// mutiple classes are valid
+class Test2 {
+    public int index;
+    public int type;
+}
+
+class Test3 {
+    // empty classes are valid
+}
+
+
+// comment at end of file
