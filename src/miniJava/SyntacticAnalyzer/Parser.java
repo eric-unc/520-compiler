@@ -49,6 +49,8 @@ public class Parser {
 		
 		if(currToken.getType() == VOID){
 			takeIt();
+			take(IDEN);
+			take(L_PAREN);
 			parseMethod();
 		}else{
 			parseType();
@@ -95,6 +97,7 @@ public class Parser {
 	private void parseMethod(){
 		if(currToken.getType() != R_PAREN){
 			parseParamList();
+			take(R_PAREN);
 		}else
 			takeIt();
 		
