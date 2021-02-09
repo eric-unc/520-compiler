@@ -11,7 +11,7 @@ public class CompilerException extends RuntimeException {
 		
 	}
 	
-	public CompilerException(TokenType expectedType, Scanner scanner){
-		super("Expected " + expectedType + " token on line " + scanner.getLineNum() + "!");
+	public CompilerException(TokenType expected, TokenType got, Scanner scanner){
+		super("Expected " + expected + " token on line " + scanner.getLineNum() + ":" + scanner.getLineWidth() + ", got " + got + "!");
 	}
 }

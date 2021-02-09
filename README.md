@@ -29,11 +29,11 @@ The compiler should be used through the command line, through arguments:
 			| Type Id **=** Expression**;**
 			| Reference(**[**Expression**]**)? **=** Expression**;**
 			| Reference**(**ArgList?**);**
-* Expression ::= (Reference(**[**Expression**]**|**(**ArgList?**)**)?
-			| Unop Expression
+* Expression ::= (Unop Expression
 			| **(**Expression**)**
 			| Literal
-			| **new** (Id**()**|Type**[**Expression**]**))
+			| **new** (**int[**Expression**]**|Id(**()**|**[**Expression**]**))
+			| Reference(**[**Expression**]**|**(**ArgList?**)**)? )
 			(Biop Expression)?
 * Id ::= \[\w**$_**][\w\d]+
 * Unop ::= **!** | **-**

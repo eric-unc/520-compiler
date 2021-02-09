@@ -10,12 +10,13 @@ public class Scanner {
 	private boolean end;
 
 	private char curChar;
-	private int line;
+	private int lineNum;
+	private int lineWidth;
 
 	public Scanner(InputStream stream){
 		this.stream = stream;
 		end = false;
-		line = 1;
+		lineNum = 1;
 
 		readChar();
 	}
@@ -202,14 +203,16 @@ public class Scanner {
 	private void readChar(){
 		try{
 			int c = stream.read();
-			
-			//MiniJavaCompiler.debug((char)c);
 
 			if(c == -1)
 				end = true;
 			
-			if(c == '\n')
-				line++;
+			if(c == '\n'){
+				lineNum++;
+				lineWidth = 0;
+			}
+			
+			lineWidth++;
 
 			curChar = (char) c;
 		}catch(IOException e){
@@ -219,7 +222,11 @@ public class Scanner {
 	}
 	
 	public int getLineNum(){
-		return line;
+		return lineNum;
+	}
+	
+	public int getLineWidth() {
+		return lineWidth;
 	}
 
 	private static boolean isWordChar(char c){

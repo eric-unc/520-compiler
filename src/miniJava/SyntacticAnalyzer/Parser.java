@@ -293,22 +293,103 @@ public class Parser {
 		}
 	}
 	
-	/** Expression ::= (Reference(<strong>[</strong>Expression<strong>]</strong>|<strong>(</strong>ArgList?<strong>)</strong>)?<br />
-			| Unop Expression<br />
+	/** Expression ::= (Unop Expression<br />
 			| <strong>(</strong>Expression<strong>)</strong><br />
 			| Literal<br />
-			| <strong>new</strong> (Id<strong>()</strong>|Type<strong>[</strong>Expression<strong>]</strong>))
+			| <strong>new</strong> (<strong>int[</strong>Expression<strong>]</strong>|Id(<strong>()</strong>|<strong>[</strong>Expression<strong>]</strong>))<br />
+			| Reference(<strong>[</strong>Expression<strong>]</strong>|<strong>(</strong>ArgList?<strong>)</strong>)?)<br />
 			(Biop Expression)?
 	*/
 	private void parseExpression(){
-		// TODO: WIP
+		switch(currToken.getType()){
+			case NEG:
+			case MINUS:
+				takeIt();
+				parseExpression();
+				break;
+			
+			case L_PAREN:
+				takeIt();
+				parseExpression();
+				take(R_PAREN);
+				break;
+			
+			case NUM:
+			case TRUE:
+			case FALSE:
+				takeIt();
+				break;
+				
+			case NEW:
+				takeIt();
+				
+				if(currToken.getType() == INT){
+					takeIt();
+					take(L_SQ_BRACK);
+					parseExpression();
+					take(R_SQ_BRACK);
+				}else{
+					take(IDEN);
+					
+					if(currToken.getType() == L_PAREN){
+						takeIt();
+						take(R_PAREN);
+					}else{
+						take(L_SQ_BRACK);
+						parseExpression();
+						take(R_SQ_BRACK);
+					}
+				}
+				
+				break;
+				
+			case IDEN:
+			case THIS:
+			default:
+				parseReference();
+				
+				if(currToken.getType() == L_SQ_BRACK){
+					takeIt();
+					parseExpression();
+					take(R_SQ_BRACK);
+				}else if(currToken.getType() == L_PAREN){
+					takeIt();
+					
+					if(currToken.getType() == IDEN)
+						parseArgList();
+					
+					take(R_PAREN);
+				}
+				
+				break;
+		}
+		
+		switch(currToken.getType()){
+			case MORE_THAN:
+			case LESS_THAN:
+			case MORE_EQUAL:
+			case LESS_EQUAL:
+			case EQUALS_OP:
+			case NOT_EQUALS:
+			case AND_LOG:
+			case OR_LOG:
+			case PLUS:
+			case MINUS:
+			case TIMES:
+			case DIV:
+				takeIt();
+				parseExpression();
+				
+			default:
+				break;
+		}
 	}
 	
-	private void take(TokenType type) throws CompilerException {
-		if(currToken.getType() == type){
+	private void take(TokenType expected) throws CompilerException {
+		if(currToken.getType() == expected){
 			currToken = scanner.scan();
 		}else
-			throw new CompilerException(type, scanner);
+			throw new CompilerException(expected, currToken.getType(), scanner);
 	}
 	
 	private void takeIt(){
