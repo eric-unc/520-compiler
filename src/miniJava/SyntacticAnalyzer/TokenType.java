@@ -1,14 +1,14 @@
 package miniJava.SyntacticAnalyzer;
 
 public enum TokenType {
-	/// Main/misc types
+	///// Main/misc types
 	IDEN,		// identifier
 	END,		// end
 	ERROR,		// unknown/error token
 	
 	
 	
-	/// Keywords
+	///// Keywords
 	
 	// Main/misc
 	CLASS,		// class keyword
@@ -33,12 +33,12 @@ public enum TokenType {
 	
 	
 	
-	/// Literals
+	///// Literals
 	NUM,		// number
 	TRUE,		// true boolean value
 	FALSE,		// false boolean value
 	
-	/// Symbols
+	///// Symbols
 	
 	// Main/misc
 	EQUALS,		// =

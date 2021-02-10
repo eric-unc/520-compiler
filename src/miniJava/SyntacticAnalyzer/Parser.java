@@ -33,7 +33,7 @@ public class Parser {
 		takeIt();
 	}
 	
-	/** Class ::= <strong>class</strong> id <strong>{</strong> ClassItem* <strong>}</strong> */
+	/** Class ::= <strong>class</strong> <em>id</em> <strong>{</strong> ClassItem* <strong>}</strong> */
 	private void parseClass(){
 		take(CLASS);
 		take(IDEN);
@@ -78,7 +78,7 @@ public class Parser {
 			takeIt();
 	}
 	
-	/** Type ::= (<strong>int</strong>|<strong>boolean</strong>|Id)(<strong>[]</strong>)? */
+	/** Type ::= (<strong>int</strong>|<strong>boolean</strong>|<em>id</em>)(<strong>[]</strong>)? */
 	private void parseType(){
 		if(currToken.getType() != INT && currToken.getType() != BOOLEAN)
 			take(IDEN);
@@ -91,12 +91,12 @@ public class Parser {
 		}
 	}
 	
-	/** Field ::= Id<strong>;</strong> */
+	/** Field ::= <em>id</em><strong>;</strong> */
 	private void parseField(){
 		takeIt();
 	}
 	
-	/** Method ::= Id<strong>(</strong>ParamList*<strong>){</strong>Statement*<strong>}</strong>*/
+	/** Method ::= <em>id</em><strong>(</strong>ParamList*<strong>){</strong>Statement*<strong>}</strong>*/
 	private void parseMethod(){
 		if(currToken.getType() != R_PAREN){
 			parseParamList();
@@ -112,7 +112,7 @@ public class Parser {
 		takeIt();
 	}
 	
-	/** ParamList ::= Type Id(, Type Id)* */
+	/** ParamList ::= Type <em>id</em>(, Type <em>id</em>)* */
 	private void parseParamList(){
 		parseType();
 		take(IDEN);
@@ -134,7 +134,7 @@ public class Parser {
 		}
 	}
 	
-	/** Reference ::= (Id|**this**)(**.**Id)* **/
+	/** Reference ::= (<em>id</em>|<strong>this</strong>)(<strong>.</strong><em>id</em>)* **/
 	private void parseReference(){
 		if(currToken.getType() == THIS)
 			takeIt();
@@ -151,7 +151,7 @@ public class Parser {
 	 		| <strong>return</strong> Expression<strong>;</strong><br />
 			| <strong>if(</strong>Expression<strong>)</strong> Statement (<strong>else</strong> Statement)?<br />
 			| <strong>while(</strong>Expression<strong>)</strong> Statement<br />
-			| Type Id <strong>=</strong> Expression<strong>;</strong><br />
+			| Type <em>id</em> <strong>=</strong> Expression<strong>;</strong><br />
 			| Reference(<strong>[</strong>Expression<strong>]</strong>)? <strong>=</strong> Expression<strong>;</strong><br />
 			| Reference<strong>(</strong>ArgList?<strong>);</strong><br />
 	*/
@@ -312,12 +312,12 @@ public class Parser {
 		}
 	}
 	
-	/** Expression ::= (Unop Expression<br />
+	/** Expression ::= (<em>unop</em> Expression<br />
 			| <strong>(</strong>Expression<strong>)</strong><br />
-			| Literal<br />
-			| <strong>new</strong> (<strong>int[</strong>Expression<strong>]</strong>|Id(<strong>()</strong>|<strong>[</strong>Expression<strong>]</strong>))<br />
+			| <em>literal</em><br />
+			| <strong>new</strong> (<strong>int[</strong>Expression<strong>]</strong>|<em>id</em>(<strong>()</strong>|<strong>[</strong>Expression<strong>]</strong>))<br />
 			| Reference(<strong>[</strong>Expression<strong>]</strong>|<strong>(</strong>ArgList?<strong>)</strong>)?)<br />
-			(Biop Expression)?
+			(<em>biop</em> Expression)?
 	*/
 	private void parseExpression(){
 		switch(currToken.getType()){
