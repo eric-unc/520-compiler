@@ -124,13 +124,13 @@ public class Parser {
 		}
 	}
 	
-	/** ArgList ::= Id(, Id)* **/
+	/** ArgList ::= Expression(, Expression)* **/
 	private void parseArgList(){
-		take(IDEN);
+		parseExpression();
 		
 		while(currToken.getType() == COMMA){
 			takeIt();
-			take(IDEN);
+			parseExpression();
 		}
 	}
 	
@@ -247,13 +247,22 @@ public class Parser {
 						take(SEMI);
 						break;
 						
-					case L_SQ_BRACK: // second rule with []
+					case L_SQ_BRACK: // first or second rule with []
 						takeIt();
-						parseExpression();
-						take(R_SQ_BRACK);
+						
+						if(currToken.getType() != R_SQ_BRACK){ // second rule
+							parseExpression();
+							take(R_SQ_BRACK);
+							
+						}else{
+							takeIt();
+							take(IDEN);
+						}
+						
 						take(EQUALS);
 						parseExpression();
 						take(SEMI);
+						
 						break;
 					
 					case DOT: // second or third rule

@@ -45,4 +45,49 @@ public class ParserTest {
 			fail();
 		}
 	}
+	
+	@Test
+	@ExpectSystemExitWithStatus(EXPECTED_EXIT_CODE)
+	void test3(){
+		try {
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test3.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			parser.parse();
+			System.exit(EXPECTED_EXIT_CODE);
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@ExpectSystemExitWithStatus(EXPECTED_EXIT_CODE)
+	void test4(){
+		try {
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test4.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			parser.parse();
+			System.exit(EXPECTED_EXIT_CODE);
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@ExpectSystemExitWithStatus(EXPECTED_EXIT_CODE)
+	void test5(){
+		try {
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test5.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			parser.parse();
+			System.exit(EXPECTED_EXIT_CODE);
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
 }

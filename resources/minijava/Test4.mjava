@@ -1,0 +1,5 @@
+class Test4 {
+	void method(){
+		item.doMethod(SomeClass.someMethod());
+	}
+}

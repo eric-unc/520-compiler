@@ -1,0 +1,40 @@
+/**
+ * This test file was taken from Ben Dod and is licensed separately (see README).
+ */
+class Listicle {
+    public ListItem[] makeMeAList(int length) {
+
+        ListItem[] list = new ListItem[length];
+
+        int i = 0;
+
+        while (i < length) {
+
+            ListItem new_item = new ListItem();
+            new_item.setValue(Rando.getRandomInt());
+            list[i] = new_item;
+            i = i + 1;
+        }
+
+        return list;
+    }
+}
+
+class ListItem {
+
+    int cool_value;
+
+    public void setValue(int value) {
+        this.cool_value = value;
+    }
+
+    public int getValue() {
+        return cool_value;
+    }
+}
+
+class Rando {
+    public static int getRandomInt() {
+        return 7;       // yeah.
+    }
+}

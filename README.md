@@ -20,7 +20,7 @@ The compiler should be used through the command line, through arguments:
 * Field ::= Id**;**
 * Method ::= Id**(**ParamList\* **){**Statement\* **}**
 * ParamList ::= Type Id(, Type Id)*
-* ArgList ::= Id(, Id)*
+* ArgList ::= Expression(, Expression)*
 * Reference ::= (Id|**this**)(**.**Id)*
 * Statement ::= **{** Statement\* **}**
 			| **return** Expression**;**
