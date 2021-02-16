@@ -30,13 +30,13 @@ The compiler should be used through the command line, through arguments:
 			| Reference(**[**Expression**]**)? **=** Expression**;**
 			| Reference**(**ArgList?**);**
 * Expression ::= OrExpression
-* OrExpression ::= AndExpression (**||** AndExpression)?
-* AndExpression ::= EqualityExpression (**&&** EqualityExpression)?
-* EqualityExpression ::= RelationalExpression ((**==**|**!=**) RelationalExpression)?
+* OrExpression ::= AndExpression (**||** AndExpression)*
+* AndExpression ::= EqualityExpression (**&&** EqualityExpression)*
+* EqualityExpression ::= RelationalExpression ((**==**|**!=**) RelationalExpression)*
 * RelationalExpression ::= AdditiveExpression ((**<=**|**<**|**>**|**>=**) AdditiveExpression)?
-* AdditiveExpression ::= MultiplicativeExpression ((**+**|**-**) MultiplicativeExpression)?
-* Multiplicative ::= UnaryExpression ((\*|**/**) UnaryExpression)?
-* UnaryExpression ::= ((**-**|**!**) (PureExpression|UnaryExpression)) | PureExpression
+* AdditiveExpression ::= MultiplicativeExpression ((**+**|**-**) MultiplicativeExpression)*
+* Multiplicative ::= UnaryExpression ((\*|**/**) UnaryExpression)*
+* UnaryExpression ::= ((**-**|**!**) UnaryExpression) | PureExpression
 * PureExpression ::= **(**Expression**)**
 			| Literal
 			| **new** (**int[**Expression**]**|Id(**()**|**[**Expression**]**))

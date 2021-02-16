@@ -321,7 +321,7 @@ public class Parser {
 		
 		TODO: purify (see README)
 	*/
-	private void parseExpression(){
+	/*private void parseExpression(){
 		switch(currToken.getType()){
 			case NEG:
 			case MINUS:
@@ -402,6 +402,144 @@ public class Parser {
 				parseExpression();
 				
 			default:
+				break;
+		}
+	}*/
+	
+	/** Expression ::= OrExpression */
+	private void parseExpression(){
+		parseOrExpression();
+	}
+	
+	/** OrExpression ::= AndExpression (<strong>||</strong> AndExpression)* */
+	private void parseOrExpression(){
+		parseAndExpression();
+
+		while(currToken.getType() == OR_LOG){
+			takeIt();
+			parseAndExpression();
+		}
+	}
+	
+	/** AndExpression ::= EqualityExpression (<strong>&&</strong> EqualityExpression)* */
+	private void parseAndExpression(){
+		parseEqualityExpression();
+		
+		while(currToken.getType() == AND_LOG){
+			takeIt();
+			parseEqualityExpression();
+		}
+	}
+	
+	/** EqualityExpression ::= RelationalExpression ((<strong>==</strong>|<strong>!=</strong>) RelationalExpression)* */
+	private void parseEqualityExpression(){
+		parseRelationalExpression();
+		
+		while(currToken.getType() == EQUALS_OP || currToken.getType() == NOT_EQUALS){
+			takeIt();
+			parseRelationalExpression();
+		}
+	}
+	
+	/** RelationalExpression ::= AdditiveExpression ((<strong>==</strong>|<strong>!=</strong>) AdditiveExpression)? */
+	private void parseRelationalExpression(){
+		parseAdditiveExpression();
+		
+		if(currToken.getType() == MORE_THAN || currToken.getType() == LESS_THAN || currToken.getType() == MORE_EQUAL || currToken.getType() == LESS_EQUAL){
+			takeIt();
+			parseAdditiveExpression();
+		}
+	}
+	
+	/** AdditiveExpression ::= MultiplicativeExpression ((<strong>+</strong>|<strong>-</strong>) MultiplicativeExpression)* */
+	private void parseAdditiveExpression(){
+		parseMultiplicativeExpression();
+		
+		while(currToken.getType() == PLUS || currToken.getType() == MINUS){
+			takeIt();
+			parseMultiplicativeExpression();
+		}
+	}
+	
+	/** MultiplicativeExpression ::= UnaryExpression ((<strong>*</strong>|<strong>/</strong>) UnaryExpression)* */
+	private void parseMultiplicativeExpression(){
+		parseUnaryExpression();
+		
+		while(currToken.getType() == TIMES || currToken.getType() == DIV){
+			takeIt();
+			parseUnaryExpression();
+		}
+	}
+	
+	/** UnaryExpression ::= ((<strong>-</strong>|<strong>!</strong>) UnaryExpression) | PureExpression */
+	private void parseUnaryExpression(){
+		if(currToken.getType() == MINUS || currToken.getType() == NEG){
+			takeIt();
+			parseUnaryExpression();
+		}else
+			parsePureExpression();
+	}
+	
+	/** PureExpression ::= <strong>(</strong>Expression<strong>)</strong><br />
+			| <em>literal</em><br />
+			| <strong>new</strong> (<strong>int[</strong>Expression<strong>]</strong>|<em>id</em>(<strong>()</strong>|<strong>[</strong>Expression<strong>]</strong>))<br />
+			| Reference(<strong>[</strong>Expression<strong>]</strong>|<strong>(</strong>ArgList?<strong>)</strong>)?
+	*/
+	private void parsePureExpression(){
+		switch(currToken.getType()){
+			case L_PAREN:
+				takeIt();
+				parseExpression();
+				take(R_PAREN);
+				break;
+			
+			case NUM:
+			case TRUE:
+			case FALSE:
+				takeIt();
+				break;
+				
+			case NEW:
+				takeIt();
+				
+				if(currToken.getType() == INT){
+					takeIt();
+					take(L_SQ_BRACK);
+					parseExpression();
+					take(R_SQ_BRACK);
+				}else{
+					take(IDEN);
+					
+					if(currToken.getType() == L_PAREN){
+						takeIt();
+						take(R_PAREN);
+					}else{
+						take(L_SQ_BRACK);
+						parseExpression();
+						take(R_SQ_BRACK);
+					}
+				}
+				
+				break;
+				
+			case IDEN:
+			case THIS:
+			default:
+				parseReference();
+				
+				if(currToken.getType() == L_SQ_BRACK){
+					takeIt();
+					parseExpression();
+					take(R_SQ_BRACK);
+				}else if(currToken.getType() == L_PAREN){
+					takeIt();
+					
+					if(currToken.getType() == IDEN)
+						parseArgList();
+					
+					take(R_PAREN);
+				}
+				
 				break;
 		}
 	}
