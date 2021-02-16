@@ -29,15 +29,19 @@ The compiler should be used through the command line, through arguments:
 			| Type Id **=** Expression**;**
 			| Reference(**[**Expression**]**)? **=** Expression**;**
 			| Reference**(**ArgList?**);**
-* Expression ::= (Unop Expression
-			| **(**Expression**)**
+* Expression ::= OrExpression
+* OrExpression ::= AndExpression (**||** AndExpression)?
+* AndExpression ::= EqualityExpression (**&&** EqualityExpression)?
+* EqualityExpression ::= RelationalExpression ((**==**|**!=**) RelationalExpression)?
+* RelationalExpression ::= AdditiveExpression ((**<=**|**<**|**>**|**>=**) AdditiveExpression)?
+* AdditiveExpression ::= MultiplicativeExpression ((**+**|**-**) MultiplicativeExpression)?
+* Multiplicative ::= UnaryExpression ((\*|**/**) UnaryExpression)?
+* UnaryExpression ::= ((**-**|**!**) (PureExpression|UnaryExpression)) | PureExpression
+* PureExpression ::= **(**Expression**)**
 			| Literal
 			| **new** (**int[**Expression**]**|Id(**()**|**[**Expression**]**))
-			| Reference(**[**Expression**]**|**(**ArgList?**)**)? )
-			(Biop Expression)?
+			| Reference(**[**Expression**]**|**(**ArgList?**)**)?
 * Id ::= \[\w**$_**][\w\d]+
-* Unop ::= **!** | **-**
-* Biop ::= **>** | **<** | **==** | **<=** | **>=** | **!=** | **&&** | **||** | **+** | **-** | \* | **/**
 * Literal ::= \d(\d)+ | **true** | **false**
 
 The grammar above uses EBNF with some POSIX conventions sprinkled in to make my life easier. Whitespace is generally insignificant but there must be spaces between words.

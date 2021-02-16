@@ -318,6 +318,8 @@ public class Parser {
 			| <strong>new</strong> (<strong>int[</strong>Expression<strong>]</strong>|<em>id</em>(<strong>()</strong>|<strong>[</strong>Expression<strong>]</strong>))<br />
 			| Reference(<strong>[</strong>Expression<strong>]</strong>|<strong>(</strong>ArgList?<strong>)</strong>)?)<br />
 			(<em>biop</em> Expression)?
+		
+		TODO: purify (see README)
 	*/
 	private void parseExpression(){
 		switch(currToken.getType()){
