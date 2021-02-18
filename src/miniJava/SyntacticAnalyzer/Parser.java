@@ -33,21 +33,21 @@ public class Parser {
 		takeIt();
 	}
 	
-	/** Class ::= <strong>class</strong> <em>id</em> <strong>{</strong> ClassItem* <strong>}</strong> */
+	/** Class ::= <strong>class</strong> <em>id</em> <strong>{</strong> ClassMember* <strong>}</strong> */
 	private void parseClass(){
 		take(CLASS);
 		take(IDEN);
 		take(L_BRACKET);
 		
 		while(currToken.getType() != R_BRACKET){
-			parseClassItem();
+			parseClassMember();
 		}
 		
 		takeIt();
 	}
 	
-	/** ClassItem ::= Modifiers (Type Field|(<strong>void</strong>|Type) Method) */
-	private void parseClassItem(){
+	/** ClassMember ::= Modifiers (Type Field|(<strong>void</strong>|Type) Method) */
+	private void parseClassMember(){
 		parseModifiers();
 		
 		if(currToken.getType() == VOID){

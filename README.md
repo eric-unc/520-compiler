@@ -4,7 +4,7 @@ A "miniJava" compiler, as created for COMP 520.
 Note that because of class requirements, my code is not as ideal as I want it to be. Please forgive me on this.
 
 ## Features supported
-Currently can lex. Working on parsing.
+Currently can lex/parse, working on constructing an AST.
 
 ## Usage
 The compiler should be used through the command line, through arguments:
@@ -13,8 +13,8 @@ The compiler should be used through the command line, through arguments:
 
 ## Grammar
 * Program ::= Class\* *end*
-* Class ::= **class** Id **{** ClassItem\* **}**
-* ClassItem ::= Modifiers (Type Field|(**void**|Type) Method)
+* Class ::= **class** Id **{** ClassMember\* **}**
+* ClassMember ::= Modifiers (Type Field|(**void**|Type) Method)
 * Modifiers ::= (**public**|**private**)? **static**?
 * Type ::= (**int**|**boolean**|Id)(**[]**)?
 * Field ::= Id**;**
