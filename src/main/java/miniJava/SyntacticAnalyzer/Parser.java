@@ -604,10 +604,11 @@ public class Parser {
 		int startLineWidth = scanner.getLineWidth();
 		
 		switch(currToken.getType()){
-			case L_PAREN: // TODO: potentially () should be included in the POS
+			case L_PAREN:
 				takeIt();
 				Expression ret = parseExpression();
 				take(R_PAREN);
+				ret.posn = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
 				return ret;
 			
 			case NUM:
