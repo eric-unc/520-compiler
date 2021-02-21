@@ -226,7 +226,7 @@ public class Parser {
 				}else if(currToken.getType() == L_PAREN){ // third rule ::= Reference(ArgList?);
 					takeIt();
 					
-					if(currToken.getType() == IDEN)
+					if(currToken.getType() != R_PAREN)
 						parseArgList();
 					
 					take(R_PAREN);
@@ -291,7 +291,10 @@ public class Parser {
 							take(SEMI);
 						}else{ // third
 							take(L_PAREN);
-							parseArgList();
+							
+							if(currToken.getType() != R_PAREN)
+								parseArgList();
+							
 							take(R_PAREN);
 							take(SEMI);
 						}
@@ -309,7 +312,10 @@ public class Parser {
 					case L_PAREN:
 					default:
 						take(L_PAREN);
-						parseArgList();
+
+						if(currToken.getType() == IDEN)
+							parseArgList();
+
 						take(R_PAREN);
 						take(SEMI);
 				}
@@ -444,7 +450,7 @@ public class Parser {
 				}else if(currToken.getType() == L_PAREN){
 					takeIt();
 					
-					if(currToken.getType() == IDEN)
+					if(currToken.getType() != R_PAREN)
 						parseArgList();
 					
 					take(R_PAREN);

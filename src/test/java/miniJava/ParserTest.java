@@ -1,5 +1,6 @@
 package miniJava;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.ginsberg.junit.exit.ExpectSystemExitWithStatus;
@@ -81,6 +82,21 @@ public class ParserTest {
 	void test5(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test5.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			parser.parse();
+			System.exit(EXPECTED_EXIT_CODE);
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@ExpectSystemExitWithStatus(EXPECTED_EXIT_CODE)
+	void test6(){
+		try {
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test6.mjava");
 			Scanner scanner = new Scanner(stream);
 			Parser parser = new Parser(scanner);
 			parser.parse();

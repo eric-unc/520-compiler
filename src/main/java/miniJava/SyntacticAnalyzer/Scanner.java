@@ -194,14 +194,15 @@ public class Scanner {
 						readChar();
 						
 						while(!end){
-							readChar();
+							//readChar();
 							if(curChar == '*'){ // looking for */
 								readChar();
 								if(curChar == '/'){
 									readChar();
 									return scan(); // break, return whatever's next
 								}
-							}
+							}else
+								readChar();
 						}
 					}else
 						return new Token(DIV, oneCharPosition);

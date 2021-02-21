@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /* Automated regression tester for Checkpoint 1 tests
  * Created by Max Beckman-Harned and Jan Prins 
- * To install and run the tester see the instructions on the COMP 520 website.
+ * Modified by Eric Schneider
  */
 public class Checkpoint1 {
 	
