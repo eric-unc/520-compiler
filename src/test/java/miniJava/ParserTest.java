@@ -1,31 +1,28 @@
 package miniJava;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.ginsberg.junit.exit.ExpectSystemExitWithStatus;
+import com.ginsberg.junit.exit.FailOnSystemExit;
 
 import miniJava.SyntacticAnalyzer.Parser;
 import miniJava.SyntacticAnalyzer.Scanner;
 
-import static miniJava.SyntacticAnalyzer.TokenType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class ParserTest {
-	static final int EXPECTED_EXIT_CODE = -1;
 	
 	@Test
-	@ExpectSystemExitWithStatus(EXPECTED_EXIT_CODE)
-	void test1(){
+	@FailOnSystemExit
+	static void test1(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test1.mjava");
 			Scanner scanner = new Scanner(stream);
 			Parser parser = new Parser(scanner);
 			parser.parse();
-			System.exit(EXPECTED_EXIT_CODE);
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 			fail();
@@ -33,14 +30,13 @@ public class ParserTest {
 	}
 	
 	@Test
-	@ExpectSystemExitWithStatus(EXPECTED_EXIT_CODE)
-	void test2(){
+	@FailOnSystemExit
+	static void test2(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test2.mjava");
 			Scanner scanner = new Scanner(stream);
 			Parser parser = new Parser(scanner);
 			parser.parse();
-			System.exit(EXPECTED_EXIT_CODE);
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 			fail();
@@ -48,14 +44,13 @@ public class ParserTest {
 	}
 	
 	@Test
-	@ExpectSystemExitWithStatus(EXPECTED_EXIT_CODE)
-	void test3(){
+	@FailOnSystemExit
+	static void test3(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test3.mjava");
 			Scanner scanner = new Scanner(stream);
 			Parser parser = new Parser(scanner);
 			parser.parse();
-			System.exit(EXPECTED_EXIT_CODE);
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 			fail();
@@ -63,14 +58,13 @@ public class ParserTest {
 	}
 	
 	@Test
-	@ExpectSystemExitWithStatus(EXPECTED_EXIT_CODE)
-	void test4(){
+	@FailOnSystemExit
+	static void test4(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test4.mjava");
 			Scanner scanner = new Scanner(stream);
 			Parser parser = new Parser(scanner);
 			parser.parse();
-			System.exit(EXPECTED_EXIT_CODE);
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 			fail();
@@ -78,14 +72,13 @@ public class ParserTest {
 	}
 	
 	@Test
-	@ExpectSystemExitWithStatus(EXPECTED_EXIT_CODE)
-	void test5(){
+	@FailOnSystemExit
+	static void test5(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test5.mjava");
 			Scanner scanner = new Scanner(stream);
 			Parser parser = new Parser(scanner);
 			parser.parse();
-			System.exit(EXPECTED_EXIT_CODE);
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 			fail();
@@ -93,14 +86,13 @@ public class ParserTest {
 	}
 	
 	@Test
-	@ExpectSystemExitWithStatus(EXPECTED_EXIT_CODE)
-	void test6(){
+	@ExpectSystemExitWithStatus(4)
+	static void test6(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test6.mjava");
 			Scanner scanner = new Scanner(stream);
 			Parser parser = new Parser(scanner);
 			parser.parse();
-			System.exit(EXPECTED_EXIT_CODE);
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 			fail();

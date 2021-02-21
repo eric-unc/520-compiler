@@ -26,7 +26,7 @@ class ScannerTest {
 
 	@Test
 	@Timeout(5) // TODO: for whatever reason this timeout does not work
-	void test1(){
+	static void test1(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test1.mjava");
 
@@ -103,5 +103,4 @@ class ScannerTest {
 
 		assertEquals(true, true);
 	}
-
 }
