@@ -3,41 +3,8 @@ package miniJava.SyntacticAnalyzer;
 import static miniJava.SyntacticAnalyzer.TokenType.*;
 
 import miniJava.CompilerException;
-import miniJava.AbstractSyntaxTrees.ArrayType;
-import miniJava.AbstractSyntaxTrees.AssignStmt;
-import miniJava.AbstractSyntaxTrees.BaseType;
-import miniJava.AbstractSyntaxTrees.BinaryExpr;
-import miniJava.AbstractSyntaxTrees.BlockStmt;
-import miniJava.AbstractSyntaxTrees.BooleanLiteral;
-import miniJava.AbstractSyntaxTrees.CallExpr;
-import miniJava.AbstractSyntaxTrees.CallStmt;
-import miniJava.AbstractSyntaxTrees.ClassType;
-import miniJava.AbstractSyntaxTrees.ExprList;
-import miniJava.AbstractSyntaxTrees.Expression;
-import miniJava.AbstractSyntaxTrees.IdRef;
-import miniJava.AbstractSyntaxTrees.Identifier;
-import miniJava.AbstractSyntaxTrees.IfStmt;
-import miniJava.AbstractSyntaxTrees.IntLiteral;
-import miniJava.AbstractSyntaxTrees.IxAssignStmt;
-import miniJava.AbstractSyntaxTrees.IxExpr;
-import miniJava.AbstractSyntaxTrees.LiteralExpr;
-import miniJava.AbstractSyntaxTrees.NewArrayExpr;
-import miniJava.AbstractSyntaxTrees.NewObjectExpr;
-import miniJava.AbstractSyntaxTrees.Operator;
-import miniJava.AbstractSyntaxTrees.QualRef;
-import miniJava.AbstractSyntaxTrees.RefExpr;
-import miniJava.AbstractSyntaxTrees.Reference;
-import miniJava.AbstractSyntaxTrees.ReturnStmt;
-import miniJava.AbstractSyntaxTrees.Statement;
-import miniJava.AbstractSyntaxTrees.StatementList;
-import miniJava.AbstractSyntaxTrees.Terminal;
-import miniJava.AbstractSyntaxTrees.ThisRef;
-import miniJava.AbstractSyntaxTrees.TypeDenoter;
-import miniJava.AbstractSyntaxTrees.TypeKind;
-import miniJava.AbstractSyntaxTrees.UnaryExpr;
-import miniJava.AbstractSyntaxTrees.VarDecl;
-import miniJava.AbstractSyntaxTrees.VarDeclStmt;
-import miniJava.AbstractSyntaxTrees.WhileStmt;
+import miniJava.AbstractSyntaxTrees.*;
+import miniJava.AbstractSyntaxTrees.Package;
 
 public class Parser {
 	private Scanner scanner;
@@ -60,32 +27,44 @@ public class Parser {
 	}
 	
 	/** Program ::= Class* <em>end</em> */
-	// TODO: AST
-	public void parseProgram(){
+	public Package parseProgram(){
+		int startLineNum = scanner.getLineNum();
+		int startLineWidth = scanner.getLineWidth();
+		
+		ClassDeclList cdl = new ClassDeclList();
 		while(currToken.getType() != END){
-			parseClass();
+			cdl.add(parseClass());
 		}
 		
 		takeIt();
+		
+		return new Package(cdl, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 	}
 	
 	/** Class ::= <strong>class</strong> <em>id</em> <strong>{</strong> ClassMember* <strong>}</strong> */
 	// TODO: AST
-	private void parseClass(){
+	private ClassDecl parseClass(){
+		int startLineNum = scanner.getLineNum();
+		int startLineWidth = scanner.getLineWidth();
+		
 		take(CLASS);
-		take(IDEN);
+		String cn = take(IDEN).getValue();
 		take(L_BRACKET);
 		
+		FieldDeclList fdl = new FieldDeclList();
+		MethodDeclList mdl = new MethodDeclList();
+		
 		while(currToken.getType() != R_BRACKET){
-			parseClassMember();
+			parseClassMember(fdl, mdl);
 		}
 		
 		takeIt();
+		return new ClassDecl(cn, fdl, mdl, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 	}
 	
 	/** ClassMember ::= Modifiers (Type Field|(<strong>void</strong>|Type) Method) */
 	// TODO: AST
-	private void parseClassMember(){
+	private void parseClassMember(FieldDeclList fdl, MethodDeclList mdl){
 		parseModifiers();
 		
 		if(currToken.getType() == VOID){
