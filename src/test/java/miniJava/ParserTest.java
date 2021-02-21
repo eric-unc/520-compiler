@@ -17,7 +17,7 @@ public class ParserTest {
 	
 	@Test
 	@FailOnSystemExit
-	static void test1(){
+	void test1(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test1.mjava");
 			Scanner scanner = new Scanner(stream);
@@ -31,7 +31,7 @@ public class ParserTest {
 	
 	@Test
 	@FailOnSystemExit
-	static void test2(){
+	void test2(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test2.mjava");
 			Scanner scanner = new Scanner(stream);
@@ -45,7 +45,7 @@ public class ParserTest {
 	
 	@Test
 	@FailOnSystemExit
-	static void test3(){
+	void test3(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test3.mjava");
 			Scanner scanner = new Scanner(stream);
@@ -59,7 +59,7 @@ public class ParserTest {
 	
 	@Test
 	@FailOnSystemExit
-	static void test4(){
+	void test4(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test4.mjava");
 			Scanner scanner = new Scanner(stream);
@@ -73,7 +73,7 @@ public class ParserTest {
 	
 	@Test
 	@FailOnSystemExit
-	static void test5(){
+	void test5(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test5.mjava");
 			Scanner scanner = new Scanner(stream);
@@ -87,7 +87,7 @@ public class ParserTest {
 	
 	@Test
 	@ExpectSystemExitWithStatus(4)
-	static void test6(){
+	void test6(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test6.mjava");
 			Scanner scanner = new Scanner(stream);

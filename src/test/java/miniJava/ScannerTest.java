@@ -14,7 +14,7 @@ import miniJava.SyntacticAnalyzer.Token;
 import miniJava.SyntacticAnalyzer.TokenType;
 
 class ScannerTest {
-	static void assertScan(TokenType type, String value, Scanner scanner){
+	void assertScan(TokenType type, String value, Scanner scanner){
 		Token token = scanner.scan();
 		assertEquals(type, token.getType(), "Type mismatch");
 		assertEquals(value, token.getValue(), "Value mismatch");
@@ -26,7 +26,7 @@ class ScannerTest {
 
 	@Test
 	@Timeout(5) // TODO: for whatever reason this timeout does not work
-	static void test1(){
+	void test1(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test1.mjava");
 

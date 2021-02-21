@@ -25,8 +25,7 @@ public class Checkpoint1 {
 	static final String BIN = "build/classes/java/main/";
 
 	@Test
-	@Disabled
-	static void checkpoint1() throws IOException, InterruptedException {
+	void checkpoint1() throws IOException, InterruptedException {
 		System.out.println("Run pa1_tests on miniJava compiler!");
 		
 		// compensate for project organization 

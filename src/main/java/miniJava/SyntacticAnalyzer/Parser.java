@@ -42,7 +42,6 @@ public class Parser {
 	}
 	
 	/** Class ::= <strong>class</strong> <em>id</em> <strong>{</strong> ClassMember* <strong>}</strong> */
-	// TODO: AST
 	private ClassDecl parseClass(){
 		int startLineNum = scanner.getLineNum();
 		int startLineWidth = scanner.getLineWidth();
@@ -63,37 +62,52 @@ public class Parser {
 	}
 	
 	/** ClassMember ::= Modifiers (Type Field|(<strong>void</strong>|Type) Method) */
-	// TODO: AST
 	private void parseClassMember(FieldDeclList fdl, MethodDeclList mdl){
-		parseModifiers();
+		int startLineNum = scanner.getLineNum();
+		int startLineWidth = scanner.getLineWidth();
+		
+		boolean[] mods = parseModifiers();
 		
 		if(currToken.getType() == VOID){
 			takeIt();
-			take(IDEN);
+			SourcePosition sp = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
+			String name = take(IDEN).getValue();
 			take(L_PAREN);
-			parseMethod();
+			parseMethod(new FieldDecl(mods[0], mods[1], new BaseType(TypeKind.VOID, sp), name, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth())), mdl);
 		}else{
-			parseType();
-			// TODO: this should be part of parseField or parseMethod but that's too hard
-			take(IDEN);
+			// TODO: should make a FieldDecl parser first, and then the method is based off it
 			
-			if(currToken.getType() == SEMI)
-				parseField();
-			else{
+			TypeDenoter td = parseType();
+			
+			String name = take(IDEN).getValue();
+			
+			if(currToken.getType() == SEMI){
+				takeIt();
+				fdl.add(new FieldDecl(mods[0], mods[1], td, name, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth())));
+			}else{
 				take(L_PAREN); // This too
-				parseMethod();
+				parseMethod(new FieldDecl(mods[0], mods[1], td, name, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth())), mdl);
 			}
 		}
 	}
 	
 	/** Modifiers ::= (<strong>public</strong>|<strong>private</strong>)? <strong>static</strong>? */
-	// TODO: AST
-	private void parseModifiers(){
-		if(currToken.getType() == PUBLIC || currToken.getType() == PRIVATE)
-			takeIt();
+	private boolean[] parseModifiers(){
+		boolean[] ret = new boolean[]{false, false};
 		
-		if(currToken.getType() == STATIC)
+		if(currToken.getType() == PUBLIC)
 			takeIt();
+		else if(currToken.getType() == PRIVATE){
+			ret[0] = true;
+			takeIt();
+		}
+		
+		if(currToken.getType() == STATIC){
+			ret[1] = true;
+			takeIt();
+		}
+		
+		return ret;
 	}
 	
 	/** Type ::= Type ::= <strong>boolean</strong>|((<strong>int</strong>|Id)(<strong>[]</strong>)?) */
@@ -126,39 +140,56 @@ public class Parser {
 	}
 	
 	/** Field ::= <em>id</em><strong>;</strong> */
-	// TODO: AST
-	private void parseField(){
+	/*private void parseField(FieldDeclList fdl){
 		takeIt();
-	}
+	}*/
 	
 	/** Method ::= <em>id</em><strong>(</strong>ParamList*<strong>){</strong>Statement*<strong>}</strong>*/
-	// TODO: AST
-	private void parseMethod(){
+	private void parseMethod(MemberDecl md, MethodDeclList mdl){
+		int startLineNum = scanner.getLineNum();
+		int startLineWidth = scanner.getLineWidth();
+		
+		ParameterDeclList p1 = new ParameterDeclList();
+		
 		if(currToken.getType() != R_PAREN){
-			parseParamList();
+			p1 = parseParamList();
 			take(R_PAREN);
 		}else
 			takeIt();
 		
 		take(L_BRACKET);
 		
-		while(currToken.getType() != R_BRACKET)
-			parseStatement();
+		StatementList sl = new StatementList();
+		while(currToken.getType() != R_BRACKET){
+			sl.add(parseStatement());
+		}
 		
 		takeIt();
+		
+		mdl.add(new MethodDecl(md, p1, sl, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth())));
 	}
 	
 	/** ParamList ::= Type <em>id</em>(, Type <em>id</em>)* */
-	// TODO: AST
-	private void parseParamList(){
-		parseType();
-		take(IDEN);
+	private ParameterDeclList parseParamList(){
+		int startLineNum = scanner.getLineNum();
+		int startLineWidth = scanner.getLineWidth();
+		
+		ParameterDeclList ret = new ParameterDeclList();
+		
+		TypeDenoter td = parseType();
+		String name = take(IDEN).getValue();
+		ret.add(new ParameterDecl(td, name, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth())));
 		
 		while(currToken.getType() == COMMA){
 			takeIt();
-			parseType();
-			take(IDEN);
+			int startLineNum2 = scanner.getLineNum();
+			int startLineWidth2 = scanner.getLineWidth();
+			TypeDenoter td2 = parseType();
+			String name2 = take(IDEN).getValue();
+			ret.add(new ParameterDecl(td2, name2, new SourcePosition(startLineNum2, scanner.getLineNum(), startLineWidth2, scanner.getLineWidth())));
 		}
+		
+		return ret;
 	}
 	
 	/** ArgList ::= Expression(, Expression)* **/
