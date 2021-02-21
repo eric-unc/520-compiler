@@ -1,42 +1,8 @@
 package miniJava.SyntacticAnalyzer;
 
-import static miniJava.SyntacticAnalyzer.TokenType.AND_LOG;
-import static miniJava.SyntacticAnalyzer.TokenType.BOOLEAN;
-import static miniJava.SyntacticAnalyzer.TokenType.CLASS;
-import static miniJava.SyntacticAnalyzer.TokenType.COMMA;
-import static miniJava.SyntacticAnalyzer.TokenType.DIV;
-import static miniJava.SyntacticAnalyzer.TokenType.DOT;
-import static miniJava.SyntacticAnalyzer.TokenType.ELSE;
-import static miniJava.SyntacticAnalyzer.TokenType.END;
-import static miniJava.SyntacticAnalyzer.TokenType.EQUALS;
-import static miniJava.SyntacticAnalyzer.TokenType.EQUALS_OP;
-import static miniJava.SyntacticAnalyzer.TokenType.IDEN;
-import static miniJava.SyntacticAnalyzer.TokenType.INT;
-import static miniJava.SyntacticAnalyzer.TokenType.LESS_EQUAL;
-import static miniJava.SyntacticAnalyzer.TokenType.LESS_THAN;
-import static miniJava.SyntacticAnalyzer.TokenType.L_BRACKET;
-import static miniJava.SyntacticAnalyzer.TokenType.L_PAREN;
-import static miniJava.SyntacticAnalyzer.TokenType.L_SQ_BRACK;
-import static miniJava.SyntacticAnalyzer.TokenType.MINUS;
-import static miniJava.SyntacticAnalyzer.TokenType.MORE_EQUAL;
-import static miniJava.SyntacticAnalyzer.TokenType.MORE_THAN;
-import static miniJava.SyntacticAnalyzer.TokenType.NEG;
-import static miniJava.SyntacticAnalyzer.TokenType.NOT_EQUALS;
-import static miniJava.SyntacticAnalyzer.TokenType.OR_LOG;
-import static miniJava.SyntacticAnalyzer.TokenType.PLUS;
-import static miniJava.SyntacticAnalyzer.TokenType.PRIVATE;
-import static miniJava.SyntacticAnalyzer.TokenType.PUBLIC;
-import static miniJava.SyntacticAnalyzer.TokenType.R_BRACKET;
-import static miniJava.SyntacticAnalyzer.TokenType.R_PAREN;
-import static miniJava.SyntacticAnalyzer.TokenType.R_SQ_BRACK;
-import static miniJava.SyntacticAnalyzer.TokenType.SEMI;
-import static miniJava.SyntacticAnalyzer.TokenType.STATIC;
-import static miniJava.SyntacticAnalyzer.TokenType.THIS;
-import static miniJava.SyntacticAnalyzer.TokenType.TIMES;
-import static miniJava.SyntacticAnalyzer.TokenType.VOID;
+import static miniJava.SyntacticAnalyzer.TokenType.*;
 
 import miniJava.CompilerException;
-import miniJava.AbstractSyntaxTrees.ArrayType;
 import miniJava.AbstractSyntaxTrees.BaseType;
 import miniJava.AbstractSyntaxTrees.BinaryExpr;
 import miniJava.AbstractSyntaxTrees.BooleanLiteral;
@@ -44,6 +10,7 @@ import miniJava.AbstractSyntaxTrees.CallExpr;
 import miniJava.AbstractSyntaxTrees.ClassType;
 import miniJava.AbstractSyntaxTrees.ExprList;
 import miniJava.AbstractSyntaxTrees.Expression;
+import miniJava.AbstractSyntaxTrees.IdRef;
 import miniJava.AbstractSyntaxTrees.Identifier;
 import miniJava.AbstractSyntaxTrees.IntLiteral;
 import miniJava.AbstractSyntaxTrees.IxExpr;
@@ -51,13 +18,14 @@ import miniJava.AbstractSyntaxTrees.LiteralExpr;
 import miniJava.AbstractSyntaxTrees.NewArrayExpr;
 import miniJava.AbstractSyntaxTrees.NewObjectExpr;
 import miniJava.AbstractSyntaxTrees.Operator;
+import miniJava.AbstractSyntaxTrees.QualRef;
 import miniJava.AbstractSyntaxTrees.RefExpr;
 import miniJava.AbstractSyntaxTrees.Reference;
 import miniJava.AbstractSyntaxTrees.Terminal;
+import miniJava.AbstractSyntaxTrees.ThisRef;
 import miniJava.AbstractSyntaxTrees.TypeDenoter;
 import miniJava.AbstractSyntaxTrees.TypeKind;
 import miniJava.AbstractSyntaxTrees.UnaryExpr;
-import miniJava.AbstractSyntaxTrees.Visitor;
 
 public class Parser {
 	private Scanner scanner;
@@ -206,19 +174,28 @@ public class Parser {
 	}
 	
 	/** Reference ::= (<em>id</em>|<strong>this</strong>)(<strong>.</strong><em>id</em>)* **/
-	// TODO: AST
 	private Reference parseReference(){
-		if(currToken.getType() == THIS)
+		int startLineNum = scanner.getLineNum();
+		int startLineWidth = scanner.getLineWidth();
+		
+		Reference r;
+		
+		if(currToken.getType() == THIS){
 			takeIt();
-		else
-			take(IDEN);
+			r = new ThisRef(new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+			
+		}else{
+			Identifier id = new Identifier(take(IDEN));
+			r = new IdRef(id, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+		}
 		
 		while(currToken.getType() == DOT){
 			takeIt();
-			take(IDEN);
+			Identifier id = new Identifier(take(IDEN));
+			r = new QualRef(r, id, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 		}
 		
-		return null; // TODO
+		return r;
 	}
 	
 	/** Statement ::= <strong>{</strong> Statement* <strong>}</strong><br />
