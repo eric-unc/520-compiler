@@ -1,8 +1,63 @@
 package miniJava.SyntacticAnalyzer;
 
-import static miniJava.SyntacticAnalyzer.TokenType.*;
+import static miniJava.SyntacticAnalyzer.TokenType.AND_LOG;
+import static miniJava.SyntacticAnalyzer.TokenType.BOOLEAN;
+import static miniJava.SyntacticAnalyzer.TokenType.CLASS;
+import static miniJava.SyntacticAnalyzer.TokenType.COMMA;
+import static miniJava.SyntacticAnalyzer.TokenType.DIV;
+import static miniJava.SyntacticAnalyzer.TokenType.DOT;
+import static miniJava.SyntacticAnalyzer.TokenType.ELSE;
+import static miniJava.SyntacticAnalyzer.TokenType.END;
+import static miniJava.SyntacticAnalyzer.TokenType.EQUALS;
+import static miniJava.SyntacticAnalyzer.TokenType.EQUALS_OP;
+import static miniJava.SyntacticAnalyzer.TokenType.IDEN;
+import static miniJava.SyntacticAnalyzer.TokenType.INT;
+import static miniJava.SyntacticAnalyzer.TokenType.LESS_EQUAL;
+import static miniJava.SyntacticAnalyzer.TokenType.LESS_THAN;
+import static miniJava.SyntacticAnalyzer.TokenType.L_BRACKET;
+import static miniJava.SyntacticAnalyzer.TokenType.L_PAREN;
+import static miniJava.SyntacticAnalyzer.TokenType.L_SQ_BRACK;
+import static miniJava.SyntacticAnalyzer.TokenType.MINUS;
+import static miniJava.SyntacticAnalyzer.TokenType.MORE_EQUAL;
+import static miniJava.SyntacticAnalyzer.TokenType.MORE_THAN;
+import static miniJava.SyntacticAnalyzer.TokenType.NEG;
+import static miniJava.SyntacticAnalyzer.TokenType.NOT_EQUALS;
+import static miniJava.SyntacticAnalyzer.TokenType.OR_LOG;
+import static miniJava.SyntacticAnalyzer.TokenType.PLUS;
+import static miniJava.SyntacticAnalyzer.TokenType.PRIVATE;
+import static miniJava.SyntacticAnalyzer.TokenType.PUBLIC;
+import static miniJava.SyntacticAnalyzer.TokenType.R_BRACKET;
+import static miniJava.SyntacticAnalyzer.TokenType.R_PAREN;
+import static miniJava.SyntacticAnalyzer.TokenType.R_SQ_BRACK;
+import static miniJava.SyntacticAnalyzer.TokenType.SEMI;
+import static miniJava.SyntacticAnalyzer.TokenType.STATIC;
+import static miniJava.SyntacticAnalyzer.TokenType.THIS;
+import static miniJava.SyntacticAnalyzer.TokenType.TIMES;
+import static miniJava.SyntacticAnalyzer.TokenType.VOID;
 
 import miniJava.CompilerException;
+import miniJava.AbstractSyntaxTrees.ArrayType;
+import miniJava.AbstractSyntaxTrees.BaseType;
+import miniJava.AbstractSyntaxTrees.BinaryExpr;
+import miniJava.AbstractSyntaxTrees.BooleanLiteral;
+import miniJava.AbstractSyntaxTrees.CallExpr;
+import miniJava.AbstractSyntaxTrees.ClassType;
+import miniJava.AbstractSyntaxTrees.ExprList;
+import miniJava.AbstractSyntaxTrees.Expression;
+import miniJava.AbstractSyntaxTrees.Identifier;
+import miniJava.AbstractSyntaxTrees.IntLiteral;
+import miniJava.AbstractSyntaxTrees.IxExpr;
+import miniJava.AbstractSyntaxTrees.LiteralExpr;
+import miniJava.AbstractSyntaxTrees.NewArrayExpr;
+import miniJava.AbstractSyntaxTrees.NewObjectExpr;
+import miniJava.AbstractSyntaxTrees.Operator;
+import miniJava.AbstractSyntaxTrees.RefExpr;
+import miniJava.AbstractSyntaxTrees.Reference;
+import miniJava.AbstractSyntaxTrees.Terminal;
+import miniJava.AbstractSyntaxTrees.TypeDenoter;
+import miniJava.AbstractSyntaxTrees.TypeKind;
+import miniJava.AbstractSyntaxTrees.UnaryExpr;
+import miniJava.AbstractSyntaxTrees.Visitor;
 
 public class Parser {
 	private Scanner scanner;
@@ -128,18 +183,22 @@ public class Parser {
 		}
 	}
 	
-	/** ArgList ::= Expression(, Expression)* **/
-	private void parseArgList(){
+	/** ArgList ::= Expression(, Expression)* 
+	 * @return **/
+	private ExprList parseArgList(){
 		parseExpression();
 		
 		while(currToken.getType() == COMMA){
 			takeIt();
 			parseExpression();
 		}
+		
+		return null; // TODO
 	}
 	
-	/** Reference ::= (<em>id</em>|<strong>this</strong>)(<strong>.</strong><em>id</em>)* **/
-	private void parseReference(){
+	/** Reference ::= (<em>id</em>|<strong>this</strong>)(<strong>.</strong><em>id</em>)* 
+	 * @return **/
+	private Reference parseReference(){
 		if(currToken.getType() == THIS)
 			takeIt();
 		else
@@ -149,6 +208,8 @@ public class Parser {
 			takeIt();
 			take(IDEN);
 		}
+		
+		return null; // TODO
 	}
 	
 	/** Statement ::= <strong>{</strong> Statement* <strong>}</strong><br />
@@ -323,77 +384,156 @@ public class Parser {
 	}
 	
 	/** Expression ::= OrExpression */
-	private void parseExpression(){
-		parseOrExpression();
+	private Expression parseExpression(){
+		return parseOrExpression();
 	}
 	
 	/** OrExpression ::= AndExpression (<strong>||</strong> AndExpression)* */
-	private void parseOrExpression(){
-		parseAndExpression();
+	private Expression parseOrExpression(){
+		int startLineNum = scanner.getLineNum();
+		int startLineWidth = scanner.getLineWidth();
+		
+		Expression ret = parseAndExpression();
 
 		while(currToken.getType() == OR_LOG){
+			Expression e1 = ret;
+			Operator op = new Operator(currToken);
+			
 			takeIt();
-			parseAndExpression();
+			
+			Expression e2 = parseAndExpression();
+			SourcePosition pos = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
+			
+			ret = new BinaryExpr(op, e1, e2, pos);
 		}
+		
+		return ret;
 	}
 	
 	/** AndExpression ::= EqualityExpression (<strong>&&</strong> EqualityExpression)* */
-	private void parseAndExpression(){
-		parseEqualityExpression();
+	private Expression parseAndExpression(){
+		int startLineNum = scanner.getLineNum();
+		int startLineWidth = scanner.getLineWidth();
 		
+		Expression ret = parseEqualityExpression();
+
 		while(currToken.getType() == AND_LOG){
+			Expression e1 = ret;
+			Operator op = new Operator(currToken);
+			
 			takeIt();
-			parseEqualityExpression();
+			
+			Expression e2 = parseEqualityExpression();
+			SourcePosition pos = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
+			
+			ret = new BinaryExpr(op, e1, e2, pos);
 		}
+		
+		return ret;
 	}
 	
 	/** EqualityExpression ::= RelationalExpression ((<strong>==</strong>|<strong>!=</strong>) RelationalExpression)* */
-	private void parseEqualityExpression(){
-		parseRelationalExpression();
+	private Expression parseEqualityExpression(){
+		int startLineNum = scanner.getLineNum();
+		int startLineWidth = scanner.getLineWidth();
 		
+		Expression ret = parseRelationalExpression();
+
 		while(currToken.getType() == EQUALS_OP || currToken.getType() == NOT_EQUALS){
+			Expression e1 = ret;
+			Operator op = new Operator(currToken);
+			
 			takeIt();
-			parseRelationalExpression();
+			
+			Expression e2 = parseRelationalExpression();
+			SourcePosition pos = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
+			
+			ret = new BinaryExpr(op, e1, e2, pos);
 		}
+		
+		return ret;
 	}
 	
 	/** RelationalExpression ::= AdditiveExpression ((<strong>==</strong>|<strong>!=</strong>) AdditiveExpression)? */
-	private void parseRelationalExpression(){
-		parseAdditiveExpression();
+	private Expression parseRelationalExpression(){
+		int startLineNum = scanner.getLineNum();
+		int startLineWidth = scanner.getLineWidth();
 		
-		if(currToken.getType() == MORE_THAN || currToken.getType() == LESS_THAN || currToken.getType() == MORE_EQUAL || currToken.getType() == LESS_EQUAL){
+		Expression ret = parseAdditiveExpression();
+
+		while(currToken.getType() == MORE_THAN || currToken.getType() == LESS_THAN || currToken.getType() == MORE_EQUAL || currToken.getType() == LESS_EQUAL){
+			Expression e1 = ret;
+			Operator op = new Operator(currToken);
+			
 			takeIt();
-			parseAdditiveExpression();
+			
+			Expression e2 = parseAdditiveExpression();
+			SourcePosition pos = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
+			
+			ret = new BinaryExpr(op, e1, e2, pos);
 		}
+		
+		return ret;
 	}
 	
 	/** AdditiveExpression ::= MultiplicativeExpression ((<strong>+</strong>|<strong>-</strong>) MultiplicativeExpression)* */
-	private void parseAdditiveExpression(){
-		parseMultiplicativeExpression();
+	private Expression parseAdditiveExpression(){
+		int startLineNum = scanner.getLineNum();
+		int startLineWidth = scanner.getLineWidth();
 		
+		Expression ret = parseMultiplicativeExpression();
+
 		while(currToken.getType() == PLUS || currToken.getType() == MINUS){
+			Expression e1 = ret;
+			Operator op = new Operator(currToken);
+			
 			takeIt();
-			parseMultiplicativeExpression();
+			
+			Expression e2 = parseMultiplicativeExpression();
+			SourcePosition pos = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
+			
+			ret = new BinaryExpr(op, e1, e2, pos);
 		}
+		
+		return ret;
 	}
 	
 	/** MultiplicativeExpression ::= UnaryExpression ((<strong>*</strong>|<strong>/</strong>) UnaryExpression)* */
-	private void parseMultiplicativeExpression(){
-		parseUnaryExpression();
+	private Expression parseMultiplicativeExpression(){
+		int startLineNum = scanner.getLineNum();
+		int startLineWidth = scanner.getLineWidth();
 		
+		Expression ret = parseUnaryExpression();
+
 		while(currToken.getType() == TIMES || currToken.getType() == DIV){
+			Expression e1 = ret;
+			
+			Operator op = new Operator(currToken);
 			takeIt();
-			parseUnaryExpression();
+			
+			Expression e2 = parseUnaryExpression();
+			SourcePosition pos = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
+			
+			ret = new BinaryExpr(op, e1, e2, pos);
 		}
+		
+		return ret;
 	}
 	
 	/** UnaryExpression ::= ((<strong>-</strong>|<strong>!</strong>) UnaryExpression) | PureExpression */
-	private void parseUnaryExpression(){
+	private Expression parseUnaryExpression(){
 		if(currToken.getType() == MINUS || currToken.getType() == NEG){
+			int startLineNum = scanner.getLineNum();
+			int startLineWidth = scanner.getLineWidth();
+			
+			Operator op = new Operator(currToken);
 			takeIt();
-			parseUnaryExpression();
+			
+			Expression e = parseUnaryExpression();
+			SourcePosition pos = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
+			return new UnaryExpr(op, e, pos);
 		}else
-			parsePureExpression();
+			return parsePureExpression();
 	}
 	
 	/** PureExpression ::= <strong>(</strong>Expression<strong>)</strong><br />
@@ -401,73 +541,94 @@ public class Parser {
 			| <strong>new</strong> (<strong>int[</strong>Expression<strong>]</strong>|<em>id</em>(<strong>()</strong>|<strong>[</strong>Expression<strong>]</strong>))<br />
 			| Reference(<strong>[</strong>Expression<strong>]</strong>|<strong>(</strong>ArgList?<strong>)</strong>)?
 	*/
-	private void parsePureExpression(){
+	private Expression parsePureExpression(){
+		int startLineNum = scanner.getLineNum();
+		int startLineWidth = scanner.getLineWidth();
+		
 		switch(currToken.getType()){
-			case L_PAREN:
+			case L_PAREN: // TODO: potentially () should be included in the POS
 				takeIt();
-				parseExpression();
+				Expression ret = parseExpression();
 				take(R_PAREN);
-				break;
+				return ret;
 			
 			case NUM:
+				Terminal il = new IntLiteral(currToken);
+				takeIt();
+				return new LiteralExpr(il, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+				
 			case TRUE:
 			case FALSE:
+				Terminal bl = new BooleanLiteral(currToken);
 				takeIt();
-				break;
+				return new LiteralExpr(bl, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 				
 			case NEW:
 				takeIt();
 				
 				if(currToken.getType() == INT){
+					TypeDenoter td = new BaseType(TypeKind.INT, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 					takeIt();
 					take(L_SQ_BRACK);
-					parseExpression();
+					Expression e = parseExpression();
 					take(R_SQ_BRACK);
-				}else{
-					take(IDEN);
 					
-					if(currToken.getType() == L_PAREN){
+					return new NewArrayExpr(td, e, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+				}else{
+					Identifier i = new Identifier(take(IDEN));
+					ClassType ct = new ClassType(i, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+					
+					if(currToken.getType() == L_PAREN){ // new id()
 						takeIt();
 						take(R_PAREN);
-					}else{
+						return new NewObjectExpr(ct, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+					}else{ // new id[expr]
 						take(L_SQ_BRACK);
-						parseExpression();
+						Expression e = parseExpression();
 						take(R_SQ_BRACK);
+						return new NewArrayExpr(ct, e, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 					}
 				}
-				
-				break;
 				
 			case IDEN:
 			case THIS:
 			default:
-				parseReference();
+				Reference r = parseReference();
 				
 				if(currToken.getType() == L_SQ_BRACK){
 					takeIt();
-					parseExpression();
+					Expression e = parseExpression();
 					take(R_SQ_BRACK);
+					return new IxExpr(r, e, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 				}else if(currToken.getType() == L_PAREN){
 					takeIt();
 					
+					ExprList el = new ExprList();
+					
 					if(currToken.getType() != R_PAREN)
-						parseArgList();
+						el = parseArgList();
 					
 					take(R_PAREN);
-				}
-				
-				break;
+					return new CallExpr(r, el, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+				}else
+					return new RefExpr(r, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 		}
 	}
 	
-	private void take(TokenType expected) throws CompilerException {
-		if(currToken.getType() == expected){
+	private Token take(TokenType expected) throws CompilerException {
+		Token ret = currToken;
+		
+		if(currToken.getType() == expected)
 			currToken = scanner.scan();
-		}else
+		else
 			throw new CompilerException(expected, currToken.getType(), scanner);
+		
+		return ret;
 	}
 	
-	private void takeIt(){
+	private Token takeIt(){
+		Token ret = currToken;
 		currToken = scanner.scan();
+		return ret;
 	}
 }
