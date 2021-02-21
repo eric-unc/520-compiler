@@ -3,16 +3,22 @@ package miniJava.SyntacticAnalyzer;
 import static miniJava.SyntacticAnalyzer.TokenType.*;
 
 import miniJava.CompilerException;
+import miniJava.AbstractSyntaxTrees.ArrayType;
+import miniJava.AbstractSyntaxTrees.AssignStmt;
 import miniJava.AbstractSyntaxTrees.BaseType;
 import miniJava.AbstractSyntaxTrees.BinaryExpr;
+import miniJava.AbstractSyntaxTrees.BlockStmt;
 import miniJava.AbstractSyntaxTrees.BooleanLiteral;
 import miniJava.AbstractSyntaxTrees.CallExpr;
+import miniJava.AbstractSyntaxTrees.CallStmt;
 import miniJava.AbstractSyntaxTrees.ClassType;
 import miniJava.AbstractSyntaxTrees.ExprList;
 import miniJava.AbstractSyntaxTrees.Expression;
 import miniJava.AbstractSyntaxTrees.IdRef;
 import miniJava.AbstractSyntaxTrees.Identifier;
+import miniJava.AbstractSyntaxTrees.IfStmt;
 import miniJava.AbstractSyntaxTrees.IntLiteral;
+import miniJava.AbstractSyntaxTrees.IxAssignStmt;
 import miniJava.AbstractSyntaxTrees.IxExpr;
 import miniJava.AbstractSyntaxTrees.LiteralExpr;
 import miniJava.AbstractSyntaxTrees.NewArrayExpr;
@@ -21,11 +27,17 @@ import miniJava.AbstractSyntaxTrees.Operator;
 import miniJava.AbstractSyntaxTrees.QualRef;
 import miniJava.AbstractSyntaxTrees.RefExpr;
 import miniJava.AbstractSyntaxTrees.Reference;
+import miniJava.AbstractSyntaxTrees.ReturnStmt;
+import miniJava.AbstractSyntaxTrees.Statement;
+import miniJava.AbstractSyntaxTrees.StatementList;
 import miniJava.AbstractSyntaxTrees.Terminal;
 import miniJava.AbstractSyntaxTrees.ThisRef;
 import miniJava.AbstractSyntaxTrees.TypeDenoter;
 import miniJava.AbstractSyntaxTrees.TypeKind;
 import miniJava.AbstractSyntaxTrees.UnaryExpr;
+import miniJava.AbstractSyntaxTrees.VarDecl;
+import miniJava.AbstractSyntaxTrees.VarDeclStmt;
+import miniJava.AbstractSyntaxTrees.WhileStmt;
 
 public class Parser {
 	private Scanner scanner;
@@ -106,20 +118,31 @@ public class Parser {
 	}
 	
 	/** Type ::= Type ::= <strong>boolean</strong>|((<strong>int</strong>|Id)(<strong>[]</strong>)?) */
-	// TODO: AST
-	private void parseType(){
+	private TypeDenoter parseType(){
+		int startLineNum = scanner.getLineNum();
+		int startLineWidth = scanner.getLineWidth();
+		
 		if(currToken.getType() == BOOLEAN) {
 			takeIt();
+			return new BaseType(TypeKind.BOOLEAN, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 		}else{
-			if(currToken.getType() == INT)
+			TypeDenoter ret;
+			
+			if(currToken.getType() == INT) {
 				takeIt();
-			else
-				take(IDEN);
+				ret = new BaseType(TypeKind.INT, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+			}else{
+				Identifier i = new Identifier(take(IDEN));
+				ret = new ClassType(i, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+			}
 			
 			if(currToken.getType() == L_SQ_BRACK){
 				takeIt();
 				take(R_SQ_BRACK);
+				ret = new ArrayType(ret, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 			}
+			
+			return ret;
 		}
 	}
 	
@@ -206,166 +229,204 @@ public class Parser {
 			| Reference(<strong>[</strong>Expression<strong>]</strong>)? <strong>=</strong> Expression<strong>;</strong><br />
 			| Reference<strong>(</strong>ArgList?<strong>);</strong><br />
 	*/
-	// TODO: AST
-	private void parseStatement(){
+	private Statement parseStatement(){
+		int startLineNum = scanner.getLineNum();
+		int startLineWidth = scanner.getLineWidth();
+		
 		switch(currToken.getType()){
 			case L_BRACKET:
 				takeIt();
 				
+				StatementList sl = new StatementList();
+				
 				while(currToken.getType() != R_BRACKET)
-					parseStatement();
+					sl.add(parseStatement());
 				
 				takeIt();
-				break;
+				return new BlockStmt(sl, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 				
 			case RETURN:
 				takeIt();
 				
+				Expression retE = null;
+				
 				if(currToken.getType() != SEMI)
-					parseExpression();
+					retE = parseExpression();
 				
 				take(SEMI);
-				break;
+				return new ReturnStmt(retE, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 				
 			case IF:
 				takeIt();
 				take(L_PAREN);
-				parseExpression();
+				Expression ifE = parseExpression();
 				take(R_PAREN);
-				parseStatement();
+				Statement ifTS = parseStatement();
 				
 				if(currToken.getType() == ELSE){
 					takeIt();
-					parseStatement();
+					Statement ifFS = parseStatement();
+					return new IfStmt(ifE, ifTS, ifFS, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+				}else{
+					return new IfStmt(ifE, ifTS, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 				}
-				
-				break;
 				
 			case WHILE:
 				takeIt();
 				take(L_PAREN);
-				parseExpression();
+				Expression whileE = parseExpression();
 				take(R_PAREN);
-				parseStatement();
-				break;
+				Statement whileS = parseStatement();
+				return new WhileStmt(whileE, whileS, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 			
 			// The following very messy parts are for the last three rules.
-			// int/bool part of first statement (missing iden)
+			// int/bool part of first statement (missing iden):
+			// (int|boolean) id = Expression;
 			case INT:
 			case BOOLEAN:
-				parseType();
-				take(IDEN);
+				TypeDenoter td = parseType();
+				String name = take(IDEN).getValue();
+				VarDecl vd = new VarDecl(td, name, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+				
 				take(EQUALS);
-				parseExpression();
+				Expression val = parseExpression();
 				take(SEMI);
-				break;
+				return new VarDeclStmt(vd, val, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 			
 			// this part of second/third (missing iden)
 			case THIS:
-				parseReference();
+				Reference r = parseReference();
 				
 				if(currToken.getType() == L_SQ_BRACK){ // second rule with [] ::= Reference[Expression] = Expression;
 					takeIt();
-					parseExpression();
+					Expression arrLoc = parseExpression();
 					take(R_SQ_BRACK);
+					
 					take(EQUALS);
-					parseExpression();
+					Expression ixVal = parseExpression();
 					take(SEMI);
+					
+					return new IxAssignStmt(r, arrLoc, ixVal, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 				}else if(currToken.getType() == L_PAREN){ // third rule ::= Reference(ArgList?);
 					takeIt();
 					
+					ExprList el = new ExprList();
+					
 					if(currToken.getType() != R_PAREN)
-						parseArgList();
+						el = parseArgList();
 					
 					take(R_PAREN);
 					take(SEMI);
+					return new CallStmt(r, el, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 				}else{ // second rule without [] ::= Reference = Expression;
 					take(EQUALS);
-					parseExpression();
+					Expression asVal = parseExpression();
 					take(SEMI);
+					return new AssignStmt(r, asVal, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 				}
-				
-				break;
 			
 			case IDEN: // assuming iden
 			default:
-				take(IDEN);
+				Identifier id = new Identifier(take(IDEN));
 				
 				switch(currToken.getType()){
-					case IDEN: // first rule only
-						takeIt();
+					case IDEN: // Type id = Expression;
+						TypeDenoter td2 = new ClassType(id, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+						String name2 = takeIt().getValue();
+						VarDecl varD = new VarDecl(td2, name2, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+						
 						take(EQUALS);
-						parseExpression();
+						Expression e = parseExpression();
 						take(SEMI);
-						break;
+						return new VarDeclStmt(varD, e, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 						
 					case L_SQ_BRACK: // first or second rule with []
 						takeIt();
 						
-						if(currToken.getType() != R_SQ_BRACK){ // second rule
-							parseExpression();
+						if(currToken.getType() != R_SQ_BRACK){ // second rule; Ref[Expr] = Expr;
+							Reference idR = new IdRef(id, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+							Expression ix = parseExpression();
 							take(R_SQ_BRACK);
-							
-						}else{
+							take(EQUALS);
+							Expression newVal = parseExpression();
+							take(SEMI);
+							return new IxAssignStmt(idR, ix, newVal, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+						}else{ // first rule; Ref[] id = Expr;
 							takeIt();
-							take(IDEN);
+							// TODO: lmao the first SourcePosition is BS
+							TypeDenoter td3 = new ClassType(id, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+							TypeDenoter td4 = new ArrayType(td3, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+							String name3 = take(IDEN).getValue();
+							VarDecl vDecl = new VarDecl(td4, name3, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+							take(EQUALS);
+							Expression newVal = parseExpression();
+							take(SEMI);
+							return new VarDeclStmt(vDecl, newVal, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 						}
-						
-						take(EQUALS);
-						parseExpression();
-						take(SEMI);
-						
-						break;
 					
 					case DOT: // second or third rule
+						Reference r2 = new IdRef(id, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 						takeIt();
-						take(IDEN);
+						Identifier id2 = new Identifier(take(IDEN));
+						r2 = new QualRef(r2, id2, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 						
 						while(currToken.getType() == DOT){
 							takeIt();
-							take(IDEN);
+							Identifier id3 = new Identifier(take(IDEN));
+							r2 = new QualRef(r2, id3, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 						}
 						
 						if(currToken.getType() == L_SQ_BRACK){ // second rule with [
+							// like thing.q[5] = 5
 							takeIt();
-							parseExpression();
+							Expression e2 = parseExpression();
 							take(R_SQ_BRACK);
+							
+							
 							take(EQUALS);
-							parseExpression();
+							Expression e3 = parseExpression();
 							take(SEMI);
+							return new IxAssignStmt(r2, e2, e3, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 						}else if(currToken.getType() == EQUALS){ // second without [
+							// like thing.q = 5
 							takeIt();
-							parseExpression();
+							Expression newVal = parseExpression();
 							take(SEMI);
-						}else{ // third
+							return new AssignStmt(r2, newVal, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+						}else{ // third, like thing.q()
 							take(L_PAREN);
 							
+							ExprList el = new ExprList();
+							
 							if(currToken.getType() != R_PAREN)
-								parseArgList();
+								el = parseArgList();
 							
 							take(R_PAREN);
 							take(SEMI);
+							return new CallStmt(r2, el, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 						}
-						
-						break;
 					
-					case EQUALS:
+					case EQUALS: // id = Exp;
+						Reference ref = new IdRef(id, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 						takeIt();
-						parseExpression();
+						Expression e2 = parseExpression();
 						take(SEMI);
-						
-						break;
+						return new AssignStmt(ref, e2, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 					
 					// assume ( for final case)
-					case L_PAREN:
+					case L_PAREN: // id(ArgList?)
 					default:
+						Reference ref2 = new IdRef(id, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 						take(L_PAREN);
 
+						ExprList el = new ExprList();
+						
 						if(currToken.getType() == IDEN)
-							parseArgList();
+							el = parseArgList();
 
 						take(R_PAREN);
 						take(SEMI);
+						return new CallStmt(ref2, el, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
 				}
 		}
 	}
