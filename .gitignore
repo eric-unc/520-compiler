@@ -32,5 +32,6 @@ hs_err_pid*
 .project
 *.settings
 
-
+# Important
+src/test/resources/miniJava/pa1_tests/*
 /build/

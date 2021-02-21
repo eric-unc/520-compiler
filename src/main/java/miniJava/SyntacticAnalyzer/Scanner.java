@@ -249,11 +249,11 @@ public class Scanner {
 	}
 
 	private static boolean isValidIdenfifierChar(char c){
-		return isValidIdentifierStartChar(c) || isDigitChar(c);
+		return isValidIdentifierStartChar(c) || isDigitChar(c) || c == '_';
 	}
 
 	private static boolean isValidIdentifierStartChar(char c){
-		return isWordChar(c) | c == '$' | c == '_';
+		return isWordChar(c);
 	}
 	
 	private static boolean isNewline(char c){
