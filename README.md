@@ -16,7 +16,7 @@ The compiler should be used through the command line, through arguments:
 * Class ::= **class** Id **{** ClassMember\* **}**
 * ClassMember ::= Modifiers (Type Field|(**void**|Type) Method)
 * Modifiers ::= (**public**|**private**)? **static**?
-* Type ::= (**int**|**boolean**|Id)(**[]**)?
+* Type ::= **boolean**|((**int**|Id)(**[]**)?)
 * Field ::= Id**;**
 * Method ::= Id**(**ParamList\* **){**Statement\* **}**
 * ParamList ::= Type Id(, Type Id)*
@@ -49,7 +49,7 @@ The grammar above uses EBNF with some POSIX conventions sprinkled in to make my 
 ## License
 As you can see in the [license file](LICENSE), this project is under the "Unlicense" which effectively releases it into the public domain. Basically, do what you want with my code. However, I don't recommend using the code for reference for COMP 520; Professor Prins explicitly doesn't allow this, and the particular subset to implement will change year-to-year. And of course, you will find it more rewarding to create something by yourself from scratch.
 
-I have taken some test files from [Ben Dod](https://github.com/benjdod/someminijavatests), which are unlicensed. I have noted as such where I have used them. Also, classes in the `AbstractSyntaxTrees` package are all made by Professor Prins.
+I have taken some test files from [Ben Dod](https://github.com/benjdod/someminijavatests), which are unlicensed. Also, many classes in the `AbstractSyntaxTrees` package are made by Professor Prins. I have noted as such where I have used them.
 
 ## Credits
 * Eric Schneider

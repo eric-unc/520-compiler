@@ -78,16 +78,20 @@ public class Parser {
 			takeIt();
 	}
 	
-	/** Type ::= (<strong>int</strong>|<strong>boolean</strong>|<em>id</em>)(<strong>[]</strong>)? */
+	/** Type ::= Type ::= <strong>boolean</strong>|((<strong>int</strong>|Id)(<strong>[]</strong>)?) */
 	private void parseType(){
-		if(currToken.getType() != INT && currToken.getType() != BOOLEAN)
-			take(IDEN);
-		else
+		if(currToken.getType() == BOOLEAN) {
 			takeIt();
-		
-		if(currToken.getType() == L_SQ_BRACK){
-			takeIt();
-			take(R_SQ_BRACK);
+		}else{
+			if(currToken.getType() == INT)
+				takeIt();
+			else
+				take(IDEN);
+			
+			if(currToken.getType() == L_SQ_BRACK){
+				takeIt();
+				take(R_SQ_BRACK);
+			}
 		}
 	}
 	
