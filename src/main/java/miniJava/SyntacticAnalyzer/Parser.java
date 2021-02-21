@@ -80,6 +80,7 @@ public class Parser {
 	}
 	
 	/** Program ::= Class* <em>end</em> */
+	// TODO: AST
 	public void parseProgram(){
 		while(currToken.getType() != END){
 			parseClass();
@@ -89,6 +90,7 @@ public class Parser {
 	}
 	
 	/** Class ::= <strong>class</strong> <em>id</em> <strong>{</strong> ClassMember* <strong>}</strong> */
+	// TODO: AST
 	private void parseClass(){
 		take(CLASS);
 		take(IDEN);
@@ -102,6 +104,7 @@ public class Parser {
 	}
 	
 	/** ClassMember ::= Modifiers (Type Field|(<strong>void</strong>|Type) Method) */
+	// TODO: AST
 	private void parseClassMember(){
 		parseModifiers();
 		
@@ -125,6 +128,7 @@ public class Parser {
 	}
 	
 	/** Modifiers ::= (<strong>public</strong>|<strong>private</strong>)? <strong>static</strong>? */
+	// TODO: AST
 	private void parseModifiers(){
 		if(currToken.getType() == PUBLIC || currToken.getType() == PRIVATE)
 			takeIt();
@@ -134,6 +138,7 @@ public class Parser {
 	}
 	
 	/** Type ::= Type ::= <strong>boolean</strong>|((<strong>int</strong>|Id)(<strong>[]</strong>)?) */
+	// TODO: AST
 	private void parseType(){
 		if(currToken.getType() == BOOLEAN) {
 			takeIt();
@@ -151,11 +156,13 @@ public class Parser {
 	}
 	
 	/** Field ::= <em>id</em><strong>;</strong> */
+	// TODO: AST
 	private void parseField(){
 		takeIt();
 	}
 	
 	/** Method ::= <em>id</em><strong>(</strong>ParamList*<strong>){</strong>Statement*<strong>}</strong>*/
+	// TODO: AST
 	private void parseMethod(){
 		if(currToken.getType() != R_PAREN){
 			parseParamList();
@@ -172,6 +179,7 @@ public class Parser {
 	}
 	
 	/** ParamList ::= Type <em>id</em>(, Type <em>id</em>)* */
+	// TODO: AST
 	private void parseParamList(){
 		parseType();
 		take(IDEN);
@@ -183,21 +191,22 @@ public class Parser {
 		}
 	}
 	
-	/** ArgList ::= Expression(, Expression)* 
-	 * @return **/
+	/** ArgList ::= Expression(, Expression)* **/
 	private ExprList parseArgList(){
-		parseExpression();
+		Expression e = parseExpression();
+		ExprList ret = new ExprList();
+		ret.add(e);
 		
 		while(currToken.getType() == COMMA){
 			takeIt();
-			parseExpression();
+			ret.add(parseExpression());
 		}
 		
-		return null; // TODO
+		return ret;
 	}
 	
-	/** Reference ::= (<em>id</em>|<strong>this</strong>)(<strong>.</strong><em>id</em>)* 
-	 * @return **/
+	/** Reference ::= (<em>id</em>|<strong>this</strong>)(<strong>.</strong><em>id</em>)* **/
+	// TODO: AST
 	private Reference parseReference(){
 		if(currToken.getType() == THIS)
 			takeIt();
@@ -220,6 +229,7 @@ public class Parser {
 			| Reference(<strong>[</strong>Expression<strong>]</strong>)? <strong>=</strong> Expression<strong>;</strong><br />
 			| Reference<strong>(</strong>ArgList?<strong>);</strong><br />
 	*/
+	// TODO: AST
 	private void parseStatement(){
 		switch(currToken.getType()){
 			case L_BRACKET:
