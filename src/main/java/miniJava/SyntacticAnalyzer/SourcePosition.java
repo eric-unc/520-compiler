@@ -1,35 +1,31 @@
 package miniJava.SyntacticAnalyzer;
 
 public class SourcePosition {
-	public final int startLineNum;
-	public final int endLineNum;
-	public final int startLineWidth;
-	public final int endLineWidth;
+	private final HalfPosition start;
+	private final HalfPosition end;
 	
-	public SourcePosition(int lineNum, int lineWidth){
-		this(lineNum, lineNum, lineWidth, lineWidth);
+	public SourcePosition(HalfPosition pos){
+		this(pos, pos);
 	}
 	
-	public SourcePosition(int startLineNum, int endLineNum, int startLineWidth, int endLineWidth){
-		this.startLineNum = startLineNum;
-		this.endLineNum = endLineNum;
-		this.startLineWidth = startLineWidth;
-		this.endLineWidth = endLineWidth;
+	public SourcePosition(HalfPosition start, HalfPosition end){
+		this.start = start;
+		this.end = end;
 	}
 
 	public int getStartLineNum(){
-		return startLineNum;
+		return start.getLineNum();
 	}
 
 	public int getEndLineNum(){
-		return endLineNum;
+		return end.getLineNum();
 	}
 
 	public int getStartLineWidth(){
-		return startLineWidth;
+		return start.getLineWidth();
 	}
 
 	public int getEndLineWidth(){
-		return endLineWidth;
+		return end.getLineWidth();
 	}
 }

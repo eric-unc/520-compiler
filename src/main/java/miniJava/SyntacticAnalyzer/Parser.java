@@ -28,8 +28,7 @@ public class Parser {
 	
 	/** Program ::= Class* <em>end</em> */
 	public Package parseProgram(){
-		int startLineNum = scanner.getLineNum();
-		int startLineWidth = scanner.getLineWidth();
+		HalfPosition start = scanner.getHalfPosition();
 		
 		ClassDeclList cdl = new ClassDeclList();
 		while(currToken.getType() != END){
@@ -38,13 +37,12 @@ public class Parser {
 		
 		takeIt();
 		
-		return new Package(cdl, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+		return new Package(cdl, new SourcePosition(start, scanner.getHalfPosition()));
 	}
 	
 	/** Class ::= <strong>class</strong> <em>id</em> <strong>{</strong> ClassMember* <strong>}</strong> */
 	private ClassDecl parseClass(){
-		int startLineNum = scanner.getLineNum();
-		int startLineWidth = scanner.getLineWidth();
+		HalfPosition start = scanner.getHalfPosition();
 		
 		take(CLASS);
 		String cn = take(IDEN).getValue();
@@ -58,22 +56,21 @@ public class Parser {
 		}
 		
 		takeIt();
-		return new ClassDecl(cn, fdl, mdl, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+		return new ClassDecl(cn, fdl, mdl, new SourcePosition(start, scanner.getHalfPosition()));
 	}
 	
 	/** ClassMember ::= Modifiers (Type Field|(<strong>void</strong>|Type) Method) */
 	private void parseClassMember(FieldDeclList fdl, MethodDeclList mdl){
-		int startLineNum = scanner.getLineNum();
-		int startLineWidth = scanner.getLineWidth();
+		HalfPosition start = scanner.getHalfPosition();
 		
 		boolean[] mods = parseModifiers();
 		
 		if(currToken.getType() == VOID){
 			takeIt();
-			SourcePosition sp = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
+			SourcePosition sp = new SourcePosition(start, scanner.getHalfPosition());
 			String name = take(IDEN).getValue();
 			take(L_PAREN);
-			parseMethod(new FieldDecl(mods[0], mods[1], new BaseType(TypeKind.VOID, sp), name, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth())), mdl);
+			parseMethod(new FieldDecl(mods[0], mods[1], new BaseType(TypeKind.VOID, sp), name, new SourcePosition(start, scanner.getHalfPosition())), mdl);
 		}else{
 			// TODO: should make a FieldDecl parser first, and then the method is based off it
 			
@@ -83,10 +80,10 @@ public class Parser {
 			
 			if(currToken.getType() == SEMI){
 				takeIt();
-				fdl.add(new FieldDecl(mods[0], mods[1], td, name, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth())));
+				fdl.add(new FieldDecl(mods[0], mods[1], td, name, new SourcePosition(start, scanner.getHalfPosition())));
 			}else{
 				take(L_PAREN); // This too
-				parseMethod(new FieldDecl(mods[0], mods[1], td, name, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth())), mdl);
+				parseMethod(new FieldDecl(mods[0], mods[1], td, name, new SourcePosition(start, scanner.getHalfPosition())), mdl);
 			}
 		}
 	}
@@ -112,27 +109,26 @@ public class Parser {
 	
 	/** Type ::= Type ::= <strong>boolean</strong>|((<strong>int</strong>|Id)(<strong>[]</strong>)?) */
 	private TypeDenoter parseType(){
-		int startLineNum = scanner.getLineNum();
-		int startLineWidth = scanner.getLineWidth();
+		HalfPosition start = scanner.getHalfPosition();
 		
 		if(currToken.getType() == BOOLEAN) {
 			takeIt();
-			return new BaseType(TypeKind.BOOLEAN, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+			return new BaseType(TypeKind.BOOLEAN, new SourcePosition(start, scanner.getHalfPosition()));
 		}else{
 			TypeDenoter ret;
 			
 			if(currToken.getType() == INT) {
 				takeIt();
-				ret = new BaseType(TypeKind.INT, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+				ret = new BaseType(TypeKind.INT, new SourcePosition(start, scanner.getHalfPosition()));
 			}else{
 				Identifier i = new Identifier(take(IDEN));
-				ret = new ClassType(i, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+				ret = new ClassType(i, new SourcePosition(start, scanner.getHalfPosition()));
 			}
 			
 			if(currToken.getType() == L_SQ_BRACK){
 				takeIt();
 				take(R_SQ_BRACK);
-				ret = new ArrayType(ret, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+				ret = new ArrayType(ret, new SourcePosition(start, scanner.getHalfPosition()));
 			}
 			
 			return ret;
@@ -146,8 +142,7 @@ public class Parser {
 	
 	/** Method ::= <em>id</em><strong>(</strong>ParamList*<strong>){</strong>Statement*<strong>}</strong>*/
 	private void parseMethod(MemberDecl md, MethodDeclList mdl){
-		int startLineNum = scanner.getLineNum();
-		int startLineWidth = scanner.getLineWidth();
+		HalfPosition start = scanner.getHalfPosition();
 		
 		ParameterDeclList p1 = new ParameterDeclList();
 		
@@ -166,27 +161,25 @@ public class Parser {
 		
 		takeIt();
 		
-		mdl.add(new MethodDecl(md, p1, sl, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth())));
+		mdl.add(new MethodDecl(md, p1, sl, new SourcePosition(start, scanner.getHalfPosition())));
 	}
 	
 	/** ParamList ::= Type <em>id</em>(, Type <em>id</em>)* */
 	private ParameterDeclList parseParamList(){
-		int startLineNum = scanner.getLineNum();
-		int startLineWidth = scanner.getLineWidth();
+		HalfPosition start = scanner.getHalfPosition();
 		
 		ParameterDeclList ret = new ParameterDeclList();
 		
 		TypeDenoter td = parseType();
 		String name = take(IDEN).getValue();
-		ret.add(new ParameterDecl(td, name, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth())));
+		ret.add(new ParameterDecl(td, name, new SourcePosition(start, scanner.getHalfPosition())));
 		
 		while(currToken.getType() == COMMA){
 			takeIt();
-			int startLineNum2 = scanner.getLineNum();
-			int startLineWidth2 = scanner.getLineWidth();
+			start = scanner.getHalfPosition();
 			TypeDenoter td2 = parseType();
 			String name2 = take(IDEN).getValue();
-			ret.add(new ParameterDecl(td2, name2, new SourcePosition(startLineNum2, scanner.getLineNum(), startLineWidth2, scanner.getLineWidth())));
+			ret.add(new ParameterDecl(td2, name2, new SourcePosition(start, scanner.getHalfPosition())));
 		}
 		
 		return ret;
@@ -208,24 +201,23 @@ public class Parser {
 	
 	/** Reference ::= (<em>id</em>|<strong>this</strong>)(<strong>.</strong><em>id</em>)* **/
 	private Reference parseReference(){
-		int startLineNum = scanner.getLineNum();
-		int startLineWidth = scanner.getLineWidth();
+		HalfPosition start = scanner.getHalfPosition();
 		
 		Reference r;
 		
 		if(currToken.getType() == THIS){
 			takeIt();
-			r = new ThisRef(new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+			r = new ThisRef(new SourcePosition(start, scanner.getHalfPosition()));
 			
 		}else{
 			Identifier id = new Identifier(take(IDEN));
-			r = new IdRef(id, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+			r = new IdRef(id, new SourcePosition(start, scanner.getHalfPosition()));
 		}
 		
 		while(currToken.getType() == DOT){
 			takeIt();
 			Identifier id = new Identifier(take(IDEN));
-			r = new QualRef(r, id, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+			r = new QualRef(r, id, new SourcePosition(start, scanner.getHalfPosition()));
 		}
 		
 		return r;
@@ -240,8 +232,7 @@ public class Parser {
 			| Reference<strong>(</strong>ArgList?<strong>);</strong><br />
 	*/
 	private Statement parseStatement(){
-		int startLineNum = scanner.getLineNum();
-		int startLineWidth = scanner.getLineWidth();
+		HalfPosition start = scanner.getHalfPosition();
 		
 		switch(currToken.getType()){
 			case L_BRACKET:
@@ -253,7 +244,7 @@ public class Parser {
 					sl.add(parseStatement());
 				
 				takeIt();
-				return new BlockStmt(sl, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+				return new BlockStmt(sl, new SourcePosition(start, scanner.getHalfPosition()));
 				
 			case RETURN:
 				takeIt();
@@ -264,7 +255,7 @@ public class Parser {
 					retE = parseExpression();
 				
 				take(SEMI);
-				return new ReturnStmt(retE, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+				return new ReturnStmt(retE, new SourcePosition(start, scanner.getHalfPosition()));
 				
 			case IF:
 				takeIt();
@@ -276,9 +267,9 @@ public class Parser {
 				if(currToken.getType() == ELSE){
 					takeIt();
 					Statement ifFS = parseStatement();
-					return new IfStmt(ifE, ifTS, ifFS, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+					return new IfStmt(ifE, ifTS, ifFS, new SourcePosition(start, scanner.getHalfPosition()));
 				}else{
-					return new IfStmt(ifE, ifTS, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+					return new IfStmt(ifE, ifTS, new SourcePosition(start, scanner.getHalfPosition()));
 				}
 				
 			case WHILE:
@@ -287,7 +278,7 @@ public class Parser {
 				Expression whileE = parseExpression();
 				take(R_PAREN);
 				Statement whileS = parseStatement();
-				return new WhileStmt(whileE, whileS, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+				return new WhileStmt(whileE, whileS, new SourcePosition(start, scanner.getHalfPosition()));
 			
 			// The following very messy parts are for the last three rules.
 			// int/bool part of first statement (missing iden):
@@ -296,12 +287,12 @@ public class Parser {
 			case BOOLEAN:
 				TypeDenoter td = parseType();
 				String name = take(IDEN).getValue();
-				VarDecl vd = new VarDecl(td, name, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+				VarDecl vd = new VarDecl(td, name, new SourcePosition(start, scanner.getHalfPosition()));
 				
 				take(EQUALS);
 				Expression val = parseExpression();
 				take(SEMI);
-				return new VarDeclStmt(vd, val, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+				return new VarDeclStmt(vd, val, new SourcePosition(start, scanner.getHalfPosition()));
 			
 			// this part of second/third (missing iden)
 			case THIS:
@@ -316,7 +307,7 @@ public class Parser {
 					Expression ixVal = parseExpression();
 					take(SEMI);
 					
-					return new IxAssignStmt(r, arrLoc, ixVal, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+					return new IxAssignStmt(r, arrLoc, ixVal, new SourcePosition(start, scanner.getHalfPosition()));
 				}else if(currToken.getType() == L_PAREN){ // third rule ::= Reference(ArgList?);
 					takeIt();
 					
@@ -327,12 +318,12 @@ public class Parser {
 					
 					take(R_PAREN);
 					take(SEMI);
-					return new CallStmt(r, el, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+					return new CallStmt(r, el, new SourcePosition(start, scanner.getHalfPosition()));
 				}else{ // second rule without [] ::= Reference = Expression;
 					take(EQUALS);
 					Expression asVal = parseExpression();
 					take(SEMI);
-					return new AssignStmt(r, asVal, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+					return new AssignStmt(r, asVal, new SourcePosition(start, scanner.getHalfPosition()));
 				}
 			
 			case IDEN: // assuming iden
@@ -341,49 +332,49 @@ public class Parser {
 				
 				switch(currToken.getType()){
 					case IDEN: // Type id = Expression;
-						TypeDenoter td2 = new ClassType(id, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+						TypeDenoter td2 = new ClassType(id, new SourcePosition(start, scanner.getHalfPosition()));
 						String name2 = takeIt().getValue();
-						VarDecl varD = new VarDecl(td2, name2, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+						VarDecl varD = new VarDecl(td2, name2, new SourcePosition(start, scanner.getHalfPosition()));
 						
 						take(EQUALS);
 						Expression e = parseExpression();
 						take(SEMI);
-						return new VarDeclStmt(varD, e, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+						return new VarDeclStmt(varD, e, new SourcePosition(start, scanner.getHalfPosition()));
 						
 					case L_SQ_BRACK: // first or second rule with []
 						takeIt();
 						
 						if(currToken.getType() != R_SQ_BRACK){ // second rule; Ref[Expr] = Expr;
-							Reference idR = new IdRef(id, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+							Reference idR = new IdRef(id, new SourcePosition(start, scanner.getHalfPosition()));
 							Expression ix = parseExpression();
 							take(R_SQ_BRACK);
 							take(EQUALS);
 							Expression newVal = parseExpression();
 							take(SEMI);
-							return new IxAssignStmt(idR, ix, newVal, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+							return new IxAssignStmt(idR, ix, newVal, new SourcePosition(start, scanner.getHalfPosition()));
 						}else{ // first rule; Ref[] id = Expr;
 							takeIt();
 							// TODO: lmao the first SourcePosition is BS
-							TypeDenoter td3 = new ClassType(id, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
-							TypeDenoter td4 = new ArrayType(td3, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+							TypeDenoter td3 = new ClassType(id, new SourcePosition(start, scanner.getHalfPosition()));
+							TypeDenoter td4 = new ArrayType(td3, new SourcePosition(start, scanner.getHalfPosition()));
 							String name3 = take(IDEN).getValue();
-							VarDecl vDecl = new VarDecl(td4, name3, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+							VarDecl vDecl = new VarDecl(td4, name3, new SourcePosition(start, scanner.getHalfPosition()));
 							take(EQUALS);
 							Expression newVal = parseExpression();
 							take(SEMI);
-							return new VarDeclStmt(vDecl, newVal, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+							return new VarDeclStmt(vDecl, newVal, new SourcePosition(start, scanner.getHalfPosition()));
 						}
 					
 					case DOT: // second or third rule
-						Reference r2 = new IdRef(id, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+						Reference r2 = new IdRef(id, new SourcePosition(start, scanner.getHalfPosition()));
 						takeIt();
 						Identifier id2 = new Identifier(take(IDEN));
-						r2 = new QualRef(r2, id2, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+						r2 = new QualRef(r2, id2, new SourcePosition(start, scanner.getHalfPosition()));
 						
 						while(currToken.getType() == DOT){
 							takeIt();
 							Identifier id3 = new Identifier(take(IDEN));
-							r2 = new QualRef(r2, id3, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+							r2 = new QualRef(r2, id3, new SourcePosition(start, scanner.getHalfPosition()));
 						}
 						
 						if(currToken.getType() == L_SQ_BRACK){ // second rule with [
@@ -396,13 +387,13 @@ public class Parser {
 							take(EQUALS);
 							Expression e3 = parseExpression();
 							take(SEMI);
-							return new IxAssignStmt(r2, e2, e3, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+							return new IxAssignStmt(r2, e2, e3, new SourcePosition(start, scanner.getHalfPosition()));
 						}else if(currToken.getType() == EQUALS){ // second without [
 							// like thing.q = 5
 							takeIt();
 							Expression newVal = parseExpression();
 							take(SEMI);
-							return new AssignStmt(r2, newVal, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+							return new AssignStmt(r2, newVal, new SourcePosition(start, scanner.getHalfPosition()));
 						}else{ // third, like thing.q()
 							take(L_PAREN);
 							
@@ -413,20 +404,20 @@ public class Parser {
 							
 							take(R_PAREN);
 							take(SEMI);
-							return new CallStmt(r2, el, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+							return new CallStmt(r2, el, new SourcePosition(start, scanner.getHalfPosition()));
 						}
 					
 					case EQUALS: // id = Exp;
-						Reference ref = new IdRef(id, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+						Reference ref = new IdRef(id, new SourcePosition(start, scanner.getHalfPosition()));
 						takeIt();
 						Expression e2 = parseExpression();
 						take(SEMI);
-						return new AssignStmt(ref, e2, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+						return new AssignStmt(ref, e2, new SourcePosition(start, scanner.getHalfPosition()));
 					
 					// assume ( for final case)
 					case L_PAREN: // id(ArgList?)
 					default:
-						Reference ref2 = new IdRef(id, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+						Reference ref2 = new IdRef(id, new SourcePosition(start, scanner.getHalfPosition()));
 						take(L_PAREN);
 
 						ExprList el = new ExprList();
@@ -436,7 +427,7 @@ public class Parser {
 
 						take(R_PAREN);
 						take(SEMI);
-						return new CallStmt(ref2, el, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+						return new CallStmt(ref2, el, new SourcePosition(start, scanner.getHalfPosition()));
 				}
 		}
 	}
@@ -448,8 +439,7 @@ public class Parser {
 	
 	/** OrExpression ::= AndExpression (<strong>||</strong> AndExpression)* */
 	private Expression parseOrExpression(){
-		int startLineNum = scanner.getLineNum();
-		int startLineWidth = scanner.getLineWidth();
+		HalfPosition start = scanner.getHalfPosition();
 		
 		Expression ret = parseAndExpression();
 
@@ -460,7 +450,7 @@ public class Parser {
 			takeIt();
 			
 			Expression e2 = parseAndExpression();
-			SourcePosition pos = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
+			SourcePosition pos = new SourcePosition(start, scanner.getHalfPosition());
 			
 			ret = new BinaryExpr(op, e1, e2, pos);
 		}
@@ -470,8 +460,7 @@ public class Parser {
 	
 	/** AndExpression ::= EqualityExpression (<strong>&&</strong> EqualityExpression)* */
 	private Expression parseAndExpression(){
-		int startLineNum = scanner.getLineNum();
-		int startLineWidth = scanner.getLineWidth();
+		HalfPosition start = scanner.getHalfPosition();
 		
 		Expression ret = parseEqualityExpression();
 
@@ -482,7 +471,7 @@ public class Parser {
 			takeIt();
 			
 			Expression e2 = parseEqualityExpression();
-			SourcePosition pos = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
+			SourcePosition pos = new SourcePosition(start, scanner.getHalfPosition());
 			
 			ret = new BinaryExpr(op, e1, e2, pos);
 		}
@@ -492,8 +481,7 @@ public class Parser {
 	
 	/** EqualityExpression ::= RelationalExpression ((<strong>==</strong>|<strong>!=</strong>) RelationalExpression)* */
 	private Expression parseEqualityExpression(){
-		int startLineNum = scanner.getLineNum();
-		int startLineWidth = scanner.getLineWidth();
+		HalfPosition start = scanner.getHalfPosition();
 		
 		Expression ret = parseRelationalExpression();
 
@@ -504,7 +492,7 @@ public class Parser {
 			takeIt();
 			
 			Expression e2 = parseRelationalExpression();
-			SourcePosition pos = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
+			SourcePosition pos = new SourcePosition(start, scanner.getHalfPosition());
 			
 			ret = new BinaryExpr(op, e1, e2, pos);
 		}
@@ -514,8 +502,7 @@ public class Parser {
 	
 	/** RelationalExpression ::= AdditiveExpression ((<strong>==</strong>|<strong>!=</strong>) AdditiveExpression)? */
 	private Expression parseRelationalExpression(){
-		int startLineNum = scanner.getLineNum();
-		int startLineWidth = scanner.getLineWidth();
+		HalfPosition start = scanner.getHalfPosition();
 		
 		Expression ret = parseAdditiveExpression();
 
@@ -526,7 +513,7 @@ public class Parser {
 			takeIt();
 			
 			Expression e2 = parseAdditiveExpression();
-			SourcePosition pos = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
+			SourcePosition pos = new SourcePosition(start, scanner.getHalfPosition());
 			
 			ret = new BinaryExpr(op, e1, e2, pos);
 		}
@@ -536,8 +523,7 @@ public class Parser {
 	
 	/** AdditiveExpression ::= MultiplicativeExpression ((<strong>+</strong>|<strong>-</strong>) MultiplicativeExpression)* */
 	private Expression parseAdditiveExpression(){
-		int startLineNum = scanner.getLineNum();
-		int startLineWidth = scanner.getLineWidth();
+		HalfPosition start = scanner.getHalfPosition();
 		
 		Expression ret = parseMultiplicativeExpression();
 
@@ -548,7 +534,7 @@ public class Parser {
 			takeIt();
 			
 			Expression e2 = parseMultiplicativeExpression();
-			SourcePosition pos = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
+			SourcePosition pos = new SourcePosition(start, scanner.getHalfPosition());
 			
 			ret = new BinaryExpr(op, e1, e2, pos);
 		}
@@ -558,8 +544,7 @@ public class Parser {
 	
 	/** MultiplicativeExpression ::= UnaryExpression ((<strong>*</strong>|<strong>/</strong>) UnaryExpression)* */
 	private Expression parseMultiplicativeExpression(){
-		int startLineNum = scanner.getLineNum();
-		int startLineWidth = scanner.getLineWidth();
+		HalfPosition start = scanner.getHalfPosition();
 		
 		Expression ret = parseUnaryExpression();
 
@@ -570,7 +555,7 @@ public class Parser {
 			takeIt();
 			
 			Expression e2 = parseUnaryExpression();
-			SourcePosition pos = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
+			SourcePosition pos = new SourcePosition(start, scanner.getHalfPosition());
 			
 			ret = new BinaryExpr(op, e1, e2, pos);
 		}
@@ -581,14 +566,13 @@ public class Parser {
 	/** UnaryExpression ::= ((<strong>-</strong>|<strong>!</strong>) UnaryExpression) | PureExpression */
 	private Expression parseUnaryExpression(){
 		if(currToken.getType() == MINUS || currToken.getType() == NEG){
-			int startLineNum = scanner.getLineNum();
-			int startLineWidth = scanner.getLineWidth();
+			HalfPosition start = scanner.getHalfPosition();
 			
 			Operator op = new Operator(currToken);
 			takeIt();
 			
 			Expression e = parseUnaryExpression();
-			SourcePosition pos = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
+			SourcePosition pos = new SourcePosition(start, scanner.getHalfPosition());
 			return new UnaryExpr(op, e, pos);
 		}else
 			return parsePureExpression();
@@ -600,52 +584,51 @@ public class Parser {
 			| Reference(<strong>[</strong>Expression<strong>]</strong>|<strong>(</strong>ArgList?<strong>)</strong>)?
 	*/
 	private Expression parsePureExpression(){
-		int startLineNum = scanner.getLineNum();
-		int startLineWidth = scanner.getLineWidth();
+		HalfPosition start = scanner.getHalfPosition();
 		
 		switch(currToken.getType()){
 			case L_PAREN:
 				takeIt();
 				Expression ret = parseExpression();
 				take(R_PAREN);
-				ret.posn = new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth());
+				ret.posn = new SourcePosition(start, scanner.getHalfPosition());
 				return ret;
 			
 			case NUM:
 				Terminal il = new IntLiteral(currToken);
 				takeIt();
-				return new LiteralExpr(il, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+				return new LiteralExpr(il, new SourcePosition(start, scanner.getHalfPosition()));
 				
 			case TRUE:
 			case FALSE:
 				Terminal bl = new BooleanLiteral(currToken);
 				takeIt();
-				return new LiteralExpr(bl, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+				return new LiteralExpr(bl, new SourcePosition(start, scanner.getHalfPosition()));
 				
 			case NEW:
 				takeIt();
 				
 				if(currToken.getType() == INT){
-					TypeDenoter td = new BaseType(TypeKind.INT, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+					TypeDenoter td = new BaseType(TypeKind.INT, new SourcePosition(start, scanner.getHalfPosition()));
 					takeIt();
 					take(L_SQ_BRACK);
 					Expression e = parseExpression();
 					take(R_SQ_BRACK);
 					
-					return new NewArrayExpr(td, e, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+					return new NewArrayExpr(td, e, new SourcePosition(start, scanner.getHalfPosition()));
 				}else{
 					Identifier i = new Identifier(take(IDEN));
-					ClassType ct = new ClassType(i, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+					ClassType ct = new ClassType(i, new SourcePosition(start, scanner.getHalfPosition()));
 					
 					if(currToken.getType() == L_PAREN){ // new id()
 						takeIt();
 						take(R_PAREN);
-						return new NewObjectExpr(ct, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+						return new NewObjectExpr(ct, new SourcePosition(start, scanner.getHalfPosition()));
 					}else{ // new id[expr]
 						take(L_SQ_BRACK);
 						Expression e = parseExpression();
 						take(R_SQ_BRACK);
-						return new NewArrayExpr(ct, e, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+						return new NewArrayExpr(ct, e, new SourcePosition(start, scanner.getHalfPosition()));
 					}
 				}
 				
@@ -658,7 +641,7 @@ public class Parser {
 					takeIt();
 					Expression e = parseExpression();
 					take(R_SQ_BRACK);
-					return new IxExpr(r, e, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+					return new IxExpr(r, e, new SourcePosition(start, scanner.getHalfPosition()));
 				}else if(currToken.getType() == L_PAREN){
 					takeIt();
 					
@@ -668,9 +651,9 @@ public class Parser {
 						el = parseArgList();
 					
 					take(R_PAREN);
-					return new CallExpr(r, el, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+					return new CallExpr(r, el, new SourcePosition(start, scanner.getHalfPosition()));
 				}else
-					return new RefExpr(r, new SourcePosition(startLineNum, scanner.getLineNum(), startLineWidth, scanner.getLineWidth()));
+					return new RefExpr(r, new SourcePosition(start, scanner.getHalfPosition()));
 		}
 	}
 	

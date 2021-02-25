@@ -26,11 +26,10 @@ public class Scanner {
 			readChar();
 		
 		if(end)
-			return new Token(END, new SourcePosition(lineNum, lineWidth));
+			return new Token(END, getSourcePosition());
 
 		if(isValidIdentifierStartChar(curChar)){
-			int startLineNum = lineNum;
-			int endLineNum = lineWidth;
+			HalfPosition pos = getHalfPosition();
 			
 			StringBuilder word = new StringBuilder();
 
@@ -39,7 +38,7 @@ public class Scanner {
 				readChar();
 			}
 			
-			SourcePosition position = new SourcePosition(startLineNum, lineNum, endLineNum, lineWidth);
+			SourcePosition position = new SourcePosition(pos, getHalfPosition());
 
 			switch(word.toString()){
 				// Keywords
@@ -80,8 +79,7 @@ public class Scanner {
 					return new Token(IDEN, word.toString(), position);
 			}
 		}else if(isDigitChar(curChar)){
-			int startLineNum = lineNum;
-			int endLineNum = lineWidth;
+			HalfPosition pos = getHalfPosition();
 			
 			StringBuilder num = new StringBuilder();
 
@@ -90,10 +88,12 @@ public class Scanner {
 				readChar();
 			}
 
-			return new Token(NUM, num.toString(), new SourcePosition(startLineNum, lineNum, endLineNum, lineWidth));
+			return new Token(NUM, num.toString(), new SourcePosition(pos, getHalfPosition()));
 		}else{
-			SourcePosition oneCharPosition = new SourcePosition(lineNum - 1, lineNum - 1, lineWidth - 1, lineWidth - 1);
-			SourcePosition twoCharPosition = new SourcePosition(lineNum - 1, lineNum - 1, lineWidth, lineWidth);
+			HalfPosition pos = getHalfPosition();
+			
+			SourcePosition oneCharPos = new SourcePosition(pos, pos);
+			SourcePosition twoCharPos = new SourcePosition(pos, new HalfPosition(pos.getLineNum() + 1, pos.getLineWidth() + 1));
 			
 			switch(curChar){
 				case '=':
@@ -101,85 +101,85 @@ public class Scanner {
 
 					if(curChar == '='){ // ==
 						readChar();
-						return new Token(EQUALS_OP, twoCharPosition);
+						return new Token(EQUALS_OP, twoCharPos);
 					}else // just =
-						return new Token(EQUALS, oneCharPosition);
+						return new Token(EQUALS, oneCharPos);
 				case ';':
 					readChar();
-					return new Token(SEMI, oneCharPosition);
+					return new Token(SEMI, oneCharPos);
 				case '.':
 					readChar();
-					return new Token(DOT, oneCharPosition);
+					return new Token(DOT, oneCharPos);
 				case ',':
 					readChar();
-					return new Token(COMMA, oneCharPosition);
+					return new Token(COMMA, oneCharPos);
 				case '(':
 					readChar();
-					return new Token(L_PAREN, oneCharPosition);
+					return new Token(L_PAREN, oneCharPos);
 				case ')':
 					readChar();
-					return new Token(R_PAREN, oneCharPosition);
+					return new Token(R_PAREN, oneCharPos);
 				case '{':
 					readChar();
-					return new Token(L_BRACKET, oneCharPosition);
+					return new Token(L_BRACKET, oneCharPos);
 				case '}':
 					readChar();
-					return new Token(R_BRACKET, oneCharPosition);
+					return new Token(R_BRACKET, oneCharPos);
 				case '[':
 					readChar();
-					return new Token(L_SQ_BRACK, oneCharPosition);
+					return new Token(L_SQ_BRACK, oneCharPos);
 				case ']':
 					readChar();
-					return new Token(R_SQ_BRACK, oneCharPosition);
+					return new Token(R_SQ_BRACK, oneCharPos);
 				case '>':
 					readChar();
 
 					if(curChar == '='){ // >=
 						readChar();
-						return new Token(MORE_EQUAL, twoCharPosition);
+						return new Token(MORE_EQUAL, twoCharPos);
 					}else // just >
-						return new Token(MORE_THAN, oneCharPosition);
+						return new Token(MORE_THAN, oneCharPos);
 				case '<':
 					readChar();
 
 					if(curChar == '='){ // <=
 						readChar();
-						return new Token(LESS_EQUAL, twoCharPosition);
+						return new Token(LESS_EQUAL, twoCharPos);
 					}else // just >
-						return new Token(LESS_THAN, oneCharPosition);
+						return new Token(LESS_THAN, oneCharPos);
 				case '!':
 					readChar();
 					
 					if(curChar == '='){ // !=
 						readChar();
-						return new Token(NOT_EQUALS, twoCharPosition);
+						return new Token(NOT_EQUALS, twoCharPos);
 					}else // just !
-						return new Token(NEG, oneCharPosition);
+						return new Token(NEG, oneCharPos);
 				case '&':
 					readChar();
 					
 					if(curChar == '&'){ // &&
 						readChar();
-						return new Token(AND_LOG, twoCharPosition);
+						return new Token(AND_LOG, twoCharPos);
 					}else // just &
-						return new Token(ERROR, "&", oneCharPosition); // TODO: bitwise &
+						return new Token(ERROR, "&", oneCharPos); // TODO: bitwise &
 				case '|':
 					readChar();
 					
 					if(curChar == '|'){ // ||
 						readChar();
-						return new Token(OR_LOG, twoCharPosition);
+						return new Token(OR_LOG, twoCharPos);
 					}else // just |
-						return new Token(ERROR, "|", oneCharPosition); // TODO: bitwise |
+						return new Token(ERROR, "|", oneCharPos); // TODO: bitwise |
 				case '+':
 					readChar();
-					return new Token(PLUS, oneCharPosition);
+					return new Token(PLUS, oneCharPos);
 				case '-':
 					readChar();
-					return new Token(MINUS, oneCharPosition);
+					return new Token(MINUS, oneCharPos);
 				case '*':
 					readChar();
-					return new Token(TIMES, oneCharPosition);
+					return new Token(TIMES, oneCharPos);
 				case '/':
 					readChar();
 					
@@ -205,9 +205,9 @@ public class Scanner {
 								readChar();
 						}
 					}else
-						return new Token(DIV, oneCharPosition);
+						return new Token(DIV, oneCharPos);
 				default:
-					return new Token(ERROR, "" + curChar, oneCharPosition);
+					return new Token(ERROR, "" + curChar, oneCharPos);
 			}
 		}
 	}
@@ -239,6 +239,14 @@ public class Scanner {
 	
 	public int getLineWidth() {
 		return lineWidth;
+	}
+	
+	public HalfPosition getHalfPosition(){
+		return new HalfPosition(lineNum, lineWidth);
+	}
+	
+	public SourcePosition getSourcePosition(){
+		return new SourcePosition(getHalfPosition(), getHalfPosition());
 	}
 
 	private static boolean isWordChar(char c){
