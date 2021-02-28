@@ -1,0 +1,11 @@
+/**
+ * This test file was taken from Professor Jan Prins and is licensed separately (see README).
+ */
+class Test7 {
+	public boolean c;
+	
+	public static void main(String[] args){
+		if(true)
+			this.b[3] = 1 + 2 * x;
+	}
+}

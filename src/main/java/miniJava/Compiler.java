@@ -3,6 +3,8 @@ package miniJava;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import miniJava.AbstractSyntaxTrees.AST;
+import miniJava.AbstractSyntaxTrees.ASTDisplay;
 import miniJava.SyntacticAnalyzer.Parser;
 import miniJava.SyntacticAnalyzer.Scanner;
 
@@ -30,7 +32,10 @@ public class Compiler {
 		
 		Scanner scanner = new Scanner(stream);
 		Parser parser = new Parser(scanner);
-		parser.parse();
+		AST ast = parser.parse();
+		
+		ASTDisplay display = new ASTDisplay();
+		display.showTree(ast);
 		
 		System.exit(0);
 	}

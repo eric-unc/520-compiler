@@ -26,7 +26,7 @@ public class Scanner {
 			readChar();
 		
 		if(end)
-			return new Token(END, getSourcePosition());
+			return new Token(END, "", getSourcePosition());
 
 		if(isValidIdentifierStartChar(curChar)){
 			HalfPosition pos = getHalfPosition();
@@ -43,37 +43,37 @@ public class Scanner {
 			switch(word.toString()){
 				// Keywords
 				case "class":
-					return new Token(CLASS, position);
+					return new Token(CLASS, "class", position);
 				case "this":
-					return new Token(THIS, position);
+					return new Token(THIS, "this", position);
 				case "return":
-					return new Token(RETURN, position);
+					return new Token(RETURN, "return", position);
 				case "new":
-					return new Token(NEW, position);
+					return new Token(NEW, "new", position);
 				case "int":
-					return new Token(INT, position);
+					return new Token(INT, "int", position);
 				case "boolean":
-					return new Token(BOOLEAN, position);
+					return new Token(BOOLEAN, "boolean", position);
 				case "if":
-					return new Token(IF, position);
+					return new Token(IF, "if", position);
 				case "else":
-					return new Token(ELSE, position);
+					return new Token(ELSE, "else", position);
 				case "while":
-					return new Token(WHILE, position);
+					return new Token(WHILE, "while", position);
 				case "public":
-					return new Token(PUBLIC, position);
+					return new Token(PUBLIC, "public", position);
 				case "private":
-					return new Token(PRIVATE, position);
+					return new Token(PRIVATE, "private", position);
 				case "static":
-					return new Token(STATIC, position);
+					return new Token(STATIC, "static", position);
 				case "void":
-					return new Token(VOID, position);
+					return new Token(VOID, "void", position);
 
 				// Word literals
 				case "true":
-					return new Token(TRUE, position);
+					return new Token(TRUE, "true", position);
 				case "false":
-					return new Token(FALSE, position);
+					return new Token(FALSE, "false", position);
 
 				default:
 					return new Token(IDEN, word.toString(), position);
@@ -101,66 +101,66 @@ public class Scanner {
 
 					if(curChar == '='){ // ==
 						readChar();
-						return new Token(EQUALS_OP, twoCharPos);
+						return new Token(EQUALS_OP, "==", twoCharPos);
 					}else // just =
-						return new Token(EQUALS, oneCharPos);
+						return new Token(EQUALS, "=", oneCharPos);
 				case ';':
 					readChar();
-					return new Token(SEMI, oneCharPos);
+					return new Token(SEMI, ";", oneCharPos);
 				case '.':
 					readChar();
-					return new Token(DOT, oneCharPos);
+					return new Token(DOT, ".", oneCharPos);
 				case ',':
 					readChar();
-					return new Token(COMMA, oneCharPos);
+					return new Token(COMMA, ",", oneCharPos);
 				case '(':
 					readChar();
-					return new Token(L_PAREN, oneCharPos);
+					return new Token(L_PAREN, "(", oneCharPos);
 				case ')':
 					readChar();
-					return new Token(R_PAREN, oneCharPos);
+					return new Token(R_PAREN, ")", oneCharPos);
 				case '{':
 					readChar();
-					return new Token(L_BRACKET, oneCharPos);
+					return new Token(L_BRACKET, "{", oneCharPos);
 				case '}':
 					readChar();
-					return new Token(R_BRACKET, oneCharPos);
+					return new Token(R_BRACKET, "}", oneCharPos);
 				case '[':
 					readChar();
-					return new Token(L_SQ_BRACK, oneCharPos);
+					return new Token(L_SQ_BRACK, "[", oneCharPos);
 				case ']':
 					readChar();
-					return new Token(R_SQ_BRACK, oneCharPos);
+					return new Token(R_SQ_BRACK, "]", oneCharPos);
 				case '>':
 					readChar();
 
 					if(curChar == '='){ // >=
 						readChar();
-						return new Token(MORE_EQUAL, twoCharPos);
+						return new Token(MORE_EQUAL, ">=", twoCharPos);
 					}else // just >
-						return new Token(MORE_THAN, oneCharPos);
+						return new Token(MORE_THAN, ">", oneCharPos);
 				case '<':
 					readChar();
 
 					if(curChar == '='){ // <=
 						readChar();
-						return new Token(LESS_EQUAL, twoCharPos);
+						return new Token(LESS_EQUAL, "<=", twoCharPos);
 					}else // just >
-						return new Token(LESS_THAN, oneCharPos);
+						return new Token(LESS_THAN, "<", oneCharPos);
 				case '!':
 					readChar();
 					
 					if(curChar == '='){ // !=
 						readChar();
-						return new Token(NOT_EQUALS, twoCharPos);
+						return new Token(NOT_EQUALS, "!=", twoCharPos);
 					}else // just !
-						return new Token(NEG, oneCharPos);
+						return new Token(NEG, "!", oneCharPos);
 				case '&':
 					readChar();
 					
 					if(curChar == '&'){ // &&
 						readChar();
-						return new Token(AND_LOG, twoCharPos);
+						return new Token(AND_LOG, "&&", twoCharPos);
 					}else // just &
 						return new Token(ERROR, "&", oneCharPos); // TODO: bitwise &
 				case '|':
@@ -168,18 +168,18 @@ public class Scanner {
 					
 					if(curChar == '|'){ // ||
 						readChar();
-						return new Token(OR_LOG, twoCharPos);
+						return new Token(OR_LOG, "||", twoCharPos);
 					}else // just |
 						return new Token(ERROR, "|", oneCharPos); // TODO: bitwise |
 				case '+':
 					readChar();
-					return new Token(PLUS, oneCharPos);
+					return new Token(PLUS, "+", oneCharPos);
 				case '-':
 					readChar();
-					return new Token(MINUS, oneCharPos);
+					return new Token(MINUS, "-", oneCharPos);
 				case '*':
 					readChar();
-					return new Token(TIMES, oneCharPos);
+					return new Token(TIMES, "*", oneCharPos);
 				case '/':
 					readChar();
 					
@@ -205,7 +205,7 @@ public class Scanner {
 								readChar();
 						}
 					}else
-						return new Token(DIV, oneCharPos);
+						return new Token(DIV, "/", oneCharPos);
 				default:
 					return new Token(ERROR, "" + curChar, oneCharPos);
 			}

@@ -5,10 +5,6 @@ public class Token {
 	private final String value;
 	private final SourcePosition position;
 
-	public Token(TokenType type, SourcePosition position){
-		this(type, null, position);
-	}
-
 	public Token(TokenType type, String value, SourcePosition position){
 		this.type = type;
 		this.value = value;

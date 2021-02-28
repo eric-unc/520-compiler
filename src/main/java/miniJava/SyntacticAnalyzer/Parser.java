@@ -17,13 +17,15 @@ public class Parser {
 		currToken = scanner.scan();
 	}
 	
-	public void parse(){
+	public AST parse(){
 		try {
-			parseProgram();
+			return parseProgram();
 		}catch(CompilerException e){
 			System.err.println(e.getMessage());
 			System.exit(4);
 		}
+		
+		return null;
 	}
 	
 	/** Program ::= Class* <em>end</em> */
