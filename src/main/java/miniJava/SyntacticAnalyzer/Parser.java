@@ -78,12 +78,11 @@ public class Parser {
 		boolean isPrivate = false;
 		boolean isStatic = false;
 		
-		if(currToken.getType() == PRIVATE)
-			takeIt();
-		else if(currToken.getType() == PUBLIC){
+		if(currToken.getType() == PRIVATE) {
 			isPrivate = true;
 			takeIt();
-		}
+		}else if(currToken.getType() == PUBLIC)
+			takeIt();
 		
 		if(currToken.getType() == STATIC){
 			isStatic = true;
