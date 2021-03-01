@@ -4,7 +4,7 @@ A "miniJava" compiler, as created for COMP 520.
 Note that because of class requirements, my code is not as ideal as I want it to be. Please forgive me on this.
 
 ## Features supported
-Currently can lex/parse, working on constructing an AST.
+Parses for correct syntax and builds an AST.
 
 ## Usage
 The compiler should be used through the command line, through arguments:
