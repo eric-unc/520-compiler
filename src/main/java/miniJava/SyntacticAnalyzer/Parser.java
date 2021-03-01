@@ -61,52 +61,81 @@ public class Parser {
 		return new ClassDecl(cn, fdl, mdl, new SourcePosition(start, scanner.getHalfPosition()));
 	}
 	
-	/** ClassMember ::= Modifiers (Type Field|(<strong>void</strong>|Type) Method) */
+	/** ClassMember ::= FieldDeclaration (FieldTail|Method) */
 	private void parseClassMember(FieldDeclList fdl, MethodDeclList mdl){
-		HalfPosition start = scanner.getHalfPosition();
+		FieldDecl fd = parseFieldDeclaration();
 		
-		boolean[] mods = parseModifiers();
-		
-		if(currToken.getType() == VOID){
-			takeIt();
-			SourcePosition sp = new SourcePosition(start, scanner.getHalfPosition());
-			String name = take(IDEN).getValue();
-			take(L_PAREN);
-			parseMethod(new FieldDecl(mods[0], mods[1], new BaseType(TypeKind.VOID, sp), name, new SourcePosition(start, scanner.getHalfPosition())), mdl);
+		if(currToken.getType() == SEMI){
+			 parseFieldTail(fd, fdl);
 		}else{
-			// TODO: should make a FieldDecl parser first, and then the method is based off it
-			
-			TypeDenoter td = parseType();
-			
-			String name = take(IDEN).getValue();
-			
-			if(currToken.getType() == SEMI){
-				takeIt();
-				fdl.add(new FieldDecl(mods[0], mods[1], td, name, new SourcePosition(start, scanner.getHalfPosition())));
-			}else{
-				take(L_PAREN); // This too
-				parseMethod(new FieldDecl(mods[0], mods[1], td, name, new SourcePosition(start, scanner.getHalfPosition())), mdl);
-			}
+			parseMethod(fd, mdl);
 		}
 	}
 	
-	/** Modifiers ::= (<strong>public</strong>|<strong>private</strong>)? <strong>static</strong>? */
-	private boolean[] parseModifiers(){
-		boolean[] ret = new boolean[]{false, false};
+	/** FieldDeclaration ::= (<strong>public</strong>|<strong>private</strong>)? <strong>static</strong>? (Type|<strong>void</strong>) Id */
+	private FieldDecl parseFieldDeclaration(){
+		HalfPosition start = scanner.getHalfPosition();
+		boolean isPrivate = false;
+		boolean isStatic = false;
 		
-		if(currToken.getType() == PUBLIC)
+		if(currToken.getType() == PRIVATE)
 			takeIt();
-		else if(currToken.getType() == PRIVATE){
-			ret[0] = true;
+		else if(currToken.getType() == PUBLIC){
+			isPrivate = true;
 			takeIt();
 		}
 		
 		if(currToken.getType() == STATIC){
-			ret[1] = true;
+			isStatic = true;
 			takeIt();
 		}
 		
-		return ret;
+		TypeDenoter td;
+		
+		if(currToken.getType() == VOID){
+			takeIt();
+			td = new BaseType(TypeKind.VOID, null); // TODO: fix pos lol
+		}else
+			td = parseType();
+		
+		String name = take(IDEN).getValue();
+		
+		return new FieldDecl(isPrivate, isStatic, td, name, new SourcePosition(start, scanner.getHalfPosition()));
+	}
+	
+	private void parseFieldTail(FieldDecl fd, FieldDeclList fdl) throws CompilerException {
+		if(fd.type.typeKind == TypeKind.VOID)
+			throw new CompilerException(VOID, IDEN, scanner); // TODO: the position is technically off
+		
+		fdl.add(fd);
+		
+		take(SEMI);
+	}
+	
+	/** Method ::= **(**ParamList\* **){**Statement\* **}** */
+	private void parseMethod(FieldDecl fd, MethodDeclList mdl){
+		HalfPosition start = new HalfPosition(fd.posn.getStartLineNum(), fd.posn.getStartLineNum());
+		
+		take(L_PAREN);
+		
+		ParameterDeclList p1 = new ParameterDeclList();
+		
+		if(currToken.getType() != R_PAREN){
+			p1 = parseParamList();
+			take(R_PAREN);
+		}else
+			takeIt();
+		
+		take(L_BRACKET);
+		
+		StatementList sl = new StatementList();
+		while(currToken.getType() != R_BRACKET){
+			sl.add(parseStatement());
+		}
+		
+		takeIt();
+		
+		mdl.add(new MethodDecl(fd, p1, sl, new SourcePosition(start, scanner.getHalfPosition())));
 	}
 	
 	/** Type ::= Type ::= <strong>boolean</strong>|((<strong>int</strong>|Id)(<strong>[]</strong>)?) */
@@ -135,35 +164,6 @@ public class Parser {
 			
 			return ret;
 		}
-	}
-	
-	/** Field ::= <em>id</em><strong>;</strong> */
-	/*private void parseField(FieldDeclList fdl){
-		takeIt();
-	}*/
-	
-	/** Method ::= <em>id</em><strong>(</strong>ParamList*<strong>){</strong>Statement*<strong>}</strong>*/
-	private void parseMethod(MemberDecl md, MethodDeclList mdl){
-		HalfPosition start = scanner.getHalfPosition();
-		
-		ParameterDeclList p1 = new ParameterDeclList();
-		
-		if(currToken.getType() != R_PAREN){
-			p1 = parseParamList();
-			take(R_PAREN);
-		}else
-			takeIt();
-		
-		take(L_BRACKET);
-		
-		StatementList sl = new StatementList();
-		while(currToken.getType() != R_BRACKET){
-			sl.add(parseStatement());
-		}
-		
-		takeIt();
-		
-		mdl.add(new MethodDecl(md, p1, sl, new SourcePosition(start, scanner.getHalfPosition())));
 	}
 	
 	/** ParamList ::= Type <em>id</em>(, Type <em>id</em>)* */

@@ -14,11 +14,11 @@ The compiler should be used through the command line, through arguments:
 ## Grammar
 * Program ::= Class\* *end*
 * Class ::= **class** Id **{** ClassMember\* **}**
-* ClassMember ::= Modifiers (Type Field|(**void**|Type) Method)
-* Modifiers ::= (**public**|**private**)? **static**?
+* ClassMember ::= FieldDeclaration (FieldTail|Method)
+* FieldDeclaration ::= (**public**|**private**)? **static**? (Type|**void**) Id
+* FieldTail ::= **;**
+* Method ::= **(**ParamList\* **){**Statement\* **}**
 * Type ::= **boolean**|((**int**|Id)(**[]**)?)
-* Field ::= Id**;**
-* Method ::= Id**(**ParamList\* **){**Statement\* **}**
 * ParamList ::= Type Id(, Type Id)*
 * ArgList ::= Expression(, Expression)*
 * Reference ::= (Id|**this**)(**.**Id)*
