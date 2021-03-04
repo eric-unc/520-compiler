@@ -1,0 +1,5 @@
+class Test8 {
+	void method(){
+		int x = -1 + (5 + -3) + 4 / 5;
+	}
+}

@@ -1,0 +1,5 @@
+class Test11 {
+	void main(){
+		nm(3 + this [true]);
+	}
+}

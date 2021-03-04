@@ -423,10 +423,10 @@ public class Parser {
 
 						ExprList el = new ExprList();
 						
-						if(currToken.getType() == IDEN)
+						if(currToken.getType() != R_PAREN)
 							el = parseArgList();
 
-						take(R_PAREN);
+						takeIt();
 						take(SEMI);
 						return new CallStmt(ref2, el, new SourcePosition(start, scanner.getHalfPosition()));
 				}

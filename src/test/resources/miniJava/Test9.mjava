@@ -1,0 +1,33 @@
+/**
+ * This test file was taken from Changon Kim and is licensed separately (see README).
+ */
+class Test9 {
+	void method(){
+		this = 1*1+-!2 + 10;
+		int t = 10 + (5 + (10*2)+3); // this one
+		int tt=10*1+5;
+		
+		this.x1.x2 = 1;
+		this.b=1; 
+		
+		int t=1*2 + 1;
+		int t = 1 || 1 + 10 * 2 && t ;
+		int t = 1+3*4/2;
+		int t = 1-2+3;
+		int t = 1&& 1/2 + !s;
+
+		int t = 1 || t +1;
+		
+		int t = 1  && t + 1;
+		int t = 1 || 1 + 10 * 2 && t + !s;
+		
+		int t=ref(1,2,3*2+b)+12;
+		int t= new s() + f;
+		int t = 1 <= 2;
+		int t = 1 < 2 <= 3 == 3 + ref(1,2,3);
+		
+		int t = ref(1,2,3);
+		
+		int [] t=5+(7*3+5 || 9);	
+	}
+}

@@ -1,0 +1,624 @@
+/**
+ * This test file was taken from Changon Kim and is licensed separately (see README).
+ */
+class N {
+	void method(){
+		this = 1*1+-!2 + 10;
+		int t = 10 + (5 + (10*2)+3); // this one
+		int tt=10*1+5;
+		
+		this.x1.x2 = 1;
+		this.b=1; 
+		
+		int t=1*2 + 1;
+		int t = 1 || 1 + 10 * 2 && t ;
+		int t = 1+3*4/2;
+		int t = 1-2+3;
+		int t = 1&& 1/2 + !s;
+
+		int t = 1 || t +1;
+		
+		int t = 1  && t + 1;
+		int t = 1 || 1 + 10 * 2 && t + !s;
+		
+		int t=ref(1,2,3*2+b+new gggg()+ttt(5,32+1))+12;
+		int t= new s() + f;
+		int t = 1 <= 2;
+		int t = 1 < 2 <= 3 == 3 + ref(1,2,3);
+		
+		int t = ref(1,2,3);
+		
+		int [] t=5+(7*3+5 || 9);	
+	}
+}
+class hi
+{
+	/// field declaration tests
+	// boolean tests
+	boolean isTrue;
+	//boolean [] isTrueArray; // should fail, indeed it does.
+
+	// integer field declaration tests
+	int integer1;
+	private int integer2;
+	private static int integer3;
+	private static int [] integers;
+	
+	//type id tests
+	private static classType [] classTypesArray;
+	private static classType T2_;
+	classType g
+	;
+	
+	
+	/// method declaration test
+	// test all parameter list types - could test wrong ones again?
+	public static void main(int a, int [] b, boolean t, classType c, classType [] c2)
+	{
+	 	// let's test "Type id = expression;"
+		int a = 1; // must declare as an expression., no simple field declarations
+		boolean b=true;
+		int [] a = new int [2];
+		classType [] cs=new classType[10];
+		classType c= new classType();
+		int a = b;
+		int a = b+2;
+		
+		// let's test return ?
+		//return 1;
+		
+		// conditional
+		if (true) int x = 1;
+		if (true) int x = 2; else int y=2;
+		if (true){ int x = 2;} else int y=2;
+		if (true){ int x = 2;} else {int y=2;}
+		
+		// while 
+		while(true)
+		{
+			int x =1;
+		}
+		while (true)
+			int x  = 1;
+		
+		// reference (arg list );
+		this.fx();
+		this.fx(1, 2);
+		
+		this.inner=hi;
+		
+		this.array[0]=1;
+		
+		int t = 1+ 1;
+		boolean x = ! true || false;
+				
+		int tt = (3* 2) + t+a[0]+a[t*2+1];
+		t = t;
+		t.t.t=t;
+		t=-t + 2*t;
+
+		this=oo;
+		this.id = -t;
+		
+		return ref.get();
+		return !ts;
+		return -t;
+	}
+	// test method declaration: with void, without void, and without respective visibility or access qualifiers
+	public static void mainTest(int [] args)
+	{
+	
+	} 
+	public static classType randomFx()
+	{
+	}
+	public classType randomFx2()
+	{
+	}
+	static classType randomFx3()
+	{
+	}
+	classType randomFx4()
+	{
+	}
+}
+//test additional class
+
+class hi2
+{
+
+}
+
+class PA1Test {
+
+   public static void main(String [] args) {
+       int n = 3;
+	nm [] nm = kc [3];
+	this.nm();
+	this.nm(3  / this [true]);
+	nm(3 + this [true]);
+       n = 5 + n;
+	int[] nArray = new int[10]; 
+   }
+}
+
+class oo 
+{
+	// field declarations
+	int gg;
+	static int g2;
+	public static int g3;
+	private classType ggClassType;
+	
+	// method declaration
+	public static void main (int hi, int yo) /* hi there
+	*/
+	{
+		int x = 10;
+	}	
+	//metho declaration
+	int hi(boolean whee){ return 5;}
+	
+	static void hi2(boolean whee2){ 
+		int a2=10;
+		int [] array= new int[10];
+		classType [] a= new classType[1];
+		boolean t = hi4(a2, true, a[0], array, a);
+		
+		return whee2;
+	}
+	
+	public static boolean hi3(boolean a2)
+	{
+		int a2=1-10;
+		int a3=-a2;
+		return true;
+	}
+	
+	public boolean hi4(int a, boolean b, classType c, int [] d, classType [] e)
+	{
+		return b;
+	}
+	
+	public void hi5(int a)
+	{
+		int tt= (a+5*2+4*(3+2+a)*2);
+		return tt+this.gg;//return this.id
+	}
+	
+	public void ao()
+	{
+		int x=1;
+		return x; //return reference id
+	}
+	
+	public classType getGGClassType()
+	{
+		return this.ggClassType; //
+	}
+	
+	public oo returnCopy()
+	{
+		int x_1_a=1;
+		int x_aa2=3;
+		int xa_3=x_1_a;
+		int [] xx = new int[1];
+		int xa_=2;
+		boolean yx=true;
+		classType xc=new classType();
+		classType [] xc2=new classType[1+1];
+		boolean vvxx = !vx;
+		vvxx=!vvxx;
+	
+		vvxx=vx; // reference = reference;
+		
+		int t = new classType[(1*2+3)];
+		
+		if (x==7)
+		{
+		}
+		else {
+			
+		}
+		
+		if (x==7)
+		{
+		}
+		else 
+			y=1;
+		
+		if (x==7)
+		{
+			int y = 1;
+			int t = 1;
+		}
+		else {
+			int t = f;
+			int [] x = 5;
+			while(t==1)
+			{
+				x=5;
+				y=1+(z*t[0+(6*5)*4+a[1]] )+t[x+10];
+			}
+		}
+		
+		if (y!=7)
+		{
+			
+		}
+		while(y!=7)
+			y=y+1;
+			//System.out.println(y);
+		
+		while (y<=7)
+			y=y+1;
+			
+		while (x != 7)
+		{
+			x = x+1;
+			int t = 1;
+		}
+	
+		int []tt= new int[10];
+		classType []t3=new classType[15];
+		return this;
+	}
+	
+} // a
+
+class hi2
+{
+	public static int hi()
+	{
+	
+	}
+	int hi()
+	{
+	}
+	int [] hi(){}
+	id [] hit(){}
+	boolean hi(){}
+	id hi(){}
+	public int hi(){}
+	static int hi(){}
+	hi hi(){}
+}
+
+//////// TEST 2
+class hi 
+{
+	private static int main(int a, int [] tt, boolean x)
+	{
+	
+	}
+}
+
+class PA1Test {
+	int j;
+	int k;
+	//boolean[] j =;
+	public static void main(){
+		int i = -(3 / 2 + 5);
+		{boolean k = 5; boolean p = 5;}
+		{{int[] u = 3/9;}} /* dfdf
+		dfasdfasdf */
+		return 0;
+	}
+	public static void ddd(){
+	}
+	//public static void key(int i[], int k){
+	public static void key(int []i, int k){
+
+		int i = 3 * 2 + 5;
+		//{{boolean[] k = 5}; boolean p = 5;}
+		//{{int[] k = 5}; boolean p = 5;}
+		{{int[] k = 5;} boolean p = 5;}
+
+		{{int[] u = 3/9;}} /* dfdf
+		dfasdfasdf */
+		this.ad.addf = dff;
+		u[fadfa] = dddd.ts;
+		
+		int t = ! true;
+		
+		/*dfdfdf*/
+		return 0;
+	}
+	
+	classType nextMethod(int t, boolean tt, classType [] g)
+	{
+		
+	}
+	
+	string td(int t , string s, boolean a)
+	{
+		return s;
+	}
+	
+	classType id;
+	
+	a td(forid [] t, string i , boolean s)
+	{
+		var i2 = i_i;
+		id[] t=2;
+		{}
+		{}
+		id [] a = new id();
+		int c=new int [10];
+		int c2 = new hi[a[0]];
+		ref[0]=ref[1+2]+3;
+		ref = -t;
+		ref = -t+!hi.a;
+		ref=ref(hi, b);
+		ref[0]=ref(hi);
+		aref(1,2, a[0]);
+		id[] a = 1;
+		id [] a = new id () + 5 / new int [ 10];
+		boolean a = new id ();
+
+		ref = 1;
+		ref [a] = new id () + 5 / new int [ 10];
+		boolean a = new id ();
+		ref(1, 20, new id () + 5 / new int [ 10]);
+						
+		//ref(hi);
+		
+		int x= 5+3+3+true*f/2+f/(2+d*4+2)+(true*f/a[0]+f/(2+d*4+2))+a2[true];
+		ref = ! 10+!ref(1,2);
+		ref = ! 10+-ref(1,2);
+		ref = ----!!!ref(1,2);
+		ref=!(-!true+ton);
+	
+
+		while( hi / f1)
+		{
+			t=4;
+			int x= 5+3+3+true*f/2+f/(2+d*4+2)+(true*f/a[0]+f/(2+d*4+2))+a2[true];
+			ref = ! 10+!ref(1,2);
+			ref = ! 10+-ref(1,2);
+			ref = ----!!!ref(1,2);
+			ref=!(-!true+ton);
+	
+		}
+		if( hi / f1)
+			t=4;
+					else
+			
+			int x= 5+3+3+true*f/2+f/(2+d*4+2)+(true*f/a[0]+f/(2+d*4+2))+a2[true];
+			ref = ! 10+!ref(1,2);
+			ref = ! 10+-ref(1,2);
+			ref = ----!!!ref(1,2);
+			ref=!(-!true+ton);
+	
+			t=4;
+			int x= 5+3+3+true*f/2+f/(2+d*4+2)+(true*f/a[0]+f/(2+d*4+2))+a2[true];
+			ref = ! 10+!ref(1,2);
+			ref = ! 10+-ref(1,2);
+			ref = ----!!!ref(1,2);
+			ref=!(-!true+ton);
+			
+			return a[0] + ! (hi);
+			
+			//int i = Foo.toString().length();
+			
+			//int j = someStringArray[1].length();
+
+			//int k = foo.bar(18,-3).baz;
+			int l = foo.bar.baz(123,1);
+			//int ij = ref[1].hi();
+			int [] g=t[1];
+			var [] g=
+			ref(1,2,3);
+			//ref[122]=12+a[A]+12a;
+			while (t==1+2)
+			hi2=1;
+			if (new int[1])
+				//h=1;
+				hi=(hi);
+			else
+			hi2=2+2*2;
+	}
+}
+// PA1 lex comment pass
+
+class id 
+{
+	public boolean c;
+	public static void m (String [] args)
+	{
+		int t=1;
+		
+		int[] ref=new int[5];
+		
+		c ref = new c();
+
+
+		this=5;
+
+		this.hi1.hi2.hi3=5;
+		
+		this.b=3;
+		this.b[1]=5;
+		
+		this(1,23);
+		
+		return 5;
+		return;
+		
+		if (1) int x=1;
+		while (true) int x = 1;
+		
+		hi hi= 5;
+		ref();
+		
+		ref = 2;
+		ref = ref;
+		ref = ref[1];
+		ref= ref(1,2);
+		ref.i.i=ref(1,2);
+		
+		this.i=1 + 1 + 1;
+		//this.this.i=1;
+		
+		{}
+		{
+			
+		}
+
+		this = 1*1+-!2 + 10;
+		int t = 10 + (5 + (10*2)+3);
+		int tt=10*1+5;
+		
+		this.x1.x2 = 1;
+		this.b=1; 
+		
+		int t=1*2 + 1;
+		int t = 1 || 1 + 10 * 2 && t ;
+		int t = 1+3*4/2;
+		int t = 1-2+3;
+		int t = 1&& 1/2 + !s;
+
+		int t = 1 || t +1;
+		
+		int t = 1  && t + 1;
+		int t = 1 || 1 + 10 * 2 && t + !s;
+		
+		int t=ref(1,2,3*2)+12;
+		int t= new s() + f;
+		int t = 1 <= 2;
+		int t = 1 < 2 <= 3 == 3 + ref(1,2,3);
+		
+		int t = ref(1,2,3);
+		return;
+		
+		if (true)
+		
+			int x = 1;
+		
+		else
+			x=1;
+			
+		if (true)
+		{
+			int x = 1;
+		}
+		else
+		{
+			x=1;
+		}
+			
+		if (true)
+			int x = 1;
+		else
+		{
+			x=1;
+		}
+			
+		if (true)
+		{
+			int x = 1;
+		}
+		else
+			x=1;		
+		
+		while (true == 5)
+			t=1;
+			
+		while (true==5)
+		{
+			t=1;
+			t=2;
+		}
+	}
+}
+
+class id{
+	public static void main(String [] args)
+	{
+		int [] t=new int[5];
+	}
+}
+
+// PA1 parse identifiers pass
+class Keywords {
+
+    // minijava keywords are lower case only
+    void p() {
+        int format = while_1;
+        int Int = New;
+        For = Class;     
+        FOR = RETURN;
+    }
+
+   public int declare () {
+      boolean iF = true; 
+      boolean Then = false; 
+      boolean else1 = false;
+
+      if (true == false) { else1 = iF == Then; }
+      int t = 1 < 2 <= 3 == 3 + ref(1,2,3);
+   }
+} 
+// PA1 parse parse pass
+class MainClass {
+   public static void main (String [] args) {
+      SecondSubClass newobj = new SecondSubClass ();
+   }
+}
+class SuperClass
+{
+   private void fillup (boolean open, int [] jar, int marble, int upto) {
+
+      int index = 0;
+      if (open == true) {
+         while ( index < upto ) {
+            ownjar [index] = jar [index];
+	    jar [index] = marble;
+         }  // while
+      }  // if
+   }  // fillup
+
+}  // class SuperClass
+
+// simple PA2 example
+class PA2sample {
+ public boolean c;
+
+ public static void main(String[] args){
+ if (true)
+ this.b[3] = 1 + 2 * x;
+ }
+}
+
+class id
+{
+	public static void main(String [] args, int t, int[] g)
+	{
+		this = 1*1+-!2 + 10;
+		int t = 10 + (5 + (10*2)+3); // this one
+		int tt=10*1+5;
+		
+		this.x1.x2 = 1;
+		this.b=1; 
+		
+		int t=1*2 + 1;
+		int t = 1 || 1 + 10 * 2 && t ;
+		int t = 1+3*4/2;
+		int t = 1-2+3;
+		int t = 1&& 1/2 + !s;
+
+		int t = 1 || t +1;
+		
+		int t = 1  && t + 1;
+		int t = 1 || 1 + 10 * 2 && t + !s;
+		
+		int t=ref(1,2,3*2)+12;
+		int t= new s() + f;
+		int t = 1 <= 2;
+		int t = 1 < 2 <= 3 == 3 + ref(1,2,3);
+		
+		int t = ref(1,2,3);
+		
+		int [] t=5+(7*3+5 || 9);
+	}
+}

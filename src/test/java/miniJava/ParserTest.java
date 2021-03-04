@@ -112,4 +112,18 @@ public class ParserTest {
 			fail();
 		}
 	}
+	
+	@Test
+	@FailOnSystemExit
+	void test11(){
+		try {
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test11.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			parser.parse();
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
 }
