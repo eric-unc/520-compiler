@@ -605,6 +605,11 @@ public class Parser {
 				Terminal bl = new BooleanLiteral(currToken);
 				takeIt();
 				return new LiteralExpr(bl, new SourcePosition(start, scanner.getHalfPosition()));
+			
+			case NULL:
+				Terminal nl = new NullLiteral(currToken);
+				takeIt();
+				return new LiteralExpr(nl, new SourcePosition(start, scanner.getHalfPosition()));
 				
 			case NEW:
 				takeIt();

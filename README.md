@@ -1,7 +1,7 @@
 # 520-compiler
 A "miniJava" compiler, as created for COMP 520.
 
-Note that because of class requirements, my code is not as ideal as I want it to be. Please forgive me on this.
+Note that because of class requirements, my code is not as ideal as I want it to be. Please forgive me.
 
 ## Features supported
 Parses for correct syntax and builds an AST.
@@ -42,15 +42,22 @@ The compiler should be used through the command line, through arguments:
 			| **new** (**int[**Expression**]**|Id(**()**|**[**Expression**]**))
 			| Reference(**[**Expression**]**|**(**ArgList?**)**)?
 * Id ::= \[\w**$_**][\w\d]+
-* Literal ::= \d(\d)+ | **true** | **false**
+* Literal ::= \d(\d)+ | **true** | **false** | **null**
 
 The grammar above uses EBNF with some POSIX conventions sprinkled in to make my life easier. Whitespace is generally insignificant but there must be spaces between words.
 
 ## License
 As you can see in the [license file](LICENSE), this project is under the "Unlicense" which effectively releases it into the public domain. Basically, do what you want with my code. However, I don't recommend using the code for reference for COMP 520; Professor Prins explicitly doesn't allow this, and the particular subset to implement will change year-to-year. And of course, you will find it more rewarding to create something by yourself from scratch.
 
-I have taken some test files from others, including [Ben Dod](https://github.com/benjdod/someminijavatests), Changon Kim, and Professor Jan Prins, which are unlicensed. I have noted as such where I have used them. The classes in the `AbstractSyntaxTrees` package are made by Professor Prins.
+I have taken some test files from others, including [Ben Dod](https://github.com/benjdod/someminijavatests), Changon Kim, and Professor Jan Prins, which are unlicensed. I have noted as such where I have used them. The classes in the `AbstractSyntaxTrees` package were made by Professor Prins with some changes as describes below.
+
+### Changes made to classes in the AbstractSyntaxTrees package
+* Added support for null (adding `NullLiteral.java`, and updating `Visitor.java` and `ASTDisplay.java` to support it)
+* Syntactical/code style changes/cleanup
 
 ## Credits
 * Eric Schneider
+* Jan Prins (AST package, checkpoint tests, `Test7.mjava`)
+* Ben Dod (`Test2.mjava`, `Test3.mjava`)
+* Changon Kim (`Test9.mjava`)
   

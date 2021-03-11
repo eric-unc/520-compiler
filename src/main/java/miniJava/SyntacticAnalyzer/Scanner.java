@@ -74,6 +74,8 @@ public class Scanner {
 					return new Token(TRUE, "true", position);
 				case "false":
 					return new Token(FALSE, "false", position);
+				case "null":
+					return new Token(NULL, "null", position);
 
 				default:
 					return new Token(IDEN, word.toString(), position);

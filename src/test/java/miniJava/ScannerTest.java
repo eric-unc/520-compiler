@@ -28,7 +28,7 @@ class ScannerTest {
 	@Timeout(5) // TODO: for whatever reason this timeout does not work
 	void test1(){
 		try {
-			FileInputStream stream = new FileInputStream(MainTest.RES + "Test1.mjava");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test01.mjava");
 
 			Scanner scanner = new Scanner(stream);
 

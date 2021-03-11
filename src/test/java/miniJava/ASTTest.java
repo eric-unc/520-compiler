@@ -21,7 +21,7 @@ public class ASTTest {
 	@FailOnSystemExit
 	void test2(){
 		try {
-			FileInputStream stream = new FileInputStream(MainTest.RES + "Test2.mjava");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test02.mjava");
 			Scanner scanner = new Scanner(stream);
 			Parser parser = new Parser(scanner);
 			AST ast = parser.parse();
@@ -38,7 +38,7 @@ public class ASTTest {
 	@FailOnSystemExit
 	void test3(){
 		try {
-			FileInputStream stream = new FileInputStream(MainTest.RES + "Test3.mjava");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test03.mjava");
 			Scanner scanner = new Scanner(stream);
 			Parser parser = new Parser(scanner);
 			AST ast = parser.parse();
@@ -55,7 +55,7 @@ public class ASTTest {
 	@FailOnSystemExit
 	void test7(){
 		try {
-			FileInputStream stream = new FileInputStream(MainTest.RES + "Test7.mjava");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test07.mjava");
 			Scanner scanner = new Scanner(stream);
 			Parser parser = new Parser(scanner);
 			AST ast = parser.parse();
@@ -72,7 +72,7 @@ public class ASTTest {
 	@FailOnSystemExit
 	void test8(){
 		try {
-			FileInputStream stream = new FileInputStream(MainTest.RES + "Test8.mjava");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test08.mjava");
 			Scanner scanner = new Scanner(stream);
 			Parser parser = new Parser(scanner);
 			AST ast = parser.parse();
@@ -89,7 +89,7 @@ public class ASTTest {
 	@FailOnSystemExit
 	void test9(){
 		try {
-			FileInputStream stream = new FileInputStream(MainTest.RES + "Test9.mjava");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test09.mjava");
 			Scanner scanner = new Scanner(stream);
 			Parser parser = new Parser(scanner);
 			AST ast = parser.parse();
@@ -107,6 +107,23 @@ public class ASTTest {
 	void test10(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test10.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ASTDisplay display = new ASTDisplay(); 
+			display.showTree(ast);
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test12(){
+		try {
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test12.mjava");
 			Scanner scanner = new Scanner(stream);
 			Parser parser = new Parser(scanner);
 			AST ast = parser.parse();

@@ -34,9 +34,10 @@ public enum TokenType {
 	
 	
 	///// Literals
-	NUM,		// number
+	NUM,		// (int) number
 	TRUE,		// true boolean value
 	FALSE,		// false boolean value
+	NULL,		// null
 	
 	///// Symbols
 	

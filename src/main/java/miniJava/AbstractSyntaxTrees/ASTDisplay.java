@@ -5,15 +5,15 @@
  */
 package miniJava.AbstractSyntaxTrees;
 
-/*
+/**
  * Display AST in text form, one node per line, using indentation to show 
  * subordinate nodes below a parent node.
  *   
- * Performs an in-order traversal of AST, visiting an AST node of type XXX 
+ * Performs an in-order traversal of AST, visiting an AST node of type XYZ
  * with a method of the form  
- *   
- *       public Object visitXXX( XXX astnode, String arg)
- *       
+ *   <pre>
+ *       public Object visitXYZ( XYZ astnode, String arg)
+ *   </pre>
  *   where arg is a prefix string (indentation) to precede display of ast node
  *   and a null Object is returned as the result.
  *   The display is produced by printing a line of output at each node visited.
@@ -363,5 +363,10 @@ public class ASTDisplay implements Visitor<String,Object> {
     public Object visitBooleanLiteral(BooleanLiteral bool, String arg){
         show(arg, quote(bool.spelling) + " " + bool.toString());
         return null;
+    }
+    
+    public Object visitNullLiteral(NullLiteral nil, String arg){
+    	show(arg, quote(nil.spelling) + " " + nil.toString());
+    	return null;
     }
 }
