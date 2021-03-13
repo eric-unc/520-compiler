@@ -103,7 +103,7 @@ public class Parser {
 	
 	private void parseFieldTail(FieldDecl fd, FieldDeclList fdl) throws SyntacticAnalyzerException {
 		if(fd.type.typeKind == TypeKind.VOID)
-			throw new SyntacticAnalyzerException(VOID, IDEN, scanner); // TODO: the position is technically off
+			throw new ParserException(VOID, IDEN, scanner); // TODO: the position is technically off
 		
 		fdl.add(fd);
 		
@@ -668,7 +668,7 @@ public class Parser {
 		if(currToken.getType() == expected)
 			currToken = scanner.scan();
 		else
-			throw new SyntacticAnalyzerException(expected, currToken.getType(), scanner);
+			throw new ParserException(expected, currToken.getType(), scanner);
 		
 		return ret;
 	}
