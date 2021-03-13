@@ -2,7 +2,6 @@ package miniJava.SyntacticAnalyzer;
 
 import static miniJava.SyntacticAnalyzer.TokenType.*;
 
-import miniJava.CompilerException;
 import miniJava.AbstractSyntaxTrees.*;
 import miniJava.AbstractSyntaxTrees.Package;
 
@@ -20,7 +19,7 @@ public class Parser {
 	public AST parse(){
 		try {
 			return parseProgram();
-		}catch(CompilerException e){
+		}catch(SyntacticAnalyzerException e){
 			System.err.println(e.getMessage());
 			System.exit(4);
 		}
@@ -102,9 +101,9 @@ public class Parser {
 		return new FieldDecl(isPrivate, isStatic, td, name, new SourcePosition(start, scanner.getHalfPosition()));
 	}
 	
-	private void parseFieldTail(FieldDecl fd, FieldDeclList fdl) throws CompilerException {
+	private void parseFieldTail(FieldDecl fd, FieldDeclList fdl) throws SyntacticAnalyzerException {
 		if(fd.type.typeKind == TypeKind.VOID)
-			throw new CompilerException(VOID, IDEN, scanner); // TODO: the position is technically off
+			throw new SyntacticAnalyzerException(VOID, IDEN, scanner); // TODO: the position is technically off
 		
 		fdl.add(fd);
 		
@@ -663,13 +662,13 @@ public class Parser {
 		}
 	}
 	
-	private Token take(TokenType expected) throws CompilerException {
+	private Token take(TokenType expected) throws SyntacticAnalyzerException {
 		Token ret = currToken;
 		
 		if(currToken.getType() == expected)
 			currToken = scanner.scan();
 		else
-			throw new CompilerException(expected, currToken.getType(), scanner);
+			throw new SyntacticAnalyzerException(expected, currToken.getType(), scanner);
 		
 		return ret;
 	}

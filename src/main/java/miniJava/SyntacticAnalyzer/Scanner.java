@@ -164,7 +164,8 @@ public class Scanner {
 						readChar();
 						return new Token(AND_LOG, "&&", twoCharPos);
 					}else // just &
-						return new Token(ERROR, "&", oneCharPos); // TODO: bitwise &
+						//return new Token(ERROR, "&", oneCharPos); // TODO: bitwise &
+						throw new ScannerException("bitwise and (&)", lineNum, lineWidth);
 				case '|':
 					readChar();
 					
@@ -172,7 +173,8 @@ public class Scanner {
 						readChar();
 						return new Token(OR_LOG, "||", twoCharPos);
 					}else // just |
-						return new Token(ERROR, "|", oneCharPos); // TODO: bitwise |
+						//return new Token(ERROR, "|", oneCharPos); // TODO: bitwise |
+						throw new ScannerException("bitwise or (|)", lineNum, lineWidth);
 				case '+':
 					readChar();
 					return new Token(PLUS, "+", oneCharPos);
@@ -209,7 +211,9 @@ public class Scanner {
 					}else
 						return new Token(DIV, "/", oneCharPos);
 				default:
-					return new Token(ERROR, "" + curChar, oneCharPos);
+					Token t = new Token(ERROR, "" + curChar, oneCharPos);
+					throw new ScannerException(t, lineNum, lineWidth);
+					//return t;
 			}
 		}
 	}
