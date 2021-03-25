@@ -86,13 +86,13 @@ public class Identification implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitArrayType(ArrayType type, Object arg){
-		// TODO Auto-generated method stub
+		type.eltType.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitBlockStmt(BlockStmt stmt, Object arg){
-		// TODO Auto-generated method stub
+		stmt.sl.forEach(s -> s.visit(this, null));
 		return null;
 	}
 
