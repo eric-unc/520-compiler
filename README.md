@@ -44,7 +44,7 @@ The compiler should be used through the command line, through arguments:
 * Id ::= \[\w**$_**][\w\d]+
 * Literal ::= \d(\d)+ | **true** | **false** | **null**
 
-The grammar above uses EBNF with some POSIX conventions sprinkled in to make my life easier. Whitespace is generally insignificant but there must be spaces between words.
+The grammar above uses EBNF with some POSIX conventions sprinkled in to make my life easier. Whitespace is generally insignificant but there must be spaces between words and so on.
 
 ## License
 As you can see in the [license file](LICENSE), this project is under the "Unlicense" which effectively releases it into the public domain. Basically, do what you want with my code. However, I don't recommend using the code for reference for COMP 520; Professor Prins explicitly doesn't allow this, and the particular subset to implement will change year-to-year. And of course, you will find it more rewarding to create something by yourself from scratch.
@@ -55,6 +55,9 @@ I have taken some test files from others, including [Ben Dod](https://github.com
 * Added support for null (adding `NullLiteral.java`, and updating `Visitor.java` and `ASTDisplay.java` to support it).
 * Added `decl` field to Identifier for contextual analysis.
 * Syntactical/code style changes/cleanup.
+
+## Testing
+This project uses JUnit for testing. I have my own tests, and some tests added from others. There are also "checkpoint" tests, which are given by Professor Prins, which you can see in `Checkpoint1.java` and similar files. These checkpoint unit tests however rely on samples that are (as of right now) _only_ saved locally to my computer, as they might reveal too much. Without the samples, the checkpoint unit tests will not pass unless the `checkpointtests` environmental variable is set to `false`.
 
 ## Credits
 * Eric Schneider

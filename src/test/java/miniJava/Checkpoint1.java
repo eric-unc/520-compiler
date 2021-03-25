@@ -1,5 +1,7 @@
 package miniJava;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,9 +10,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.jupiter.api.*;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 
 /* Automated regression tester for Checkpoint 1 tests
  * Created by Max Beckman-Harned and Jan Prins 
@@ -24,6 +25,7 @@ public class Checkpoint1 {
 	static final String BIN = "build/classes/java/main/";
 
 	@Test
+	@DisabledIfEnvironmentVariable(matches = "checkpointtests", named = "false")
 	void checkpoint1() throws IOException, InterruptedException {
 		System.out.println("Run pa1_tests on miniJava compiler!");
 		

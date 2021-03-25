@@ -34,4 +34,5 @@ hs_err_pid*
 
 # Important
 src/test/resources/miniJava/pa1_tests/*
+src/test/resources/miniJava/pa2_tests/*
 /build/
