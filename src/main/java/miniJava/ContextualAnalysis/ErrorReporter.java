@@ -16,4 +16,8 @@ public class ErrorReporter {
 	public void printErrors(){
 		errors.forEach(System.out::println);
 	}
+	
+	public int numErrors(){
+		return errors.size();
+	}
 }

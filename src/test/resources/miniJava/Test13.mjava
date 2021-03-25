@@ -1,0 +1,11 @@
+class Test13 {
+	public static void main(String[] args){
+		int x = 5;
+		int x = 2;
+		int x = x - y;
+	}
+}
+
+class Test13 {
+
+}

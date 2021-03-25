@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.ginsberg.junit.exit.FailOnSystemExit;
@@ -14,6 +15,7 @@ import miniJava.AbstractSyntaxTrees.ASTDisplay;
 import miniJava.SyntacticAnalyzer.Parser;
 import miniJava.SyntacticAnalyzer.Scanner;
 
+@Disabled
 public class ASTTest {
 	// TODO: I really should do some kind of automatic text comparison but this is hard.
 
