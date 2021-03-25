@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 /* Automated regression tester for Checkpoint 2 tests
  * Created by Max Beckman-Harned and Jan Prins
@@ -32,7 +33,7 @@ public class Checkpoint2 {
 	}
 	
 	@Test
-	@DisabledIfEnvironmentVariable(matches = "checkpointtests", named = "false")
+	@EnabledIfSystemProperty(named = "user.home", matches = "C:\\\\Users\\\\u1643364")
 	void checkpoint2() throws IOException, InterruptedException {
 		File testDir = new File(PA2_TESTS);
 		int failures = 0;
