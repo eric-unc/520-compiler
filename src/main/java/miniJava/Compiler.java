@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 
 import miniJava.AbstractSyntaxTrees.AST;
 import miniJava.AbstractSyntaxTrees.ASTDisplay;
+import miniJava.AbstractSyntaxTrees.Package;
+import miniJava.ContextualAnalysis.ErrorReporter;
+import miniJava.ContextualAnalysis.Identification;
 import miniJava.SyntacticAnalyzer.Parser;
 import miniJava.SyntacticAnalyzer.Scanner;
 
@@ -36,6 +39,11 @@ public class Compiler {
 		
 		ASTDisplay display = new ASTDisplay();
 		display.showTree(ast);
+		
+		ErrorReporter e = new ErrorReporter();
+		Identification id = new Identification((Package)ast, e);
+		
+		e.printErrors();
 		
 		System.exit(0);
 	}

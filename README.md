@@ -4,7 +4,7 @@ A "miniJava" compiler, as created for COMP 520.
 Note that because of class requirements, my code is not as ideal as I want it to be. Please forgive me.
 
 ## Features supported
-Parses for correct syntax and builds an AST.
+Parses for correct syntax and builds an AST. Working on contextual analysis.
 
 ## Usage
 The compiler should be used through the command line, through arguments:
@@ -52,8 +52,9 @@ As you can see in the [license file](LICENSE), this project is under the "Unlice
 I have taken some test files from others, including [Ben Dod](https://github.com/benjdod/someminijavatests), Changon Kim, and Professor Jan Prins, which are unlicensed. I have noted as such where I have used them. The classes in the `AbstractSyntaxTrees` package were made by Professor Prins with some changes as describes below.
 
 ### Changes made to classes in the AbstractSyntaxTrees package
-* Added support for null (adding `NullLiteral.java`, and updating `Visitor.java` and `ASTDisplay.java` to support it)
-* Syntactical/code style changes/cleanup
+* Added support for null (adding `NullLiteral.java`, and updating `Visitor.java` and `ASTDisplay.java` to support it).
+* Added `decl` field to Identifier for contextual analysis.
+* Syntactical/code style changes/cleanup.
 
 ## Credits
 * Eric Schneider
