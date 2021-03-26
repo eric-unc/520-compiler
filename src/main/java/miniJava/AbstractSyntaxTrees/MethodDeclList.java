@@ -7,11 +7,16 @@ package miniJava.AbstractSyntaxTrees;
 
 import java.util.*;
 
-public class MethodDeclList implements Iterable<MethodDecl>
-{
-	public MethodDeclList() {
+public class MethodDeclList implements Iterable<MethodDecl> {
+	
+	public MethodDeclList(){
 		methodDeclList = new ArrayList<MethodDecl>();
 	}   
+	
+	public MethodDeclList(MethodDecl md){
+		this();
+		methodDeclList.add(md);
+	}
 
 	public void add(MethodDecl cd){
 		methodDeclList.add(cd);
@@ -21,7 +26,7 @@ public class MethodDeclList implements Iterable<MethodDecl>
 		return methodDeclList.get(i);
 	}
 
-	public int size() {
+	public int size(){
 		return methodDeclList.size();
 	}
 

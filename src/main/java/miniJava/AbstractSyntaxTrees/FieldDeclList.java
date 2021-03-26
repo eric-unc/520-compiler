@@ -7,11 +7,16 @@ package miniJava.AbstractSyntaxTrees;
 
 import java.util.*;
 
-public class FieldDeclList implements Iterable<FieldDecl>
-{
+public class FieldDeclList implements Iterable<FieldDecl> {
+	
 	public FieldDeclList() {
 		fieldDeclList = new ArrayList<FieldDecl>();
-	}   
+	}
+	
+	public FieldDeclList(FieldDecl dl) {
+		this();
+		fieldDeclList.add(dl);
+	}
 
 	public void add(FieldDecl cd){
 		fieldDeclList.add(cd);

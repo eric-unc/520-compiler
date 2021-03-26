@@ -1,0 +1,16 @@
+// Ugliness galore!
+class X {
+	public System sys; // note that constructor is private is regular Java lol
+	
+	public int X(){
+		int X = 5;
+		
+		{
+			// we cannot declare X here, despite my wishes.
+			System System = sys;
+		}
+		
+		return X;
+	}
+}
+

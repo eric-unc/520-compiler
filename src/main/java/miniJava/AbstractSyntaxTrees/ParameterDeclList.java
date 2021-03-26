@@ -13,6 +13,11 @@ public class ParameterDeclList implements Iterable<ParameterDecl>
     	parameterDeclList = new ArrayList<ParameterDecl>();
     }
     
+    public ParameterDeclList(ParameterDecl decl) {
+    	this();
+    	parameterDeclList.add(decl);
+    }
+    
     public void add(ParameterDecl s){
     	parameterDeclList.add(s);
     }

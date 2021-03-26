@@ -3,8 +3,9 @@ package miniJava.ContextualAnalysis;
 import java.util.HashMap;
 import java.util.Stack;
 
-import miniJava.AbstractSyntaxTrees.Declaration;
-import miniJava.AbstractSyntaxTrees.Identifier;
+import miniJava.AbstractSyntaxTrees.*;
+import miniJava.SyntacticAnalyzer.Token;
+import miniJava.SyntacticAnalyzer.TokenType;
 
 public class IdentificationTable {
 	private Stack<HashMap<String, Declaration>> table;
@@ -18,7 +19,44 @@ public class IdentificationTable {
 	public IdentificationTable(ErrorReporter reporter){
 		this.reporter = reporter;
 		table = new Stack<>();
-		table.push(new HashMap<>());
+		openScope();
+		
+		/// Predefined names. Yes, this is hacky.
+		// String
+		enter(new ClassDecl(
+				"String",
+				new FieldDeclList(),
+				new MethodDeclList(),
+				null));
+		
+		// _PrintStream
+		enter(new ClassDecl(
+				"_PrintStream",
+				new FieldDeclList(),
+				new MethodDeclList(
+						new MethodDecl(
+								new FieldDecl(false, false, new BaseType(TypeKind.VOID, null), "println", null),
+								new ParameterDeclList(new ParameterDecl(new BaseType(TypeKind.INT, null), "n", null)),
+								new StatementList(),
+								null)
+				),
+				null));
+		
+		// System
+		Token pStreamToken = new Token(TokenType.IDEN, "_PrintStream", null);
+		Identifier pStreamIden = new Identifier(pStreamToken);
+		
+		enter(new ClassDecl(
+				"System",
+				new FieldDeclList(
+						new FieldDecl(
+								false, 
+								true, new ClassType(new Identifier(pStreamToken, retrieve(pStreamIden)), null),
+								"out",
+								null)
+				),
+				new MethodDeclList(),
+				null));
 	}
 	
 	public ErrorReporter getReporter(){
@@ -29,22 +67,48 @@ public class IdentificationTable {
 		reporter.addError(error);
 	}
 	
-	// TODO: make these methods more complicated
-	
 	public void enter(Declaration dec){
-		if(table.peek().containsKey(dec.name))
-			reporter.addError("*** line " + dec.posn.getStartLineNum() + ": attempts to declare" + dec.name + " with conflicting declaration on line " + table.peek().get(dec.name).posn.getStartLineNum() + "!");
-		else
+		// TODO: I think the condition isn't necessary, but will test later.
+		if(getLevel() >= 4){
+			for(int i = table.size() - 1; i >= 3; i--){
+				if(table.get(i).containsKey(dec.name)){
+					reporter.addError("*** line " + dec.posn.getStartLineNum() + ": attempts to declare " + dec.name + " with conflicting declaration on line " + table.peek().get(dec.name).posn.getStartLineNum() + "!");
+					return;
+				}
+			}
+			
 			table.peek().put(dec.name, dec);
+		}else{
+			if(table.peek().containsKey(dec.name))
+				reporter.addError("*** line " + dec.posn.getStartLineNum() + ": attempts to declare " + dec.name + " with conflicting declaration on line " + table.peek().get(dec.name).posn.getStartLineNum() + "!");
+			else
+				table.peek().put(dec.name, dec);
+		}
 	}
 	
 	/**
 	 * 
-	 * @param iden the identifier name
+	 * @param iden the identifier, which will be modified to have a declared attached to it.
 	 * @return either the declaration found or <code>null</code>
 	 */
 	public Declaration retrieve(Identifier iden){
-		return table.peek().get(iden.spelling);
+		Declaration ret = null;
+		
+		for(int i = table.size() - 1; i >= 0; i--){
+			Declaration possibleDecl = table.get(i).get(iden.spelling);
+			
+			if(possibleDecl != null){
+				ret = possibleDecl;
+				break;
+			}
+		}
+		
+		if(ret == null)
+			reporter.addError("*** line " + iden.posn.getStartLineNum() + ": attempts to reference " + iden.spelling + " which was not found!");
+		else
+			iden.decl = ret;
+		
+		return ret;
 	}
 	
 	public void openScope(){
@@ -56,6 +120,6 @@ public class IdentificationTable {
 	}
 	
 	public int getLevel(){
-		return table.size();
+		return table.size() - 1;
 	}
 }

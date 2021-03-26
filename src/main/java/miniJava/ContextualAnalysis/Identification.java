@@ -15,10 +15,13 @@ public class Identification implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitPackage(Package prog, Object arg){
+		table.openScope();
+		
 		prog.classDeclList.forEach(table::enter);
 		
 		prog.classDeclList.forEach(cd -> cd.visit(this, null));
 		
+		table.closeScope();
 		return null;
 	}
 
@@ -98,139 +101,153 @@ public class Identification implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitVardeclStmt(VarDeclStmt stmt, Object arg){
-		// TODO Auto-generated method stub
+		stmt.varDecl.visit(this, null);
+		stmt.initExp.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitAssignStmt(AssignStmt stmt, Object arg){
-		// TODO Auto-generated method stub
+		stmt.ref.visit(this, null);
+		stmt.val.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitIxAssignStmt(IxAssignStmt stmt, Object arg){
-		// TODO Auto-generated method stub
+		stmt.ref.visit(this, null);
+		stmt.ix.visit(this, null);
+		stmt.exp.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitCallStmt(CallStmt stmt, Object arg){
-		// TODO Auto-generated method stub
+		stmt.methodRef.visit(this, null);
+		stmt.argList.forEach(e -> e.visit(this, null));
 		return null;
 	}
 
 	@Override
 	public Object visitReturnStmt(ReturnStmt stmt, Object arg){
-		// TODO Auto-generated method stub
+		stmt.returnExpr.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitIfStmt(IfStmt stmt, Object arg){
-		// TODO Auto-generated method stub
+		stmt.cond.visit(this, null);
+		stmt.thenStmt.visit(this, null);
+		
+		if(stmt.elseStmt != null)
+			stmt.elseStmt.visit(this, null);
+		
 		return null;
 	}
 
 	@Override
 	public Object visitWhileStmt(WhileStmt stmt, Object arg){
-		// TODO Auto-generated method stub
+		stmt.cond.visit(this, null);
+		stmt.body.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitUnaryExpr(UnaryExpr expr, Object arg){
-		// TODO Auto-generated method stub
+		expr.operator.visit(this, null);
+		expr.expr.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitBinaryExpr(BinaryExpr expr, Object arg){
-		// TODO Auto-generated method stub
+		expr.operator.visit(this, null);
+		expr.left.visit(this, null);
+		expr.right.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitRefExpr(RefExpr expr, Object arg){
-		// TODO Auto-generated method stub
+		expr.ref.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitIxExpr(IxExpr expr, Object arg){
-		// TODO Auto-generated method stub
+		expr.ref.visit(this, null);
+		expr.ixExpr.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitCallExpr(CallExpr expr, Object arg){
-		// TODO Auto-generated method stub
+		expr.functionRef.visit(this, null);
+		expr.argList.forEach(al -> al.visit(this, null));
 		return null;
 	}
 
 	@Override
 	public Object visitLiteralExpr(LiteralExpr expr, Object arg){
-		// TODO Auto-generated method stub
+		// This is fine.
 		return null;
 	}
 
 	@Override
 	public Object visitNewObjectExpr(NewObjectExpr expr, Object arg){
-		// TODO Auto-generated method stub
+		expr.classtype.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitNewArrayExpr(NewArrayExpr expr, Object arg){
-		// TODO Auto-generated method stub
+		expr.eltType.visit(this, null);
+		expr.sizeExpr.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitThisRef(ThisRef ref, Object arg){
-		// TODO Auto-generated method stub
+		// this is just <code>this</code>
 		return null;
 	}
 
 	@Override
 	public Object visitIdRef(IdRef ref, Object arg){
-		// TODO Auto-generated method stub
+		ref.id.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitQRef(QualRef ref, Object arg){
-		// TODO Auto-generated method stub
+		ref.ref.visit(this, null);
+		ref.id.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitIdentifier(Identifier id, Object arg){
-		// TODO Auto-generated method stub
+		table.retrieve(id);
 		return null;
 	}
 
 	@Override
 	public Object visitOperator(Operator op, Object arg){
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitIntLiteral(IntLiteral num, Object arg){
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitBooleanLiteral(BooleanLiteral bool, Object arg){
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitNullLiteral(NullLiteral nil, Object arg){
-		// TODO Auto-generated method stub
 		return null;
 	}
 
