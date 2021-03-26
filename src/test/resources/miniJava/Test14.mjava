@@ -8,6 +8,21 @@ class X {
 		{
 			// we cannot declare X here, despite my wishes.
 			System System = sys;
+			int y = 0;
+			
+			{
+				int z = 1;
+			}
+			
+			{
+				int z = 1;
+			}
+			
+			int z = 1;
+		}
+		
+		{
+			int y = 5;
 		}
 		
 		return X;

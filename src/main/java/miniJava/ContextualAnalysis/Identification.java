@@ -95,7 +95,9 @@ public class Identification implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitBlockStmt(BlockStmt stmt, Object arg){
+		table.openScope();
 		stmt.sl.forEach(s -> s.visit(this, null));
+		table.closeScope();
 		return null;
 	}
 
