@@ -25,7 +25,18 @@ class X {
 			int y = 5;
 		}
 		
+		Clazz.initFun();
+		X = X + Clazz.fun;
+		
 		return X;
+	}
+}
+
+class Clazz {
+	public static int fun;
+	
+	public static void initFun(){
+		fun = 100;
 	}
 }
 

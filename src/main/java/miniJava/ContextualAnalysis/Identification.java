@@ -132,7 +132,9 @@ public class Identification implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitReturnStmt(ReturnStmt stmt, Object arg){
-		stmt.returnExpr.visit(this, null);
+		if(stmt.returnExpr != null)
+			stmt.returnExpr.visit(this, null);
+		
 		return null;
 	}
 
@@ -222,7 +224,7 @@ public class Identification implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitQRef(QualRef ref, Object arg){
-		ref.ref.visit(this, null);
+		ref.ref.visit(this, null); // TODO
 		ref.id.visit(this, null);
 		return null;
 	}
@@ -252,5 +254,4 @@ public class Identification implements Visitor<Object, Object> {
 	public Object visitNullLiteral(NullLiteral nil, Object arg){
 		return null;
 	}
-
 }
