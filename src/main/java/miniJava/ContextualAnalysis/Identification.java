@@ -260,6 +260,8 @@ public class Identification implements Visitor<Object, Object> {
 		if(md.isStatic)
 			reporter.addError("*** line " + ref.posn.getStartLineNum() + ": attempts to reference non-static `this` on line " + ref.posn.getStartLineNum() + "!");
 
+		// TODO: consider ref.decl
+		
 		return null;
 	}
 
@@ -268,6 +270,10 @@ public class Identification implements Visitor<Object, Object> {
 		MethodDecl md = (MethodDecl)arg;
 		
 		ref.id.visit(this, md);
+		
+		// TODO: this seems to only make this worse?
+		//Declaration d = (Declaration)ref.id.visit(this, md);
+		//ref.decl = d;
 		
 		return null;
 	}
