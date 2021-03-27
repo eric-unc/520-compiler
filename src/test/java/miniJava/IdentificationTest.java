@@ -215,4 +215,26 @@ class IdentificationTest {
 			fail();
 		}
 	}
+	
+	@Test
+	@FailOnSystemExit
+	void test16(){
+		try {
+			System.out.println("Test 16");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test16.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ErrorReporter e = new ErrorReporter();
+			@SuppressWarnings("unused")
+			Identification id = new Identification((Package)ast, e);
+			
+			e.printErrors();
+			assertEquals(0, e.numErrors());
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
 }
