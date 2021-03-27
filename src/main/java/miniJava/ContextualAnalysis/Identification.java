@@ -306,7 +306,29 @@ public class Identification implements Visitor<Object, Object> {
 			
 			ref.id.decl = d;
 		}else if(context instanceof LocalDecl){
-			//var t = ((LocalDecl)context).type;
+			LocalDecl ld = (LocalDecl)context;
+			
+			switch(ld.type.typeKind){
+				case CLASS:
+					ClassType ct = (ClassType)ld.type;
+					ClassDecl cd = (ClassDecl)table.retrieve(ct.className, md);
+					MemberDecl d = cd.visit(null, ref.id);
+					
+					if(d == null){
+						reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference " + ref.id.spelling + " which was not found in class " + cd.name + "!");
+						return null;
+					}
+					
+					if(!d.isPrivate)
+						reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference private " + d.name + " on line " + d.posn.getStartLineNum() + "!");
+					
+					ref.id.decl = d;
+					break;
+				default:
+					reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference " + ref.id.spelling + " for type" + ld.type.typeKind + "!");
+
+				
+			}
 		}
 		
 		//ref.id.visit(this, null);

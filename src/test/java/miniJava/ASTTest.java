@@ -15,7 +15,7 @@ import miniJava.AbstractSyntaxTrees.ASTDisplay;
 import miniJava.SyntacticAnalyzer.Parser;
 import miniJava.SyntacticAnalyzer.Scanner;
 
-@Disabled
+//@Disabled
 public class ASTTest {
 	// TODO: I really should do some kind of automatic text comparison but this is hard.
 
