@@ -1,0 +1,15 @@
+class Test15 {
+	public static int a;
+	
+	public int b;
+	
+	public void incrementB(){
+		b = b + 1;
+	}
+	
+	public static void main(String[] args){
+		a = 10;
+		b = 5;
+		incrementB();
+	}
+}

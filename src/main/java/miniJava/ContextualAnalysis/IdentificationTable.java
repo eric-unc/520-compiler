@@ -51,7 +51,7 @@ public class IdentificationTable {
 				new FieldDeclList(
 						new FieldDecl(
 								false, 
-								true, new ClassType(new Identifier(pStreamToken, retrieve(pStreamIden)), null),
+								true, new ClassType(new Identifier(pStreamToken, retrieve(pStreamIden, null)), null),
 								"out",
 								null)
 				),
@@ -91,7 +91,7 @@ public class IdentificationTable {
 	 * @param iden the identifier, which will be modified to have a declared attached to it.
 	 * @return either the declaration found or <code>null</code>
 	 */
-	public Declaration retrieve(Identifier iden){
+	public Declaration retrieve(Identifier iden, MethodDecl fromMeth){
 		Declaration ret = null;
 		
 		for(int i = table.size() - 1; i >= 0; i--){
@@ -105,6 +105,10 @@ public class IdentificationTable {
 		
 		if(ret == null)
 			reporter.addError("*** line " + iden.posn.getStartLineNum() + ": attempts to reference " + iden.spelling + " which was not found!");
+		else if(ret instanceof MemberDecl && fromMeth != null && fromMeth.isStatic && !((MemberDecl)ret).isStatic)
+			reporter.addError("*** line " + iden.posn.getStartLineNum() + ": attempts to reference non-static " + ret.name + " on line " + ret.posn.getStartLineNum() + "!");
+		//else if(ret instanceof MemberDecl && fromMeth != null && fromMeth.isStatic && !((MemberDecl)ret).isPrivate)
+		//	reporter.addError("*** line " + iden.posn.getStartLineNum() + ": attempts to reference non-static " + ret.name + " on line " + ret.posn.getStartLineNum() + "!");
 		else
 			iden.decl = ret;
 		

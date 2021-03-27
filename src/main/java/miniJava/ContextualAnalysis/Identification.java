@@ -5,10 +5,10 @@ import miniJava.AbstractSyntaxTrees.Package;
 
 public class Identification implements Visitor<Object, Object> {
 	private IdentificationTable table;
-	//private ErrorReporter reporter;
+	private ErrorReporter reporter;
 	
 	public Identification(Package ast, ErrorReporter reporter){
-		//this.reporter = reporter;
+		this.reporter = reporter;
 		this.table = new IdentificationTable(reporter);
 		ast.visit(this, null);
 	}
@@ -27,16 +27,31 @@ public class Identification implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitClassDecl(ClassDecl cd, Object arg){
-		table.openScope();
-		
-		cd.fieldDeclList.forEach(table::enter);
-		cd.methodDeclList.forEach(table::enter);
-		
-		cd.fieldDeclList.forEach(fd -> fd.visit(this, null));
-		cd.methodDeclList.forEach(md -> md.visit(this, null));
-		
-		table.closeScope();
-		return null;
+		// holy shit this code is straight garbo
+		if(arg == null){
+			table.openScope();
+			
+			cd.fieldDeclList.forEach(table::enter);
+			cd.methodDeclList.forEach(table::enter);
+			
+			cd.fieldDeclList.forEach(fd -> fd.visit(this, null));
+			cd.methodDeclList.forEach(md -> md.visit(this, null));
+			
+			table.closeScope();
+			return null;
+		}else{
+			Identifier searchingFor = (Identifier)arg;
+			
+			for(FieldDecl fd : cd.fieldDeclList)
+				if(fd.name.equals(searchingFor.spelling))
+					return fd;
+			
+			for(MethodDecl md : cd.methodDeclList)
+				if(md.name.equals(searchingFor.spelling))
+					return md;
+			
+			return null;
+		}
 	}
 
 	@Override
@@ -53,7 +68,7 @@ public class Identification implements Visitor<Object, Object> {
 		md.parameterDeclList.forEach(pd -> pd.visit(this, null));
 		
 		table.openScope();
-		md.statementList.forEach(sl -> sl.visit(this, null));
+		md.statementList.forEach(sl -> sl.visit(this, md));
 		
 		table.closeScope();
 		table.closeScope();
@@ -83,7 +98,7 @@ public class Identification implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitClassType(ClassType type, Object arg){
-		table.retrieve(type.className);
+		table.retrieve(type.className, null);
 		return null;
 	}
 
@@ -95,105 +110,130 @@ public class Identification implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitBlockStmt(BlockStmt stmt, Object arg){
+		MethodDecl md = (MethodDecl)arg;
 		table.openScope();
-		stmt.sl.forEach(s -> s.visit(this, null));
+		stmt.sl.forEach(s -> s.visit(this, md));
 		table.closeScope();
 		return null;
 	}
 
 	@Override
 	public Object visitVardeclStmt(VarDeclStmt stmt, Object arg){
+		MethodDecl md = (MethodDecl)arg;
 		stmt.varDecl.visit(this, null);
-		stmt.initExp.visit(this, null);
+		stmt.initExp.visit(this, md);
 		return null;
 	}
 
 	@Override
 	public Object visitAssignStmt(AssignStmt stmt, Object arg){
-		stmt.ref.visit(this, null);
-		stmt.val.visit(this, null);
+		MethodDecl md = (MethodDecl)arg;
+		stmt.ref.visit(this, md);
+		stmt.val.visit(this, md);
 		return null;
 	}
 
 	@Override
 	public Object visitIxAssignStmt(IxAssignStmt stmt, Object arg){
-		stmt.ref.visit(this, null);
-		stmt.ix.visit(this, null);
-		stmt.exp.visit(this, null);
+		MethodDecl md = (MethodDecl)arg;
+		stmt.ref.visit(this, md);
+		stmt.ix.visit(this, md);
+		stmt.exp.visit(this, md);
 		return null;
 	}
 
 	@Override
 	public Object visitCallStmt(CallStmt stmt, Object arg){
-		stmt.methodRef.visit(this, null);
-		stmt.argList.forEach(e -> e.visit(this, null));
+		MethodDecl md = (MethodDecl)arg;
+		stmt.methodRef.visit(this, md);
+		stmt.argList.forEach(e -> e.visit(this, md));
 		return null;
 	}
 
 	@Override
 	public Object visitReturnStmt(ReturnStmt stmt, Object arg){
+		MethodDecl md = (MethodDecl)arg;
+		
 		if(stmt.returnExpr != null)
-			stmt.returnExpr.visit(this, null);
+			stmt.returnExpr.visit(this, md);
 		
 		return null;
 	}
 
 	@Override
 	public Object visitIfStmt(IfStmt stmt, Object arg){
-		stmt.cond.visit(this, null);
-		stmt.thenStmt.visit(this, null);
+		MethodDecl md = (MethodDecl)arg;
+		
+		stmt.cond.visit(this, md);
+		stmt.thenStmt.visit(this, md);
 		
 		if(stmt.elseStmt != null)
-			stmt.elseStmt.visit(this, null);
+			stmt.elseStmt.visit(this, md);
 		
 		return null;
 	}
 
 	@Override
 	public Object visitWhileStmt(WhileStmt stmt, Object arg){
-		stmt.cond.visit(this, null);
-		stmt.body.visit(this, null);
+		MethodDecl md = (MethodDecl)arg;
+		
+		stmt.cond.visit(this, md);
+		stmt.body.visit(this, md);
+		
 		return null;
 	}
 
 	@Override
 	public Object visitUnaryExpr(UnaryExpr expr, Object arg){
+		MethodDecl md = (MethodDecl)arg;
+		
 		expr.operator.visit(this, null);
-		expr.expr.visit(this, null);
+		expr.expr.visit(this, md);
 		return null;
 	}
 
 	@Override
 	public Object visitBinaryExpr(BinaryExpr expr, Object arg){
+		MethodDecl md = (MethodDecl)arg;
+		
 		expr.operator.visit(this, null);
-		expr.left.visit(this, null);
-		expr.right.visit(this, null);
+		expr.left.visit(this, md);
+		expr.right.visit(this, md);
+		
 		return null;
 	}
 
 	@Override
 	public Object visitRefExpr(RefExpr expr, Object arg){
-		expr.ref.visit(this, null);
+		MethodDecl md = (MethodDecl)arg;
+		
+		expr.ref.visit(this, md);
+		
 		return null;
 	}
 
 	@Override
 	public Object visitIxExpr(IxExpr expr, Object arg){
-		expr.ref.visit(this, null);
-		expr.ixExpr.visit(this, null);
+		MethodDecl md = (MethodDecl)arg;
+		
+		expr.ref.visit(this, md);
+		expr.ixExpr.visit(this, md);
+		
 		return null;
 	}
 
 	@Override
 	public Object visitCallExpr(CallExpr expr, Object arg){
-		expr.functionRef.visit(this, null);
-		expr.argList.forEach(al -> al.visit(this, null));
+		MethodDecl md = (MethodDecl)arg;
+		
+		expr.functionRef.visit(this, md);
+		expr.argList.forEach(al -> al.visit(this, md));
+		
 		return null;
 	}
 
 	@Override
 	public Object visitLiteralExpr(LiteralExpr expr, Object arg){
-		// This is fine.
 		return null;
 	}
 
@@ -205,34 +245,73 @@ public class Identification implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitNewArrayExpr(NewArrayExpr expr, Object arg){
+		MethodDecl md = (MethodDecl)arg;
+		
 		expr.eltType.visit(this, null);
-		expr.sizeExpr.visit(this, null);
+		expr.sizeExpr.visit(this, md);
+		
 		return null;
 	}
 
 	@Override
 	public Object visitThisRef(ThisRef ref, Object arg){
-		// this is just <code>this</code>
+		MethodDecl md = (MethodDecl)arg;
+		
+		if(md.isStatic)
+			reporter.addError("*** line " + ref.posn.getStartLineNum() + ": attempts to reference non-static `this` on line " + ref.posn.getStartLineNum() + "!");
+
 		return null;
 	}
 
 	@Override
 	public Object visitIdRef(IdRef ref, Object arg){
-		ref.id.visit(this, null);
+		MethodDecl md = (MethodDecl)arg;
+		
+		ref.id.visit(this, md);
+		
 		return null;
 	}
 
 	@Override
 	public Object visitQRef(QualRef ref, Object arg){
-		ref.ref.visit(this, null); // TODO
-		ref.id.visit(this, null);
+		// XXX lmao
+		MethodDecl md = (MethodDecl)arg;
+		
+		ref.ref.visit(this, md);
+		Declaration context = ref.ref.decl;
+		
+		if(context instanceof ClassDecl){
+			// check if id is a member of ClassDecl
+			ClassDecl cd = (ClassDecl)context;
+			MemberDecl d = cd.visit(null, ref.id);
+			
+			if(d == null){
+				reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference " + ref.id.spelling + " which was not found in class " + cd.name + "!");
+				return null;
+			}
+			
+			if(!d.isStatic){
+				reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference non-static " + d.name + " on line " + d.posn.getStartLineNum() + "!");
+				return null;
+			}
+			
+			if(!d.isPrivate)
+				reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference private " + d.name + " on line " + d.posn.getStartLineNum() + "!");
+			
+			ref.id.decl = d;
+		}else if(context instanceof LocalDecl){
+			//var t = ((LocalDecl)context).type;
+		}
+		
+		//ref.id.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitIdentifier(Identifier id, Object arg){
-		table.retrieve(id);
-		return null;
+		MethodDecl md = (MethodDecl)arg;
+		
+		return table.retrieve(id, md);
 	}
 
 	@Override
