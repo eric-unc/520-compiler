@@ -127,13 +127,37 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitIxAssignStmt(IxAssignStmt stmt, Object arg){
-		// TODO Auto-generated method stub
+		if(!(stmt.ref.decl.type instanceof ArrayType))
+			expectedArrayType(stmt.ref);
+		
+		TypeDenoter ixTD = (TypeDenoter)stmt.ix.visit(this, null);
+		checkTypeKind(stmt.ix.posn, ixTD.typeKind, TypeKind.INT);
+		
+		TypeDenoter expTD = (TypeDenoter)stmt.exp.visit(this, null);
+		checkTypeDenoter(expTD.posn.getStartLineNum(), ((ArrayType)stmt.ref.decl.type).eltType, expTD);
+		
 		return null;
 	}
 
 	@Override
 	public Object visitCallStmt(CallStmt stmt, Object arg){
-		// TODO Auto-generated method stub
+		if(stmt.methodRef.decl instanceof MethodDecl){
+			MethodDecl md = (MethodDecl)stmt.methodRef.decl;
+			
+			if(md.parameterDeclList.size() != stmt.argList.size()){
+				expectedArgs(stmt.posn.getStartLineNum(), md, stmt.argList.size());
+			}else{				
+				for(int i = 0; i < md.parameterDeclList.size(); i++){
+					Expression passedArg = stmt.argList.get(i);
+					ParameterDecl param = md.parameterDeclList.get(i);
+					
+					checkTypeDenoter(passedArg.posn.getStartLineNum(), (TypeDenoter)param.visit(this, null), (TypeDenoter)passedArg.visit(this, null));
+				}
+			}
+		}else{
+			expectedMethod(stmt.posn.getStartLineNum());
+		}
+		
 		return null;
 	}
 
@@ -154,8 +178,6 @@ public class TypeChecking implements Visitor<Object, Object> {
 		
 		return null;
 	}
-
-	
 
 	@Override
 	public Object visitWhileStmt(WhileStmt stmt, Object arg){
@@ -223,8 +245,8 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitRefExpr(RefExpr expr, Object arg){
-		// TODO Auto-generated method stub
-		return null;
+		// XXX???
+		return expr.ref.visit(this, null);
 	}
 
 	@Override
