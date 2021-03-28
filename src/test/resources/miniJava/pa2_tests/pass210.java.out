@@ -1,0 +1,17 @@
+======= AST Display =========================
+Package
+  ClassDeclList [1]
+  . ClassDecl
+  .   "A" classname
+  .   FieldDeclList [0]
+  .   MethodDeclList [1]
+  .   . (public) MethodDecl
+  .   .   ClassType
+  .   .     "A" Identifier
+  .   .   "p" methodname
+  .   .   ParameterDeclList [0]
+  .   .   StmtList [1]
+  .   .   . ReturnStmt
+  .   .   .   RefExpr
+  .   .   .     ThisRef
+=============================================

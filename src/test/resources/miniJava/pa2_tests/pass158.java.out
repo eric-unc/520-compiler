@@ -1,0 +1,48 @@
+======= AST Display =========================
+Package
+  ClassDeclList [1]
+  . ClassDecl
+  .   "Test" classname
+  .   FieldDeclList [0]
+  .   MethodDeclList [1]
+  .   . (public) MethodDecl
+  .   .   VOID BaseType
+  .   .   "p" methodname
+  .   .   ParameterDeclList [0]
+  .   .   StmtList [5]
+  .   .   . AssignStmt
+  .   .   .   IdRef
+  .   .   .     "a" Identifier
+  .   .   .   LiteralExpr
+  .   .   .     "true" BooleanLiteral
+  .   .   . IxAssignStmt
+  .   .   .   IdRef
+  .   .   .     "a" Identifier
+  .   .   .   RefExpr
+  .   .   .     IdRef
+  .   .   .       "b" Identifier
+  .   .   .   RefExpr
+  .   .   .     IdRef
+  .   .   .       "c" Identifier
+  .   .   . CallStmt
+  .   .   .   IdRef
+  .   .   .     "p" Identifier
+  .   .   .   ExprList [0]
+  .   .   . AssignStmt
+  .   .   .   QualRef
+  .   .   .     "b" Identifier
+  .   .   .     IdRef
+  .   .   .       "a" Identifier
+  .   .   .   RefExpr
+  .   .   .     IdRef
+  .   .   .       "d" Identifier
+  .   .   . CallStmt
+  .   .   .   QualRef
+  .   .   .     "p" Identifier
+  .   .   .     IdRef
+  .   .   .       "c" Identifier
+  .   .   .   ExprList [1]
+  .   .   .   . RefExpr
+  .   .   .   .   IdRef
+  .   .   .   .     "e" Identifier
+=============================================

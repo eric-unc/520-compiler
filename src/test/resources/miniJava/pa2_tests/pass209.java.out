@@ -1,0 +1,20 @@
+======= AST Display =========================
+Package
+  ClassDeclList [1]
+  . ClassDecl
+  .   "A" classname
+  .   FieldDeclList [0]
+  .   MethodDeclList [1]
+  .   . (public) MethodDecl
+  .   .   VOID BaseType
+  .   .   "p" methodname
+  .   .   ParameterDeclList [0]
+  .   .   StmtList [1]
+  .   .   . IxAssignStmt
+  .   .   .   IdRef
+  .   .   .     "x" Identifier
+  .   .   .   LiteralExpr
+  .   .   .     "2" IntLiteral
+  .   .   .   LiteralExpr
+  .   .   .     "3" IntLiteral
+=============================================

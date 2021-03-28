@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 /* Automated regression tester for Checkpoint 1 tests
  * Created by Max Beckman-Harned and Jan Prins 
@@ -26,7 +25,6 @@ public class Checkpoint1 {
 	static final String BIN = "build/classes/java/main/";
 
 	@Test
-	@EnabledIfSystemProperty(named = "user.home", matches = "C:\\\\Users\\\\u1643364")
 	@Disabled
 	void checkpoint1() throws IOException, InterruptedException {
 		System.out.println("Run pa1_tests on miniJava compiler!");

@@ -58,7 +58,7 @@ I have taken some test files from others, including [Ben Dod](https://github.com
 * Syntactical/code style changes/cleanup.
 
 ## Testing
-This project uses JUnit for testing. I have my own tests, and some tests added from others. There are also "checkpoint" tests, which are given by Professor Prins, which you can see in `Checkpoint1.java` and similar files. These checkpoint unit tests however rely on samples that are (as of right now) _only_ saved locally to my computer, as they might reveal too much. Without the samples, the checkpoint unit tests will be disabled.
+This project uses JUnit for testing. I have my own tests, as well as added from others. There are also "checkpoint" tests, which are given by Professor Prins, which use `Checkpoint1.java`, `Checkpoint2.java`, etc., as controllers, and the files in `pa1_tests`, `pa2_tests`, etc., as the sample test files.
 
 ## Credits
 * Eric Schneider

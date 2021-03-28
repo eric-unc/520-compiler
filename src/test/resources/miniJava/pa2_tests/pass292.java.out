@@ -1,0 +1,85 @@
+======= AST Display =========================
+Package
+  ClassDeclList [1]
+  . ClassDecl
+  .   "Foo" classname
+  .   FieldDeclList [0]
+  .   MethodDeclList [1]
+  .   . (public) MethodDecl
+  .   .   VOID BaseType
+  .   .   "stmts" methodname
+  .   .   ParameterDeclList [0]
+  .   .   StmtList [9]
+  .   .   . VarDeclStmt
+  .   .   .   VarDecl
+  .   .   .     ArrayType
+  .   .   .       INT BaseType
+  .   .   .     "v" varname
+  .   .   .   LiteralExpr
+  .   .   .     "1" IntLiteral
+  .   .   . AssignStmt
+  .   .   .   IdRef
+  .   .   .     "x" Identifier
+  .   .   .   LiteralExpr
+  .   .   .     "2" IntLiteral
+  .   .   . AssignStmt
+  .   .   .   QualRef
+  .   .   .     "y" Identifier
+  .   .   .     IdRef
+  .   .   .       "x" Identifier
+  .   .   .   LiteralExpr
+  .   .   .     "3" IntLiteral
+  .   .   . CallStmt
+  .   .   .   IdRef
+  .   .   .     "m" Identifier
+  .   .   .   ExprList [1]
+  .   .   .   . LiteralExpr
+  .   .   .   .   "4" IntLiteral
+  .   .   . VarDeclStmt
+  .   .   .   VarDecl
+  .   .   .     ClassType
+  .   .   .       "Foo" Identifier
+  .   .   .     "bar" varname
+  .   .   .   LiteralExpr
+  .   .   .     "5" IntLiteral
+  .   .   . VarDeclStmt
+  .   .   .   VarDecl
+  .   .   .     ArrayType
+  .   .   .       ClassType
+  .   .   .         "Foo" Identifier
+  .   .   .     "x" varname
+  .   .   .   NewArrayExpr
+  .   .   .     ClassType
+  .   .   .       "Foo" Identifier
+  .   .   .     LiteralExpr
+  .   .   .       "6" IntLiteral
+  .   .   . IxAssignStmt
+  .   .   .   IdRef
+  .   .   .     "x" Identifier
+  .   .   .   RefExpr
+  .   .   .     IdRef
+  .   .   .       "i" Identifier
+  .   .   .   LiteralExpr
+  .   .   .     "7" IntLiteral
+  .   .   . CallStmt
+  .   .   .   QualRef
+  .   .   .     "m" Identifier
+  .   .   .     IdRef
+  .   .   .       "x" Identifier
+  .   .   .   ExprList [2]
+  .   .   .   . RefExpr
+  .   .   .   .   IdRef
+  .   .   .   .     "y" Identifier
+  .   .   .   . LiteralExpr
+  .   .   .   .   "8" IntLiteral
+  .   .   . IxAssignStmt
+  .   .   .   QualRef
+  .   .   .     "m" Identifier
+  .   .   .     IdRef
+  .   .   .       "x" Identifier
+  .   .   .   RefExpr
+  .   .   .     IdRef
+  .   .   .       "i" Identifier
+  .   .   .   LiteralExpr
+  .   .   .     "9" IntLiteral
+=============================================

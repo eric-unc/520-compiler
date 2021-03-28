@@ -1,0 +1,25 @@
+======= AST Display =========================
+Package
+  ClassDeclList [1]
+  . ClassDecl
+  .   "Foo" classname
+  .   FieldDeclList [0]
+  .   MethodDeclList [1]
+  .   . (public) MethodDecl
+  .   .   VOID BaseType
+  .   .   "check" methodname
+  .   .   ParameterDeclList [0]
+  .   .   StmtList [1]
+  .   .   . IfStmt
+  .   .   .   BinaryExpr
+  .   .   .     "==" Operator
+  .   .   .       LiteralExpr
+  .   .   .         "true" BooleanLiteral
+  .   .   .       LiteralExpr
+  .   .   .         "false" BooleanLiteral
+  .   .   .   ReturnStmt
+  .   .   .   ReturnStmt
+  .   .   .     NewObjectExpr
+  .   .   .       ClassType
+  .   .   .         "Foo" Identifier
+=============================================

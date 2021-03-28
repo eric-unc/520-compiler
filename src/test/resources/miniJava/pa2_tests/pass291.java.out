@@ -1,0 +1,84 @@
+======= AST Display =========================
+Package
+  ClassDeclList [1]
+  . ClassDecl
+  .   "Refs" classname
+  .   FieldDeclList [0]
+  .   MethodDeclList [1]
+  .   . (public) MethodDecl
+  .   .   VOID BaseType
+  .   .   "p" methodname
+  .   .   ParameterDeclList [0]
+  .   .   StmtList [10]
+  .   .   . AssignStmt
+  .   .   .   IdRef
+  .   .   .     "x1" Identifier
+  .   .   .   RefExpr
+  .   .   .     IdRef
+  .   .   .       "a" Identifier
+  .   .   . AssignStmt
+  .   .   .   IdRef
+  .   .   .     "x2" Identifier
+  .   .   .   RefExpr
+  .   .   .     QualRef
+  .   .   .       "b" Identifier
+  .   .   .       IdRef
+  .   .   .         "a" Identifier
+  .   .   . AssignStmt
+  .   .   .   IdRef
+  .   .   .     "x3" Identifier
+  .   .   .   RefExpr
+  .   .   .     ThisRef
+  .   .   . AssignStmt
+  .   .   .   IdRef
+  .   .   .     "x4" Identifier
+  .   .   .   IxExpr
+  .   .   .     IdRef
+  .   .   .       "a" Identifier
+  .   .   .     RefExpr
+  .   .   .       IdRef
+  .   .   .         "n" Identifier
+  .   .   . AssignStmt
+  .   .   .   IdRef
+  .   .   .     "x5" Identifier
+  .   .   .   CallExpr
+  .   .   .     IdRef
+  .   .   .       "f" Identifier
+  .   .   .     ExprList + [1]
+  .   .   .     . RefExpr
+  .   .   .     .   IdRef
+  .   .   .     .     "n" Identifier
+  .   .   . AssignStmt
+  .   .   .   IdRef
+  .   .   .     "x6" Identifier
+  .   .   .   LiteralExpr
+  .   .   .     "6" IntLiteral
+  .   .   . AssignStmt
+  .   .   .   IdRef
+  .   .   .     "x7" Identifier
+  .   .   .   LiteralExpr
+  .   .   .     "false" BooleanLiteral
+  .   .   . AssignStmt
+  .   .   .   IdRef
+  .   .   .     "x8" Identifier
+  .   .   .   NewObjectExpr
+  .   .   .     ClassType
+  .   .   .       "Foo" Identifier
+  .   .   . AssignStmt
+  .   .   .   IdRef
+  .   .   .     "x9" Identifier
+  .   .   .   NewArrayExpr
+  .   .   .     ClassType
+  .   .   .       "Foo" Identifier
+  .   .   .     RefExpr
+  .   .   .       IdRef
+  .   .   .         "n" Identifier
+  .   .   . AssignStmt
+  .   .   .   IdRef
+  .   .   .     "x10" Identifier
+  .   .   .   NewArrayExpr
+  .   .   .     INT BaseType
+  .   .   .     RefExpr
+  .   .   .       IdRef
+  .   .   .         "n" Identifier
+=============================================

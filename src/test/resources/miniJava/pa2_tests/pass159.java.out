@@ -1,0 +1,34 @@
+======= AST Display =========================
+Package
+  ClassDeclList [1]
+  . ClassDecl
+  .   "Test" classname
+  .   FieldDeclList [2]
+  .   . (public) FieldDecl
+  .   .   ArrayType
+  .   .     INT BaseType
+  .   .   "a" fieldname
+  .   . (public) FieldDecl
+  .   .   ArrayType
+  .   .     ClassType
+  .   .       "Test" Identifier
+  .   .   "t" fieldname
+  .   MethodDeclList [1]
+  .   . (public) MethodDecl
+  .   .   INT BaseType
+  .   .   "p" methodname
+  .   .   ParameterDeclList [0]
+  .   .   StmtList [1]
+  .   .   . IxAssignStmt
+  .   .   .   IdRef
+  .   .   .     "t" Identifier
+  .   .   .   RefExpr
+  .   .   .     IdRef
+  .   .   .       "e" Identifier
+  .   .   .   BinaryExpr
+  .   .   .     "+" Operator
+  .   .   .       RefExpr
+  .   .   .         ThisRef
+  .   .   .       LiteralExpr
+  .   .   .         "1" IntLiteral
+=============================================

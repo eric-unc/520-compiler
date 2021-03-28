@@ -5,12 +5,10 @@ import miniJava.AbstractSyntaxTrees.Package;
 
 public class Identification implements Visitor<Object, Object> {
 	private IdentificationTable table;
-	private Package ast;
 	private ErrorReporter reporter;
 	
 	public Identification(Package ast, ErrorReporter reporter){
 		this.reporter = reporter;
-		this.ast = ast;
 		this.table = new IdentificationTable(reporter);
 		ast.visit(this, null);
 	}
@@ -80,7 +78,8 @@ public class Identification implements Visitor<Object, Object> {
 		return null;
 	}
 
-	// This is the start of stuff purely implemented by me
+	// This is the start of stuff purely implemented by me.
+	// Not that I didn't implement the above stuff, but it was made in reference to Prins' slides.
 	@Override
 	public Object visitParameterDecl(ParameterDecl pd, Object arg){
 		pd.type.visit(this, null);
@@ -97,7 +96,6 @@ public class Identification implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitBaseType(BaseType type, Object arg){
-		// I think we don't do anything here?
 		return null;
 	}
 
@@ -265,7 +263,6 @@ public class Identification implements Visitor<Object, Object> {
 		if(md.isStatic)
 			reporter.addError("*** line " + ref.posn.getStartLineNum() + ": attempts to reference non-static `this` on line " + ref.posn.getStartLineNum() + "!");
 
-		// TODO: consider ref.decl
 		ref.decl = md.inClass;
 		return null;
 	}
@@ -274,9 +271,6 @@ public class Identification implements Visitor<Object, Object> {
 	public Object visitIdRef(IdRef ref, Object arg){
 		MethodDecl md = (MethodDecl)arg;
 		
-		//ref.id.visit(this, md);
-		
-		// TODO: this seems to only make this worse?
 		Declaration d = (Declaration)ref.id.visit(this, md);
 		ref.decl = d;
 		
@@ -285,7 +279,6 @@ public class Identification implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitQRef(QualRef ref, Object arg){
-		// XXX lmao
 		MethodDecl md = (MethodDecl)arg;
 		
 		ref.ref.visit(this, md);
@@ -363,7 +356,6 @@ public class Identification implements Visitor<Object, Object> {
 			}
 		}
 		
-		//ref.id.visit(this, null);
 		return null;
 	}
 
