@@ -53,7 +53,7 @@ I have taken some test files from others, including [Ben Dod](https://github.com
 
 ### Changes made to classes in the AbstractSyntaxTrees package
 * Added support for null (adding `NullLiteral.java`, and updating `Visitor.java` and `ASTDisplay.java` to support it).
-* Added `decl` field to `Identifier.java` and `Reference.java` for contextual analysis, along with an alternative constructor to initialize `Identifier.java`.
+* Added `decl` field to `Identifier.java` and `Reference.java` for contextual analysis, along with an alternative constructor to initialize `Identifier.java`. Added `inClass` field to `MethodDecl.java` for contextual analysis.
 * Added alternative constructor to `FieldDeclList.java`, `MethodDeclList.java`, and `ParameterDeclList.java` to accept one declaration for convenience, which is to be appended to the list.
 * Syntactical/code style changes/cleanup.
 

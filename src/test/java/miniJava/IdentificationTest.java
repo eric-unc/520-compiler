@@ -20,7 +20,7 @@ class IdentificationTest {
 
 	@Test
 	@FailOnSystemExit
-	void test1(){
+	void test01(){
 		try {
 			System.out.println("Test 1");
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test01.mjava");
@@ -42,7 +42,7 @@ class IdentificationTest {
 	
 	@Test
 	@FailOnSystemExit
-	void test2(){
+	void test02(){
 		try {
 			System.out.println("Test 2");
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test02.mjava");
@@ -64,7 +64,7 @@ class IdentificationTest {
 	
 	@Test
 	@FailOnSystemExit
-	void test3(){
+	void test03(){
 		try {
 			System.out.println("Test 3");
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test03.mjava");
@@ -86,7 +86,7 @@ class IdentificationTest {
 	
 	@Test
 	@FailOnSystemExit
-	void test4(){
+	void test04(){
 		try {
 			System.out.println("Test 4");
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test04.mjava");
@@ -99,7 +99,7 @@ class IdentificationTest {
 			Identification id = new Identification((Package)ast, e);
 			
 			e.printErrors();
-			assertEquals(4, e.numErrors());
+			assertEquals(4, e.numErrors()); // this is fine as either 2 or 4
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 			fail();
@@ -108,7 +108,7 @@ class IdentificationTest {
 	
 	@Test
 	@FailOnSystemExit
-	void test7(){
+	void test07(){
 		try {
 			System.out.println("Test 7");
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test07.mjava");
@@ -121,7 +121,7 @@ class IdentificationTest {
 			Identification id = new Identification((Package)ast, e);
 			
 			e.printErrors();
-			assertEquals(2, e.numErrors());
+			assertEquals(3, e.numErrors());
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 			fail();
@@ -130,7 +130,7 @@ class IdentificationTest {
 	
 	@Test
 	@FailOnSystemExit
-	void test8(){
+	void test08(){
 		try {
 			System.out.println("Test 8");
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test08.mjava");
@@ -232,6 +232,72 @@ class IdentificationTest {
 			
 			e.printErrors();
 			assertEquals(0, e.numErrors());
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test17(){
+		try {
+			System.out.println("Test 17");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test17.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ErrorReporter e = new ErrorReporter();
+			@SuppressWarnings("unused")
+			Identification id = new Identification((Package)ast, e);
+			
+			e.printErrors();
+			assertEquals(0, e.numErrors());
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test18(){
+		try {
+			System.out.println("Test 18");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test18.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ErrorReporter e = new ErrorReporter();
+			@SuppressWarnings("unused")
+			Identification id = new Identification((Package)ast, e);
+			
+			e.printErrors();
+			assertEquals(5, e.numErrors());
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test19(){
+		try {
+			System.out.println("Test 19");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test19.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ErrorReporter e = new ErrorReporter();
+			@SuppressWarnings("unused")
+			Identification id = new Identification((Package)ast, e);
+			
+			e.printErrors();
+			assertEquals(1, e.numErrors());
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 			fail();

@@ -1,4 +1,6 @@
 class Test16 {
+	System s;
+	
 	public static void main(String[] args){
 		int x = -7;
 		System.out.println(x);

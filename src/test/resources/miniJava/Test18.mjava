@@ -1,0 +1,39 @@
+class Test18 {
+	
+	private static A a;
+	
+	public int z;
+	
+	public static void main(String[] args){
+		a = new A();
+		a.initB();
+		a.c = 1; // does not exist
+		a.b.f = 50; // does not exist
+		a.b.initC();
+		a.b.c.lol = true; // private
+		a.b.c.gosh = false; // does not exist
+		z = 5; // non-static in static method
+	}
+}
+
+class A {
+	B b;
+	
+	public void initB(){
+		b = new B();
+	}
+}
+
+class B {
+	int g;
+	C c;
+	
+	public void initC(){
+		c = new C();
+	}
+}
+
+class C {
+	private boolean lol;
+}
+

@@ -5,10 +5,12 @@ import miniJava.AbstractSyntaxTrees.Package;
 
 public class Identification implements Visitor<Object, Object> {
 	private IdentificationTable table;
+	private Package ast;
 	private ErrorReporter reporter;
 	
 	public Identification(Package ast, ErrorReporter reporter){
 		this.reporter = reporter;
+		this.ast = ast;
 		this.table = new IdentificationTable(reporter);
 		ast.visit(this, null);
 	}
@@ -35,7 +37,7 @@ public class Identification implements Visitor<Object, Object> {
 			cd.methodDeclList.forEach(table::enter);
 			
 			cd.fieldDeclList.forEach(fd -> fd.visit(this, null));
-			cd.methodDeclList.forEach(md -> md.visit(this, null));
+			cd.methodDeclList.forEach(md -> md.visit(this, cd));
 			
 			table.closeScope();
 			return null;
@@ -63,6 +65,9 @@ public class Identification implements Visitor<Object, Object> {
 	@Override
 	public Object visitMethodDecl(MethodDecl md, Object arg){
 		md.type.visit(this, null);
+		
+		ClassDecl context = (ClassDecl)arg;
+		md.inClass = context;
 		
 		table.openScope();
 		md.parameterDeclList.forEach(pd -> pd.visit(this, null));
@@ -261,7 +266,7 @@ public class Identification implements Visitor<Object, Object> {
 			reporter.addError("*** line " + ref.posn.getStartLineNum() + ": attempts to reference non-static `this` on line " + ref.posn.getStartLineNum() + "!");
 
 		// TODO: consider ref.decl
-		
+		ref.decl = md.inClass;
 		return null;
 	}
 
@@ -269,11 +274,11 @@ public class Identification implements Visitor<Object, Object> {
 	public Object visitIdRef(IdRef ref, Object arg){
 		MethodDecl md = (MethodDecl)arg;
 		
-		ref.id.visit(this, md);
+		//ref.id.visit(this, md);
 		
 		// TODO: this seems to only make this worse?
-		//Declaration d = (Declaration)ref.id.visit(this, md);
-		//ref.decl = d;
+		Declaration d = (Declaration)ref.id.visit(this, md);
+		ref.decl = d;
 		
 		return null;
 	}
@@ -286,25 +291,30 @@ public class Identification implements Visitor<Object, Object> {
 		ref.ref.visit(this, md);
 		Declaration context = ref.ref.decl;
 		
+		if(context == null){
+			reporter.addError("*** line " + ref.ref.posn.getStartLineNum() + ": attempts to reference " + ref.id.spelling + " and no context was found!");
+			return null;
+		}
+		
 		if(context instanceof ClassDecl){
-			// check if id is a member of ClassDecl
 			ClassDecl cd = (ClassDecl)context;
-			MemberDecl d = cd.visit(null, ref.id);
+			MemberDecl d = (MemberDecl)cd.visit(this, ref.id);
 			
 			if(d == null){
 				reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference " + ref.id.spelling + " which was not found in class " + cd.name + "!");
 				return null;
 			}
 			
-			if(!d.isStatic){
+			if(md.isStatic && !d.isStatic){
 				reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference non-static " + d.name + " on line " + d.posn.getStartLineNum() + "!");
 				return null;
 			}
 			
-			if(!d.isPrivate)
+			if(d.isPrivate)
 				reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference private " + d.name + " on line " + d.posn.getStartLineNum() + "!");
 			
 			ref.id.decl = d;
+			ref.decl = ref.id.decl; // attempt
 		}else if(context instanceof LocalDecl){
 			LocalDecl ld = (LocalDecl)context;
 			
@@ -312,22 +322,44 @@ public class Identification implements Visitor<Object, Object> {
 				case CLASS:
 					ClassType ct = (ClassType)ld.type;
 					ClassDecl cd = (ClassDecl)table.retrieve(ct.className, md);
-					MemberDecl d = cd.visit(null, ref.id);
+					MemberDecl d = (MemberDecl)cd.visit(this, ref.id);
 					
 					if(d == null){
 						reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference " + ref.id.spelling + " which was not found in class " + cd.name + "!");
 						return null;
 					}
 					
-					if(!d.isPrivate)
+					if(d.isPrivate)
 						reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference private " + d.name + " on line " + d.posn.getStartLineNum() + "!");
 					
 					ref.id.decl = d;
+					ref.decl = ref.id.decl; // attempt
 					break;
 				default:
 					reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference " + ref.id.spelling + " for type" + ld.type.typeKind + "!");
-
-				
+			}
+		}else if(context instanceof MemberDecl){
+			MemberDecl memd = (MemberDecl)context;
+			
+			switch(memd.type.typeKind){
+				case CLASS:
+					ClassType ct = (ClassType)memd.type;
+					ClassDecl cd = (ClassDecl)table.retrieve(ct.className, md);
+					MemberDecl d = (MemberDecl)cd.visit(this, ref.id);
+					
+					if(d == null){
+						reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference " + ref.id.spelling + " which was not found in class " + cd.name + "!");
+						return null;
+					}
+					
+					if(d.isPrivate)
+						reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference private " + d.name + " on line " + d.posn.getStartLineNum() + "!");
+					
+					ref.id.decl = d;
+					ref.decl = ref.id.decl; // attempt
+					break;
+				default:
+					reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference " + ref.id.spelling + " for type" + memd.type.typeKind + "!");
 			}
 		}
 		

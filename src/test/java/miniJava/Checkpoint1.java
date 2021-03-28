@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 /* Automated regression tester for Checkpoint 1 tests
@@ -63,7 +62,6 @@ public class Checkpoint1 {
 				continue;
 			}
 			if (x.getName().indexOf("pass") != -1) {
-				System.out.println("THIS IS A PASS TEST");
 				if (returnCode == 0)
 					System.out.println(x.getName() + " passed successfully!");
 				else if (returnCode == 4) {
@@ -72,7 +70,6 @@ public class Checkpoint1 {
 					fail();
 				}
 			} else {
-				System.out.println("THIS IS A FAIL TEST");
 				if (returnCode == 4)
 					System.out.println(x.getName() + " failed successfully!");
 				else {

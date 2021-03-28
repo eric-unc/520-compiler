@@ -1,0 +1,10 @@
+class Test19 {
+	public static void main(String[] args){
+		A a = new A();
+		a.b = 0;
+	}
+}
+
+class A {
+	
+}

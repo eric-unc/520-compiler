@@ -1,0 +1,35 @@
+// This should all work.
+class Test17 {
+	
+	private static A a;
+	
+	public static void main(String[] args){
+		a = new A();
+		a.initB();
+		a.b.g = 50;
+		a.b.initC();
+		a.b.c.lol = true;
+	}
+}
+
+class A {
+	B b;
+	
+	public void initB(){
+		b = new B();
+	}
+}
+
+class B {
+	int g;
+	C c;
+	
+	public void initC(){
+		c = new C();
+	}
+}
+
+class C {
+	boolean lol;
+}
+

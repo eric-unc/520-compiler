@@ -17,11 +17,10 @@ import miniJava.SyntacticAnalyzer.Scanner;
 
 //@Disabled
 public class ASTTest {
-	// TODO: I really should do some kind of automatic text comparison but this is hard.
 
 	@Test
 	@FailOnSystemExit
-	void test2(){
+	void test02(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test02.mjava");
 			Scanner scanner = new Scanner(stream);
@@ -38,7 +37,7 @@ public class ASTTest {
 	
 	@Test
 	@FailOnSystemExit
-	void test3(){
+	void test03(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test03.mjava");
 			Scanner scanner = new Scanner(stream);
@@ -55,7 +54,7 @@ public class ASTTest {
 	
 	@Test
 	@FailOnSystemExit
-	void test7(){
+	void test07(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test07.mjava");
 			Scanner scanner = new Scanner(stream);
@@ -72,7 +71,7 @@ public class ASTTest {
 	
 	@Test
 	@FailOnSystemExit
-	void test8(){
+	void test08(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test08.mjava");
 			Scanner scanner = new Scanner(stream);
@@ -89,7 +88,7 @@ public class ASTTest {
 	
 	@Test
 	@FailOnSystemExit
-	void test9(){
+	void test09(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test09.mjava");
 			Scanner scanner = new Scanner(stream);
@@ -126,6 +125,40 @@ public class ASTTest {
 	void test12(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test12.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ASTDisplay display = new ASTDisplay(); 
+			display.showTree(ast);
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test17(){
+		try {
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test17.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ASTDisplay display = new ASTDisplay(); 
+			display.showTree(ast);
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test19(){
+		try {
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test19.mjava");
 			Scanner scanner = new Scanner(stream);
 			Parser parser = new Parser(scanner);
 			AST ast = parser.parse();
