@@ -53,6 +53,10 @@ public class TypeChecking implements Visitor<Object, Object> {
 	private void expectedArrayType(Reference ref){
 		reporter.addError("*** line " + ref.posn.getStartLineNum() + ": references " + ref.decl.name + " which is not an array!");
 	}
+	
+	private void expectedValidOperator(Operator operator){
+		reporter.addError("*** line " + operator.posn.getStartLineNum() + ": uses unexpected operator " + operator.spelling + "!");
+	}
 
 	@Override
 	public Object visitPackage(Package prog, Object arg){
@@ -165,14 +169,56 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitUnaryExpr(UnaryExpr expr, Object arg){
-		// TODO Auto-generated method stub
-		return null;
+		TypeDenoter e = (TypeDenoter)expr.expr.visit(this, null);
+		
+		switch(expr.operator.kind){
+			case NEG:
+				checkTypeKind(e.posn, TypeKind.BOOLEAN, e.typeKind);
+				return new BaseType(TypeKind.BOOLEAN, expr.posn);
+			case MINUS:
+				checkTypeKind(e.posn, TypeKind.INT, e.typeKind);
+				return new BaseType(TypeKind.INT, expr.posn);
+				
+			default:
+				expectedValidOperator(expr.operator);
+				return new BaseType(TypeKind.ERROR, expr.posn);
+		}
 	}
 
 	@Override
 	public Object visitBinaryExpr(BinaryExpr expr, Object arg){
-		// TODO Auto-generated method stub
-		return null;
+		TypeDenoter left = (TypeDenoter)expr.left.visit(this, null);
+		TypeDenoter right = (TypeDenoter)expr.left.visit(this, null);
+		
+		switch(expr.operator.kind){
+			case MORE_THAN:
+			case LESS_THAN:
+			case MORE_EQUAL:
+			case LESS_EQUAL:
+			case EQUALS_OP:
+			case NOT_EQUALS:
+				checkTypeKind(left.posn, TypeKind.INT, left.typeKind);
+				checkTypeKind(right.posn, TypeKind.INT, right.typeKind);
+				return new BaseType(TypeKind.BOOLEAN, expr.posn);
+				
+			case AND_LOG:
+			case OR_LOG:
+				checkTypeKind(left.posn, TypeKind.BOOLEAN, left.typeKind);
+				checkTypeKind(right.posn, TypeKind.BOOLEAN, right.typeKind);
+				return new BaseType(TypeKind.BOOLEAN, expr.posn);
+			
+			case PLUS:
+			case MINUS:
+			case TIMES:
+			case DIV:
+				checkTypeKind(left.posn, TypeKind.INT, left.typeKind);
+				checkTypeKind(right.posn, TypeKind.INT, right.typeKind);
+				return new BaseType(TypeKind.INT, expr.posn);
+			
+			default:
+				expectedValidOperator(expr.operator);
+				return new BaseType(TypeKind.ERROR, expr.posn);
+		}
 	}
 
 	@Override
