@@ -19,4 +19,9 @@ public class ClassType extends TypeDenoter
     }
 
     public Identifier className;
+
+	@Override
+	public boolean equals(TypeDenoter other){
+		return this.typeKind == other.typeKind && other instanceof ClassType && this.className.equals(((ClassType)other).className);
+	}
 }

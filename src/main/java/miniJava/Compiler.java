@@ -8,6 +8,7 @@ import miniJava.AbstractSyntaxTrees.ASTDisplay;
 import miniJava.AbstractSyntaxTrees.Package;
 import miniJava.ContextualAnalysis.ErrorReporter;
 import miniJava.ContextualAnalysis.Identification;
+import miniJava.ContextualAnalysis.TypeChecking;
 import miniJava.SyntacticAnalyzer.Parser;
 import miniJava.SyntacticAnalyzer.Scanner;
 
@@ -41,9 +42,21 @@ public class Compiler {
 		display.showTree(ast);
 		
 		ErrorReporter e = new ErrorReporter();
+		@SuppressWarnings("unused")
 		Identification id = new Identification((Package)ast, e);
 		
-		e.printErrors();
+		if(e.hasErrors()){
+			e.printErrors();
+			System.exit(4);
+		}
+		
+		@SuppressWarnings("unused")
+		TypeChecking tc = new TypeChecking((Package)ast, e);
+		
+		if(e.hasErrors()){
+			e.printErrors();
+			System.exit(4);
+		}
 		
 		System.exit(0);
 	}

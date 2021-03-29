@@ -16,4 +16,9 @@ public class HalfPosition {
 	public int getLineWidth(){
 		return lineWidth;
 	}
+	
+	@Override
+	public String toString(){
+		return lineNum + ":" + lineWidth;
+	}
 }

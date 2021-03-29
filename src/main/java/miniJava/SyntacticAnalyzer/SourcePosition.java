@@ -28,4 +28,9 @@ public class SourcePosition {
 	public int getEndLineWidth(){
 		return end.getLineWidth();
 	}
+	
+	@Override
+	public String toString(){
+		return "(Start: " + start + ", End: " + end + ")";
+	}
 }

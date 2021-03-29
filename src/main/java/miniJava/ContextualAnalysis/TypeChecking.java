@@ -21,20 +21,35 @@ public class TypeChecking implements Visitor<Object, Object> {
 		return true;
 	}
 	
-	private boolean checkTypeDenoter(int lineNum, TypeDenoter expected, TypeDenoter given){
+	private boolean checkTypeDenoter(SourcePosition posn, TypeDenoter expected, TypeDenoter given){
 		if(expected instanceof ArrayType){
-			if(expected.typeKind != given.typeKind || !(given instanceof ArrayType) || ((ArrayType)expected).eltType != ((ArrayType)given).eltType) {
-				reporter.addError("*** line " + lineNum + ": expected " + expected + ", got " + given + "!");
+			if(!(given instanceof ArrayType)){
+				reporter.addError("*** line " + posn.getStartLineNum() + ": expected " + expected + ", got " + given + "!");
+				return false;
+			}
+			
+			if(!expected.equals(given)) {
+				reporter.addError("*** line " + posn.getStartLineNum() + ": expected " + expected + " (" + ((ArrayType)expected).eltType + ")" + ", got " + given + " (" + ((ArrayType)given).eltType + ")!");
 				return false;
 			}
 		}else if(expected instanceof BaseType){
-			if(expected.typeKind != given.typeKind || !(given instanceof BaseType)) {
-				reporter.addError("*** line " + lineNum + ": expected " + expected + ", got " + given + "!");
+			if(!(given instanceof BaseType)){
+				reporter.addError("*** line " + posn.getStartLineNum() + ": expected " + expected + ", got " + given + "!");
+				return false;
+			}
+			
+			if(!expected.equals(given)) {
+				reporter.addError("*** line " + posn.getStartLineNum() + ": expected " + expected + " (" + expected.typeKind + ")" + ", got " + given + " (" + given.typeKind + ")!");
 				return false;
 			}
 		}else if(expected instanceof ClassType){
-			if(expected.typeKind != given.typeKind || !(given instanceof ClassType) || ((ClassType)expected).className.spelling != ((ClassType)given).className.spelling) {
-				reporter.addError("*** line " + lineNum + ": expected " + expected + ", got " + given + "!");
+			if(!(given instanceof ClassType)){
+				reporter.addError("*** line " + posn.getStartLineNum() + ": expected " + expected + ", got " + given + "!");
+				return false;
+			}
+			
+			if(!expected.equals(given)) {
+				reporter.addError("*** line " + posn.getStartLineNum() + ": expected " + expected + " (" + ((ClassType)expected).className.spelling + ")" + ", got " + given + " (" + ((ClassType)given).className.spelling + ")!");
 				return false;
 			}	
 		}
@@ -52,6 +67,10 @@ public class TypeChecking implements Visitor<Object, Object> {
 	
 	private void expectedArrayType(Reference ref){
 		reporter.addError("*** line " + ref.posn.getStartLineNum() + ": references " + ref.decl.name + " which is not an array!");
+	}
+	
+	private void expectedBaseOrClassType(Reference ref){
+		reporter.addError("*** line " + ref.posn.getStartLineNum() + ": references " + ref.decl.name + " is not a base type or class type!");
 	}
 	
 	private void expectedValidOperator(Operator operator){
@@ -109,19 +128,30 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitBlockStmt(BlockStmt stmt, Object arg){
-		stmt.sl.forEach(s -> s.visit(this, stmt));
+		MethodDecl md = (MethodDecl)arg;
+		stmt.sl.forEach(s -> s.visit(this, md));
 		return null;
 	}
 
 	@Override
 	public Object visitVardeclStmt(VarDeclStmt stmt, Object arg){
-		// TODO Auto-generated method stub
+		TypeDenoter declTD = (TypeDenoter)stmt.varDecl.visit(this, null);
+		TypeDenoter	expTD = (TypeDenoter)stmt.initExp.visit(this, null);
+		checkTypeDenoter(expTD.posn, declTD, expTD);
 		return null;
 	}
 
 	@Override
 	public Object visitAssignStmt(AssignStmt stmt, Object arg){
-		// TODO Auto-generated method stub
+		if(stmt.ref.decl.type instanceof BaseType || stmt.ref.decl.type instanceof ClassType){
+			TypeDenoter refTD = (TypeDenoter)stmt.ref.visit(this, null);
+			TypeDenoter expTD = (TypeDenoter)stmt.val.visit(this, null);
+			
+			checkTypeDenoter(expTD.posn, refTD, expTD);
+		}else{
+			expectedBaseOrClassType(stmt.ref);
+		}
+		
 		return null;
 	}
 
@@ -134,7 +164,7 @@ public class TypeChecking implements Visitor<Object, Object> {
 		checkTypeKind(stmt.ix.posn, ixTD.typeKind, TypeKind.INT);
 		
 		TypeDenoter expTD = (TypeDenoter)stmt.exp.visit(this, null);
-		checkTypeDenoter(expTD.posn.getStartLineNum(), ((ArrayType)stmt.ref.decl.type).eltType, expTD);
+		checkTypeDenoter(expTD.posn, ((ArrayType)stmt.ref.decl.type).eltType, expTD);
 		
 		return null;
 	}
@@ -151,7 +181,7 @@ public class TypeChecking implements Visitor<Object, Object> {
 					Expression passedArg = stmt.argList.get(i);
 					ParameterDecl param = md.parameterDeclList.get(i);
 					
-					checkTypeDenoter(passedArg.posn.getStartLineNum(), (TypeDenoter)param.visit(this, null), (TypeDenoter)passedArg.visit(this, null));
+					checkTypeDenoter(passedArg.posn, (TypeDenoter)param.visit(this, null), (TypeDenoter)passedArg.visit(this, null));
 				}
 			}
 		}else{
@@ -163,28 +193,40 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitReturnStmt(ReturnStmt stmt, Object arg){
-		return stmt.returnExpr.visit(this, null);
+		MethodDecl md = (MethodDecl)arg;
+		
+		if(stmt.returnExpr != null) {
+			TypeDenoter rTD = (TypeDenoter)stmt.returnExpr.visit(this, null);
+			checkTypeDenoter(stmt.returnExpr.posn, md.type, rTD);
+		}else
+			checkTypeKind(stmt.posn, md.type.typeKind, TypeKind.VOID);
+		
+		return null;
 	}
 
 	@Override
 	public Object visitIfStmt(IfStmt stmt, Object arg){
-		TypeDenoter condTD = (TypeDenoter)stmt.cond.visit(this, null);
-		checkTypeKind(stmt.cond.posn, condTD.typeKind, TypeKind.BOOLEAN);
+		MethodDecl md = (MethodDecl)arg;
 		
-		stmt.thenStmt.visit(this, null);
+		TypeDenoter condTD = (TypeDenoter)stmt.cond.visit(this, null);
+		checkTypeKind(stmt.cond.posn, TypeKind.BOOLEAN, condTD.typeKind);
+		
+		stmt.thenStmt.visit(this, md);
 		
 		if(stmt.elseStmt != null)
-			stmt.elseStmt.visit(this, null);
+			stmt.elseStmt.visit(this, md);
 		
 		return null;
 	}
 
 	@Override
 	public Object visitWhileStmt(WhileStmt stmt, Object arg){
+		MethodDecl md = (MethodDecl)arg;
+		
 		TypeDenoter condTD = (TypeDenoter)stmt.cond.visit(this, null);
-		checkTypeKind(stmt.cond.posn, condTD.typeKind, TypeKind.BOOLEAN);
+		checkTypeKind(stmt.cond.posn, TypeKind.BOOLEAN, condTD.typeKind);
 
-		stmt.body.visit(this, null);
+		stmt.body.visit(this, md);
 		
 		return null;
 	}
@@ -210,31 +252,34 @@ public class TypeChecking implements Visitor<Object, Object> {
 	@Override
 	public Object visitBinaryExpr(BinaryExpr expr, Object arg){
 		TypeDenoter left = (TypeDenoter)expr.left.visit(this, null);
-		TypeDenoter right = (TypeDenoter)expr.left.visit(this, null);
+		TypeDenoter right = (TypeDenoter)expr.right.visit(this, null);
 		
 		switch(expr.operator.kind){
 			case MORE_THAN:
 			case LESS_THAN:
 			case MORE_EQUAL:
 			case LESS_EQUAL:
-			case EQUALS_OP:
 			case NOT_EQUALS:
-				checkTypeKind(left.posn, TypeKind.INT, left.typeKind);
-				checkTypeKind(right.posn, TypeKind.INT, right.typeKind);
+				checkTypeKind(expr.left.posn, TypeKind.INT, left.typeKind);
+				checkTypeKind(expr.right.posn, TypeKind.INT, right.typeKind);
+				return new BaseType(TypeKind.BOOLEAN, expr.posn);
+				
+			case EQUALS_OP:
+				checkTypeDenoter(expr.posn, left, right);
 				return new BaseType(TypeKind.BOOLEAN, expr.posn);
 				
 			case AND_LOG:
 			case OR_LOG:
-				checkTypeKind(left.posn, TypeKind.BOOLEAN, left.typeKind);
-				checkTypeKind(right.posn, TypeKind.BOOLEAN, right.typeKind);
+				checkTypeKind(expr.left.posn, TypeKind.BOOLEAN, left.typeKind);
+				checkTypeKind(expr.right.posn, TypeKind.BOOLEAN, right.typeKind);
 				return new BaseType(TypeKind.BOOLEAN, expr.posn);
 			
 			case PLUS:
 			case MINUS:
 			case TIMES:
 			case DIV:
-				checkTypeKind(left.posn, TypeKind.INT, left.typeKind);
-				checkTypeKind(right.posn, TypeKind.INT, right.typeKind);
+				checkTypeKind(expr.left.posn, TypeKind.INT, left.typeKind);
+				checkTypeKind(expr.right.posn, TypeKind.INT, right.typeKind);
 				return new BaseType(TypeKind.INT, expr.posn);
 			
 			default:
@@ -245,7 +290,6 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitRefExpr(RefExpr expr, Object arg){
-		// XXX???
 		return expr.ref.visit(this, null);
 	}
 
@@ -277,7 +321,7 @@ public class TypeChecking implements Visitor<Object, Object> {
 					Expression passedArg = expr.argList.get(i);
 					ParameterDecl param = md.parameterDeclList.get(i);
 					
-					checkTypeDenoter(passedArg.posn.getStartLineNum(), (TypeDenoter)param.visit(this, null), (TypeDenoter)passedArg.visit(this, null));
+					checkTypeDenoter(passedArg.posn, (TypeDenoter)param.visit(this, null), (TypeDenoter)passedArg.visit(this, null));
 				}
 				
 				return md.type;
@@ -306,17 +350,17 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitThisRef(ThisRef ref, Object arg){
-		return ref.decl.visit(this, null);
+		return ref.decl.type;
 	}
 
 	@Override
 	public Object visitIdRef(IdRef ref, Object arg){
-		return ref.decl.visit(this, null);
+		return ref.decl.type;
 	}
 
 	@Override
 	public Object visitQRef(QualRef ref, Object arg){
-		return ref.decl.visit(this, null);
+		return ref.decl.type;
 	}
 
 	@Override

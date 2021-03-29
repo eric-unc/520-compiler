@@ -55,6 +55,7 @@ I have taken some test files from others, including [Ben Dod](https://github.com
 * Added support for null (adding `NullLiteral.java`, and updating `Visitor.java` and `ASTDisplay.java` to support it).
 * Added `decl` field to `Identifier.java` and `Reference.java` for contextual analysis, along with an alternative constructor to initialize `Identifier.java`. Added `inClass` field to `MethodDecl.java` for contextual analysis.
 * Added alternative constructor to `FieldDeclList.java`, `MethodDeclList.java`, and `ParameterDeclList.java` to accept one declaration for convenience, which is to be appended to the list.
+* Added abstract `equals` method in `TypeDenoter.java`, accompanied with implementation in `BaseType.java`, `ClassType.java`, and `ArrayType.java`. Added `equals` to `Identifier.java` and `Declaration.java`.
 * Syntactical/code style changes/cleanup.
 
 ## Testing
