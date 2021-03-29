@@ -4,7 +4,7 @@ A "miniJava" compiler, as created for COMP 520.
 Note that because of class requirements, my code is not as ideal as I want it to be. Please forgive me.
 
 ## Features supported
-Parses for correct syntax and builds an AST. Working on contextual analysis.
+Parses for correct syntax, builds an AST, perform contextual analysis (identification and type checking).
 
 ## Usage
 The compiler should be used through the command line, through arguments:
