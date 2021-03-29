@@ -1,0 +1,13 @@
+class Test21 {
+	public void main(String[] args){
+		Person p1 = new Person();
+		Person p2 = null;
+		
+		boolean b = p1 == p2;
+	}
+}
+
+class Person {
+	String name;
+	int age;
+}

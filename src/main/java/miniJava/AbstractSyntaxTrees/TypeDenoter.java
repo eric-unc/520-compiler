@@ -17,6 +17,9 @@ abstract public class TypeDenoter extends AST {
     public TypeKind typeKind;
     
     public abstract boolean equals(TypeDenoter other);
+    
+    @Override
+    public abstract String toString();
 }
 
         

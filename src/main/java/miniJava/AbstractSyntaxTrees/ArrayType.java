@@ -24,4 +24,9 @@ public class ArrayType extends TypeDenoter {
 	public boolean equals(TypeDenoter other){
 		return this.typeKind == other.typeKind && other instanceof ArrayType && this.eltType.equals(((ArrayType)other).eltType);
 	}
+	
+	@Override
+	public String toString(){
+		return "ClassType (" + eltType + ")";
+	}
 }

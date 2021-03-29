@@ -1,0 +1,17 @@
+class Test20 {
+	public void main(String[] args){
+		String s = new String();
+		String s2 = args[1];
+		System.out.println(s);
+		
+		int[] my_nums = new int[5];
+		my_nums[0] = 1;
+		my_nums[1] = 69;
+		my_nums[2] = 70;
+		
+		int x = false;
+		x = true;
+		
+		return;
+	}
+}

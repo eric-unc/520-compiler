@@ -1,0 +1,19 @@
+class Test23 {
+	public void main(String[] args){
+		Triangle t = 5; // error
+		t = new Triangle();
+		t = true || 6; // double error
+		System.out.println(t); // error
+		System.out.println(t.isEquilateral()); // error
+	}
+}
+
+class Triangle {
+	int l1;
+	int l2;
+	int l3;
+	
+	public boolean isEquilateral(){
+		return l1 == l2 && l2 == l3;
+	}
+}

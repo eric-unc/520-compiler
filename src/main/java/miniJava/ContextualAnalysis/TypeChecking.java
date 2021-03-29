@@ -21,40 +21,8 @@ public class TypeChecking implements Visitor<Object, Object> {
 		return true;
 	}
 	
-	private boolean checkTypeDenoter(SourcePosition posn, TypeDenoter expected, TypeDenoter given){
-		if(expected instanceof ArrayType){
-			if(!(given instanceof ArrayType)){
-				reporter.addError("*** line " + posn.getStartLineNum() + ": expected " + expected + ", got " + given + "!");
-				return false;
-			}
-			
-			if(!expected.equals(given)) {
-				reporter.addError("*** line " + posn.getStartLineNum() + ": expected " + expected + " (" + ((ArrayType)expected).eltType + ")" + ", got " + given + " (" + ((ArrayType)given).eltType + ")!");
-				return false;
-			}
-		}else if(expected instanceof BaseType){
-			if(!(given instanceof BaseType)){
-				reporter.addError("*** line " + posn.getStartLineNum() + ": expected " + expected + ", got " + given + "!");
-				return false;
-			}
-			
-			if(!expected.equals(given)) {
-				reporter.addError("*** line " + posn.getStartLineNum() + ": expected " + expected + " (" + expected.typeKind + ")" + ", got " + given + " (" + given.typeKind + ")!");
-				return false;
-			}
-		}else if(expected instanceof ClassType){
-			if(!(given instanceof ClassType)){
-				reporter.addError("*** line " + posn.getStartLineNum() + ": expected " + expected + ", got " + given + "!");
-				return false;
-			}
-			
-			if(!expected.equals(given)) {
-				reporter.addError("*** line " + posn.getStartLineNum() + ": expected " + expected + " (" + ((ClassType)expected).className.spelling + ")" + ", got " + given + " (" + ((ClassType)given).className.spelling + ")!");
-				return false;
-			}	
-		}
-		
-		return true;
+	private void checkTypeDenoter(SourcePosition posn, TypeDenoter expected, TypeDenoter given){if(!expected.equals(given))
+			reporter.addError("*** line " + posn.getStartLineNum() + ": expected " + expected + ", got " + given + "!");
 	}
 	
 	private void expectedMethod(int lineNum){
@@ -92,23 +60,23 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitFieldDecl(FieldDecl fd, Object arg){
-		return null;
+		return fd.type;
 	}
 
 	@Override
 	public Object visitMethodDecl(MethodDecl md, Object arg){
 		md.statementList.forEach(sl -> sl.visit(this, md));
-		return null;
+		return md.type;
 	}
 
 	@Override
 	public Object visitParameterDecl(ParameterDecl pd, Object arg){
-		return null;
+		return pd.type;
 	}
 
 	@Override
 	public Object visitVarDecl(VarDecl decl, Object arg){
-		return null;
+		return decl.type;
 	}
 
 	@Override
@@ -157,8 +125,10 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitIxAssignStmt(IxAssignStmt stmt, Object arg){
-		if(!(stmt.ref.decl.type instanceof ArrayType))
+		if(!(stmt.ref.decl.type instanceof ArrayType)){
 			expectedArrayType(stmt.ref);
+			return null;
+		}
 		
 		TypeDenoter ixTD = (TypeDenoter)stmt.ix.visit(this, null);
 		checkTypeKind(stmt.ix.posn, ixTD.typeKind, TypeKind.INT);
@@ -340,11 +310,15 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitNewObjectExpr(NewObjectExpr expr, Object arg){
-		return expr.classtype;
+		if(!expr.classtype.className.spelling.equals("String"))
+			return expr.classtype;
+		else
+			return new BaseType(TypeKind.UNSUPPORTED, expr.posn);
 	}
 
 	@Override
 	public Object visitNewArrayExpr(NewArrayExpr expr, Object arg){
+		checkTypeDenoter(expr.sizeExpr.posn, new BaseType(TypeKind.INT, null), (TypeDenoter)expr.sizeExpr.visit(this, null));
 		return new ArrayType(expr.eltType, expr.posn);
 	}
 
@@ -385,8 +359,6 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitNullLiteral(NullLiteral nil, Object arg){
-		// TODO unsure
 		return new BaseType(TypeKind.CLASS, nil.posn);
 	}
-
 }

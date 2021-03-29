@@ -179,4 +179,97 @@ class TypeCheckingTest {
 			fail();
 		}
 	}
+	
+	@Test
+	@FailOnSystemExit
+	void test20(){
+		try {
+			System.out.println("Test 20");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test20.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ErrorReporter e = new ErrorReporter();
+			new Identification((Package)ast, e);
+			e.printErrors();
+			assertEquals(0, e.numErrors());
+			
+			new TypeChecking((Package)ast, e);
+			e.printErrors();
+			assertEquals(4, e.numErrors());
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test21(){
+		try {
+			System.out.println("Test 21");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test21.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ErrorReporter e = new ErrorReporter();
+			new Identification((Package)ast, e);
+			assertEquals(0, e.numErrors());
+			
+			new TypeChecking((Package)ast, e);
+			e.printErrors();
+			assertEquals(0, e.numErrors());
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test22(){
+		try {
+			System.out.println("Test 22");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test22.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ErrorReporter e = new ErrorReporter();
+			new Identification((Package)ast, e);
+			assertEquals(0, e.numErrors());
+			
+			new TypeChecking((Package)ast, e);
+			e.printErrors();
+			assertEquals(0, e.numErrors());
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test23(){
+		try {
+			System.out.println("Test 23");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test23.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ErrorReporter e = new ErrorReporter();
+			new Identification((Package)ast, e);
+			assertEquals(0, e.numErrors());
+			
+			new TypeChecking((Package)ast, e);
+			e.printErrors();
+			assertEquals(5, e.numErrors());
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
 }

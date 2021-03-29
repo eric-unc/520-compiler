@@ -21,4 +21,9 @@ public class BaseType extends TypeDenoter
 	public boolean equals(TypeDenoter other){
 		return this.typeKind == other.typeKind && other instanceof BaseType;
 	}
+
+	@Override
+	public String toString(){
+		return "BaseType (" + this.typeKind + ")";
+	}
 }

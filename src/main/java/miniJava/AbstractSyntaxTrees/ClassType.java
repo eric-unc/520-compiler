@@ -22,6 +22,12 @@ public class ClassType extends TypeDenoter
 
 	@Override
 	public boolean equals(TypeDenoter other){
-		return this.typeKind == other.typeKind && other instanceof ClassType && this.className.equals(((ClassType)other).className);
+		return (typeKind == other.typeKind && other instanceof ClassType && className.equals(((ClassType)other).className)
+				|| (other.typeKind == TypeKind.CLASS && other instanceof BaseType)); // null is fine
+	}
+	
+	@Override
+	public String toString(){
+		return "ClassType (" + this.className.spelling + ")";
 	}
 }
