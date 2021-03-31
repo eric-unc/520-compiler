@@ -1,0 +1,16 @@
+class Test27 {
+	public void main(String[] args){
+		int[] as = new int[5];
+		int[] bs = new int[5];
+		
+		boolean asEqualsBs = as == bs; // fine
+		
+		C[] cs = new C[6];
+		
+		boolean asEqualsCs = as == cs; // error
+	}
+}
+
+class C {
+	
+}

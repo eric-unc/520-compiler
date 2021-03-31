@@ -197,7 +197,7 @@ class TypeCheckingTest {
 			
 			new TypeChecking((Package)ast, e);
 			e.printErrors();
-			assertEquals(4, e.numErrors());
+			assertEquals(5, e.numErrors());
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 			fail();
@@ -267,6 +267,121 @@ class TypeCheckingTest {
 			new TypeChecking((Package)ast, e);
 			e.printErrors();
 			assertEquals(5, e.numErrors());
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test24(){
+		try {
+			System.out.println("Test 24");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test24.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ErrorReporter e = new ErrorReporter();
+			new Identification((Package)ast, e);
+			assertEquals(0, e.numErrors());
+			
+			new TypeChecking((Package)ast, e);
+			e.printErrors();
+			assertEquals(1, e.numErrors());
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test25(){
+		try {
+			System.out.println("Test 25");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test25.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ErrorReporter e = new ErrorReporter();
+			new Identification((Package)ast, e);
+			assertEquals(0, e.numErrors());
+			
+			new TypeChecking((Package)ast, e);
+			e.printErrors();
+			assertEquals(1, e.numErrors());
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test26(){
+		try {
+			System.out.println("Test 26");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test26.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ErrorReporter e = new ErrorReporter();
+			new Identification((Package)ast, e);
+			assertEquals(0, e.numErrors());
+			
+			new TypeChecking((Package)ast, e);
+			e.printErrors();
+			assertEquals(1, e.numErrors());
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test27(){
+		try {
+			System.out.println("Test 27");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test27.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ErrorReporter e = new ErrorReporter();
+			new Identification((Package)ast, e);
+			assertEquals(0, e.numErrors());
+			
+			new TypeChecking((Package)ast, e);
+			e.printErrors();
+			assertEquals(1, e.numErrors());
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test28(){
+		try {
+			System.out.println("Test 28");
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test28.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ErrorReporter e = new ErrorReporter();
+			new Identification((Package)ast, e);
+			assertEquals(0, e.numErrors());
+			
+			new TypeChecking((Package)ast, e);
+			e.printErrors();
+			assertEquals(2, e.numErrors());
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
 			fail();

@@ -19,7 +19,7 @@ public class BaseType extends TypeDenoter
 
 	@Override
 	public boolean equals(TypeDenoter other){
-		return this.typeKind == other.typeKind && other instanceof BaseType;
+		return this.typeKind == other.typeKind && other instanceof BaseType && this.typeKind != TypeKind.UNSUPPORTED;
 	}
 
 	@Override

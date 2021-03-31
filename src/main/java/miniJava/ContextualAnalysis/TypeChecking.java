@@ -21,7 +21,8 @@ public class TypeChecking implements Visitor<Object, Object> {
 		return true;
 	}
 	
-	private void checkTypeDenoter(SourcePosition posn, TypeDenoter expected, TypeDenoter given){if(!expected.equals(given))
+	private void checkTypeDenoter(SourcePosition posn, TypeDenoter expected, TypeDenoter given){
+		if(!expected.equals(given))
 			reporter.addError("*** line " + posn.getStartLineNum() + ": expected " + expected + ", got " + given + "!");
 	}
 	
@@ -76,7 +77,10 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitVarDecl(VarDecl decl, Object arg){
-		return decl.type;
+		if(decl.type instanceof ClassType && ((ClassType)decl.type).className.spelling.equals("String"))
+			return new BaseType(TypeKind.UNSUPPORTED, decl.posn);
+		else
+			return decl.type;
 	}
 
 	@Override

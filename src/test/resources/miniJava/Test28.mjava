@@ -1,0 +1,5 @@
+class Test28 {
+	public void main(String[] args){
+		boolean b = 1 + true; // two errors since right produces an error type
+	}
+}

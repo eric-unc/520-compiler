@@ -1,16 +1,16 @@
 class Test20 {
 	public void main(String[] args){
-		String s = new String();
-		String s2 = args[1];
-		System.out.println(s);
+		String s = new String(); // error
+		String s2 = args[1]; // error
+		System.out.println(s); // error
 		
 		int[] my_nums = new int[5];
 		my_nums[0] = 1;
 		my_nums[1] = 69;
 		my_nums[2] = 70;
 		
-		int x = false;
-		x = true;
+		int x = false; // error
+		x = true; // error
 		
 		return;
 	}
