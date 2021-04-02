@@ -1,0 +1,5 @@
+class Test29 {
+	public void main(String[] args){
+		int i = args.length; // no error
+	}
+}
