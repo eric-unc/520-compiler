@@ -8,6 +8,7 @@ import miniJava.AbstractSyntaxTrees.ASTDisplay;
 import miniJava.AbstractSyntaxTrees.Package;
 import miniJava.ContextualAnalysis.ErrorReporter;
 import miniJava.ContextualAnalysis.Identification;
+import miniJava.ContextualAnalysis.MethodChecker;
 import miniJava.ContextualAnalysis.TypeChecking;
 import miniJava.SyntacticAnalyzer.Parser;
 import miniJava.SyntacticAnalyzer.Scanner;
@@ -52,6 +53,14 @@ public class Compiler {
 		
 		@SuppressWarnings("unused")
 		TypeChecking tc = new TypeChecking((Package)ast, e);
+		
+		if(e.hasErrors()){
+			e.printErrors();
+			System.exit(4);
+		}
+		
+		@SuppressWarnings("unused")
+		MethodChecker mc = new MethodChecker((Package)ast, e);
 		
 		if(e.hasErrors()){
 			e.printErrors();

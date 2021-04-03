@@ -1,0 +1,35 @@
+class Test31 {
+	public static void main(String[] args){
+		System.out.println(5);
+	}
+}
+
+class A {
+	public int x;
+	public int y;
+	
+	public void init(){
+		x = 5;
+		y = 10;
+	}
+	
+	public int add(){
+		int ret = x + y;
+		return ret;
+	}
+	
+	public boolean equal(){
+		return x == y;
+	}
+	
+	public int doABunchOfStuff(){
+		x = -x;
+		y = add();
+		x = x + y;
+		return y;
+	}
+	
+	public void doNothing(){
+		
+	}
+}

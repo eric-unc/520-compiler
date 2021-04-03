@@ -1,0 +1,11 @@
+class Test31 {
+	public static void main(String[] args){
+		System.out.println(5);
+	}
+}
+
+class AnotherClass {
+	public static void main(String[] args){ // error
+		System.out.println(7);
+	}
+}
