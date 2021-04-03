@@ -42,6 +42,10 @@ public class TypeChecking implements Visitor<Object, Object> {
 		reporter.addError("*** line " + ref.posn.getStartLineNum() + ": references " + ref.decl.name + " is not a base type or class type!");
 	}
 	
+	private void expectedNonFinalVariable(QualRef ref){
+		reporter.addError("*** line " + ref.posn.getStartLineNum() + ": references " + ref.decl.name + " which is a private field!");
+	}
+	
 	private void expectedValidOperator(Operator operator){
 		reporter.addError("*** line " + operator.posn.getStartLineNum() + ": uses unexpected operator " + operator.spelling + "!");
 	}
@@ -116,6 +120,11 @@ public class TypeChecking implements Visitor<Object, Object> {
 	@Override
 	public Object visitAssignStmt(AssignStmt stmt, Object arg){
 		if(stmt.ref.decl.type instanceof BaseType || stmt.ref.decl.type instanceof ClassType){
+			if(stmt.ref instanceof QualRef && stmt.ref.decl.name.equals("length") && ((QualRef)stmt.ref).ref.decl.type.typeKind == TypeKind.ARRAY){
+				expectedNonFinalVariable((QualRef)stmt.ref);
+				return null;
+			}
+			
 			TypeDenoter refTD = (TypeDenoter)stmt.ref.visit(this, null);
 			TypeDenoter expTD = (TypeDenoter)stmt.val.visit(this, null);
 			

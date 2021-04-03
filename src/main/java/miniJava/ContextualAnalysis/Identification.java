@@ -328,6 +328,14 @@ public class Identification implements Visitor<Object, Object> {
 					ref.id.decl = d;
 					ref.decl = ref.id.decl;
 					break;
+					
+				case ARRAY:
+					if(ref.id.spelling.equals("length")){
+						ref.id.decl = new FieldDecl(false, false, new BaseType(TypeKind.INT, null), "length", null);
+						ref.decl = ref.id.decl;
+						break;
+					}
+					
 				default:
 					reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference " + ref.id.spelling + " for type" + ld.type.typeKind + "!");
 			}
@@ -351,6 +359,14 @@ public class Identification implements Visitor<Object, Object> {
 					ref.id.decl = d;
 					ref.decl = ref.id.decl;
 					break;
+					
+				case ARRAY:
+					if(ref.id.spelling.equals("length")){
+						ref.id.decl = new FieldDecl(false, false, new BaseType(TypeKind.INT, null), "length", null);
+						ref.decl = ref.id.decl;
+						break;
+					}
+					
 				default:
 					reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference " + ref.id.spelling + " for type" + memd.type.typeKind + "!");
 			}
