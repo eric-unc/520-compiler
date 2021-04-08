@@ -15,16 +15,16 @@ import miniJava.SyntacticAnalyzer.Scanner;
 
 public class Compiler {
 	
-	private static boolean debug;
+	private static boolean isSpecialMode;
 
 	public static void main(String[] args){
 		if(args.length == 0)
 			throw new IllegalArgumentException("Needs file to compile with!");
 		
-		debug = args.length > 1 && args[1].contains("--debug");
+		isSpecialMode = args.length > 1;
 		
-		if(debugMode())
-			System.out.println("Warning: the compiler is now in debug mode.");
+		if(isSpecialMode)
+			System.out.println("Warning: the compiler is now in sepcial mode \"" + args[1] + "\".");
 		
 		FileInputStream stream = null;
 		
@@ -59,6 +59,9 @@ public class Compiler {
 			System.exit(4);
 		}
 		
+		if(isSpecialMode && args[1].contains("contextual-analysis-only"))
+			System.exit(0);
+		
 		@SuppressWarnings("unused")
 		MethodChecker mc = new MethodChecker((Package)ast, e);
 		
@@ -68,13 +71,5 @@ public class Compiler {
 		}
 		
 		System.exit(0);
-	}
-	
-	public static boolean debugMode(){
-		return debug;
-	}
-	
-	public static void debug(Object o){
-		System.out.println(o);
 	}
 }

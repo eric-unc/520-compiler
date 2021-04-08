@@ -64,6 +64,7 @@ This project uses JUnit for testing. I have my own tests, as well as added from 
 ## Credits
 * Eric Schneider
 * Jan Prins (AST package, checkpoint tests, `Test7.mjava`)
+* Max Beckman-Harned (checkpoint tests)
 * Ben Dod (`Test2.mjava`, `Test3.mjava`)
 * Changon Kim (`Test9.mjava`)
   
