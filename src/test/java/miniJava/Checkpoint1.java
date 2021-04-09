@@ -84,7 +84,7 @@ public class Checkpoint1 {
 	private static int runTest(File x, File cp) throws IOException, InterruptedException {
 		String testPath = x.getPath();
 		System.out.println(testPath);
-		ProcessBuilder pb = new ProcessBuilder("java", "-cp", BIN, "miniJava.Compiler", testPath);
+		ProcessBuilder pb = new ProcessBuilder("java", "-cp", BIN, "miniJava.Compiler", testPath, "--ast-only");
 		Process p = pb.start();
 		threadPool.execute(new ProcessOutputter(p.getInputStream(), false));
 		

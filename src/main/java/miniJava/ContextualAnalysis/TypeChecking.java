@@ -3,6 +3,8 @@ package miniJava.ContextualAnalysis;
 import miniJava.AbstractSyntaxTrees.*;
 import miniJava.AbstractSyntaxTrees.Package;
 import miniJava.SyntacticAnalyzer.SourcePosition;
+import miniJava.SyntacticAnalyzer.Token;
+import miniJava.SyntacticAnalyzer.TokenType;
 
 public class TypeChecking implements Visitor<Object, Object> {
 	private ErrorReporter reporter;
@@ -23,7 +25,31 @@ public class TypeChecking implements Visitor<Object, Object> {
 	
 	private void checkTypeDenoter(SourcePosition posn, TypeDenoter expected, TypeDenoter given){
 		if(!expected.equals(given))
-			reporter.addError("*** line " + posn.getStartLineNum() + ": expected " + expected + ", got " + given + "!");
+			reporter.addError("*** line " + posn.getStartLineNum() + ": expected " + expected.toPrettyString() + ", got " + given.toPrettyString() + "!");
+	}
+	
+	private void expectedNonNullTD(SourcePosition posn) {
+		reporter.addError("*** line " + posn.getStartLineNum() + ": expected a non-null type!");
+	}
+	
+	private void checkClass(ClassType ct){
+		if(!(ct.classDecl instanceof ClassDecl))
+			reporter.addError("*** line " + ct.posn.getStartLineNum() + ": expected a class declaration!");
+	}
+	
+	private void checkNotClassDecl(Declaration decl){
+		if(decl instanceof ClassDecl)
+			reporter.addError("*** line " + decl.posn.getStartLineNum() + ": is a class declaration, not a variable!");
+	}
+	
+	private void checkNotMethodDecl(Declaration decl){
+		if(decl instanceof MethodDecl)
+			reporter.addError("*** line " + decl.posn.getStartLineNum() + ": is a method declaration, not a variable!");
+	}
+	
+	private void checkNotSolitaryDeclaration(Statement s){
+		if(s instanceof VarDeclStmt)
+			reporter.addError("*** line " + s.posn.getStartLineNum() + ": is an unpermitted solitary variable declaration!");
 	}
 	
 	private void expectedMethod(int lineNum){
@@ -70,12 +96,14 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitMethodDecl(MethodDecl md, Object arg){
-		md.statementList.forEach(sl -> sl.visit(this, md));
+		md.parameterDeclList.forEach(pd -> pd.visit(this, md));
+		md.statementList.forEach(s -> s.visit(this, md));
 		return md.type;
 	}
 
 	@Override
 	public Object visitParameterDecl(ParameterDecl pd, Object arg){
+		pd.type.visit(this, null);
 		return pd.type;
 	}
 
@@ -94,11 +122,13 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitClassType(ClassType type, Object arg){
+		checkClass(type);
 		return null;
 	}
 
 	@Override
 	public Object visitArrayType(ArrayType type, Object arg){
+		type.eltType.visit(this, null);
 		return null;
 	}
 
@@ -113,7 +143,12 @@ public class TypeChecking implements Visitor<Object, Object> {
 	public Object visitVardeclStmt(VarDeclStmt stmt, Object arg){
 		TypeDenoter declTD = (TypeDenoter)stmt.varDecl.visit(this, null);
 		TypeDenoter	expTD = (TypeDenoter)stmt.initExp.visit(this, null);
-		checkTypeDenoter(expTD.posn, declTD, expTD);
+		
+		if(expTD != null)
+			checkTypeDenoter(expTD.posn, declTD, expTD);
+		else
+			expectedNonNullTD(stmt.posn);
+		
 		return null;
 	}
 
@@ -180,6 +215,8 @@ public class TypeChecking implements Visitor<Object, Object> {
 		
 		if(stmt.returnExpr != null) {
 			TypeDenoter rTD = (TypeDenoter)stmt.returnExpr.visit(this, null);
+			if(rTD == null)
+				System.out.println("beep");
 			checkTypeDenoter(stmt.returnExpr.posn, md.type, rTD);
 		}else
 			checkTypeKind(stmt.posn, md.type.typeKind, TypeKind.VOID);
@@ -194,10 +231,13 @@ public class TypeChecking implements Visitor<Object, Object> {
 		TypeDenoter condTD = (TypeDenoter)stmt.cond.visit(this, null);
 		checkTypeKind(stmt.cond.posn, TypeKind.BOOLEAN, condTD.typeKind);
 		
+		checkNotSolitaryDeclaration(stmt.thenStmt);
 		stmt.thenStmt.visit(this, md);
 		
-		if(stmt.elseStmt != null)
+		if(stmt.elseStmt != null){
+			checkNotSolitaryDeclaration(stmt.elseStmt);
 			stmt.elseStmt.visit(this, md);
+		}
 		
 		return null;
 	}
@@ -209,6 +249,7 @@ public class TypeChecking implements Visitor<Object, Object> {
 		TypeDenoter condTD = (TypeDenoter)stmt.cond.visit(this, null);
 		checkTypeKind(stmt.cond.posn, TypeKind.BOOLEAN, condTD.typeKind);
 
+		checkNotSolitaryDeclaration(stmt.body);
 		stmt.body.visit(this, md);
 		
 		return null;
@@ -272,7 +313,14 @@ public class TypeChecking implements Visitor<Object, Object> {
 	}
 
 	@Override
-	public Object visitRefExpr(RefExpr expr, Object arg){
+	public Object visitRefExpr(RefExpr expr, Object arg){ // TODO
+		//System.out.println("looking at " + ((IdRef)expr.ref).id);
+		/*if(expr.ref instanceof IdRef) {
+			checkNotClassDecl(((IdRef)expr.ref).decl);
+		}*/
+		
+		TypeDenoter td = (TypeDenoter) expr.ref.visit(this, null);
+		
 		return expr.ref.visit(this, null);
 	}
 
@@ -337,16 +385,29 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitThisRef(ThisRef ref, Object arg){
-		return ref.decl.type;
+		// yes, this is very hacky, i am sorry
+		System.out.println(ref.decl);
+		System.out.println(ref.decl.type);
+		ClassDecl cd = (ClassDecl)ref.decl;
+		return new ClassType(new Identifier(new Token(TokenType.IDEN, cd.name, cd.posn), cd), cd.posn);
+		//return ref.decl.type;
 	}
 
 	@Override
 	public Object visitIdRef(IdRef ref, Object arg){
+		//System.out.println("i cry when angels deserve to die " + (ref.decl instanceof ClassDecl) + " " + ref.decl.type);
+		
+		//checkNotClassDecl(ref.decl); // XXX
+		
+		//System.out.println("Did we see anything?");
+		//reporter.printErrors();
+		
 		return ref.decl.type;
 	}
 
 	@Override
 	public Object visitQRef(QualRef ref, Object arg){
+		checkNotMethodDecl(ref.ref.decl);
 		return ref.decl.type;
 	}
 

@@ -38,7 +38,6 @@ public class Identification implements Visitor<Object, Object> {
 			cd.methodDeclList.forEach(md -> md.visit(this, cd));
 			
 			table.closeScope();
-			return null;
 		}else{
 			Identifier searchingFor = (Identifier)arg;
 			
@@ -50,8 +49,9 @@ public class Identification implements Visitor<Object, Object> {
 				if(md.name.equals(searchingFor.spelling))
 					return md;
 			
-			return null;
 		}
+		
+		return null;
 	}
 
 	@Override
@@ -78,8 +78,6 @@ public class Identification implements Visitor<Object, Object> {
 		return null;
 	}
 
-	// This is the start of stuff purely implemented by me.
-	// Not that I didn't implement the above stuff, but it was made in reference to Prins' slides.
 	@Override
 	public Object visitParameterDecl(ParameterDecl pd, Object arg){
 		pd.type.visit(this, null);
@@ -101,7 +99,7 @@ public class Identification implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitClassType(ClassType type, Object arg){
-		table.retrieve(type.className, null);
+		type.classDecl = table.retrieve(type.className, null);
 		return null;
 	}
 

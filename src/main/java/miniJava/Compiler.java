@@ -24,7 +24,7 @@ public class Compiler {
 		isSpecialMode = args.length > 1;
 		
 		if(isSpecialMode)
-			System.out.println("Warning: the compiler is now in sepcial mode \"" + args[1] + "\".");
+			System.out.println("Warning: the compiler is now in special mode \"" + args[1] + "\".");
 		
 		FileInputStream stream = null;
 		
@@ -39,8 +39,11 @@ public class Compiler {
 		Parser parser = new Parser(scanner);
 		AST ast = parser.parse();
 		
-		ASTDisplay display = new ASTDisplay();
-		display.showTree(ast);
+		if(isSpecialMode && args[1].contains("--ast-only")){
+			ASTDisplay display = new ASTDisplay();
+			display.showTree(ast);
+			System.exit(0);
+		}
 		
 		ErrorReporter e = new ErrorReporter();
 		@SuppressWarnings("unused")
@@ -59,7 +62,7 @@ public class Compiler {
 			System.exit(4);
 		}
 		
-		if(isSpecialMode && args[1].contains("contextual-analysis-only"))
+		if(isSpecialMode && args[1].contains("--contextual-analysis-only"))
 			System.exit(0);
 		
 		@SuppressWarnings("unused")

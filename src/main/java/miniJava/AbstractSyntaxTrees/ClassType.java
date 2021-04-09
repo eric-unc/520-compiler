@@ -19,15 +19,16 @@ public class ClassType extends TypeDenoter
     }
 
     public Identifier className;
+    public Declaration classDecl;
 
 	@Override
 	public boolean equals(TypeDenoter other){
-		return (typeKind == other.typeKind && other instanceof ClassType && className.equals(((ClassType)other).className)
+		return other != null && (typeKind == other.typeKind && other instanceof ClassType && className.equals(((ClassType)other).className)
 				|| (other.typeKind == TypeKind.CLASS && other instanceof BaseType)); // null is fine
 	}
 	
 	@Override
-	public String toString(){
+	public String toPrettyString(){
 		return "ClassType (" + this.className.spelling + ")";
 	}
 }

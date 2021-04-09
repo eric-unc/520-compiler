@@ -73,7 +73,7 @@ public class Checkpoint2 {
 	}
 	
 	private static ReturnInfo runTest(File x) throws IOException, InterruptedException {
-		ProcessBuilder pb = new ProcessBuilder("java", "-cp", BIN, "miniJava.Compiler", x.getPath());
+		ProcessBuilder pb = new ProcessBuilder("java", "-cp", BIN, "miniJava.Compiler", x.getPath(), "--ast-only");
 		pb.redirectErrorStream(true);
 		Process p = pb.start();
 

@@ -72,7 +72,7 @@ public class IdentificationTable {
 		if(getLevel() >= 4){
 			for(int i = table.size() - 1; i >= 3; i--){
 				if(table.get(i).containsKey(dec.name)){
-					reporter.addError("*** line " + dec.posn.getStartLineNum() + ": attempts to declare " + dec.name + " with conflicting declaration on line " + table.peek().get(dec.name).posn.getStartLineNum() + "!");
+					reporter.addError("*** line " + dec.posn.getStartLineNum() + ": attempts to declare " + dec.name + " with conflicting declaration on line " + table.get(i).get(dec.name).posn.getStartLineNum() + "!");
 					return;
 				}
 			}

@@ -36,14 +36,14 @@ public class Checkpoint3 {
 		//System.out.println("Run pa3_tests on miniJava compiler in " + projDir);
 		
 		// compensate for project organization 
-		classPath = new File(BIN);
+		//classPath = new File(BIN);
 		/*if (!classPath.isDirectory()) {
 			// no bin directory in project, assume projDir is root for class files
 			classPath = new File(projDir);
 		}*/
 
 		// miniJava compiler mainclass present ?
-		if (! new File(classPath + "/miniJava/Compiler.class").exists()) {
+		if (! new File(BIN + "/miniJava/Compiler.class").exists()) {
 			System.out.println("No miniJava Compiler.class found (has it been compiled?) - exiting");
 			fail();
 			return;
@@ -66,7 +66,7 @@ public class Checkpoint3 {
             int returnCode = runTest(x); 
             if (returnCode == 1) {
 				System.err.println("### miniJava Compiler fails while processing test " + x.getName());
-				//fail();
+				fail();
 				failures++;
 				continue;
 			}
@@ -98,9 +98,10 @@ public class Checkpoint3 {
     }
         
     private static int runTest(File x) throws IOException, InterruptedException {
-
-        String testPath = x.getPath();
-        ProcessBuilder pb = new ProcessBuilder("java", "miniJava.Compiler", testPath, "contextual-analysis-only");
+    	//System.out.println(x.getPath());
+        //String testPath = x.getPath();
+        //ProcessBuilder pb = new ProcessBuilder("java", "miniJava.Compiler", testPath, "contextual-analysis-only");
+        ProcessBuilder pb = new ProcessBuilder("java", "-cp", BIN, "miniJava.Compiler", x.getPath(), "--contextual-analysis-only");
         pb.directory(classPath);
         pb.redirectErrorStream(true);
         Process p = pb.start();
@@ -119,11 +120,11 @@ public class Checkpoint3 {
         Scanner scan = new Scanner(stream);
         while (scan.hasNextLine()) {
             String line = scan.nextLine();
-            if (line.startsWith("*** "))
+            //if (line.startsWith("*** "))
                 System.out.println(line);
-            if (line.startsWith("ERROR")) {
-                System.out.println(line);
-            }
+            //if (line.startsWith("ERROR")) {
+                //System.out.println(line);
+            //}
         }
         scan.close();
     }

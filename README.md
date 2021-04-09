@@ -9,7 +9,9 @@ Parses for correct syntax, builds an AST, perform contextual analysis (identific
 ## Usage
 The compiler should be used through the command line, through arguments:
 * The first argument is the file to be compiled.
-* A second optional argument that can be supplied is `--debug`, which only exists for internal debugging purposes.
+* A second optional argument that can be supplied is a "special mode" that can stop the compiler early, so no errors are generated. The following are supported:
+** `--ast-only`: scans, parses, builds an AST, and prints the AST.
+** `--contextual-analysis-only`, scans, parses, builds an AST, performs contextual analysis (identification/type checking).
 
 ## Grammar
 * Program ::= Class\* *end*
@@ -55,7 +57,7 @@ I have taken some test files from others, including [Ben Dod](https://github.com
 * Added support for null (adding `NullLiteral.java`, and updating `Visitor.java` and `ASTDisplay.java` to support it).
 * Added `decl` field to `Identifier.java` and `Reference.java` for contextual analysis, along with an alternative constructor to initialize `Identifier.java`. Added `inClass` field to `MethodDecl.java` for contextual analysis.
 * Added alternative constructor to `FieldDeclList.java`, `MethodDeclList.java`, and `ParameterDeclList.java` to accept one declaration for convenience, which is to be appended to the list.
-* Added abstract `equals` and `toString` methods in `TypeDenoter.java`, accompanied with implementation in `BaseType.java`, `ClassType.java`, and `ArrayType.java`. Added `equals` to `Identifier.java` and `Declaration.java`.
+* Added abstract `equals` and `toPrettyString` methods in `TypeDenoter.java`, accompanied with implementation in `BaseType.java`, `ClassType.java`, and `ArrayType.java`. Added `equals` to `Identifier.java` and `Declaration.java`.
 * Syntactical/code style changes/cleanup.
 
 ## Testing

@@ -19,11 +19,11 @@ public class BaseType extends TypeDenoter
 
 	@Override
 	public boolean equals(TypeDenoter other){
-		return this.typeKind == other.typeKind && other instanceof BaseType && this.typeKind != TypeKind.UNSUPPORTED;
+		return other != null && this.typeKind == other.typeKind && other instanceof BaseType && this.typeKind != TypeKind.UNSUPPORTED;
 	}
 
 	@Override
-	public String toString(){
+	public String toPrettyString(){
 		return "BaseType (" + this.typeKind + ")";
 	}
 }

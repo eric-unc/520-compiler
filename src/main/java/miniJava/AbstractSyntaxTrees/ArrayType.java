@@ -22,11 +22,11 @@ public class ArrayType extends TypeDenoter {
 
 	@Override
 	public boolean equals(TypeDenoter other){
-		return this.typeKind == other.typeKind && other instanceof ArrayType && this.eltType.equals(((ArrayType)other).eltType);
+		return other != null && this.typeKind == other.typeKind && other instanceof ArrayType && this.eltType.equals(((ArrayType)other).eltType);
 	}
 	
 	@Override
-	public String toString(){
+	public String toPrettyString(){
 		return "ClassType (" + eltType + ")";
 	}
 }
