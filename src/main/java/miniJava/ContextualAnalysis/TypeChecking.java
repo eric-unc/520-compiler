@@ -148,6 +148,7 @@ public class TypeChecking implements Visitor<Object, Object> {
 	public Object visitVardeclStmt(VarDeclStmt stmt, Object arg){
 		TypeDenoter declTD = (TypeDenoter)stmt.varDecl.visit(this, null);
 		TypeDenoter	expTD = (TypeDenoter)stmt.initExp.visit(this, null);
+		System.out.println("vardecl stamt!");
 		
 		if(expTD != null)
 			checkTypeDenoter(expTD.posn, declTD, expTD);
@@ -159,7 +160,7 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitAssignStmt(AssignStmt stmt, Object arg){
-		if(stmt.ref.decl.type instanceof BaseType || stmt.ref.decl.type instanceof ClassType){
+		//if(stmt.ref.decl.type instanceof BaseType || stmt.ref.decl.type instanceof ClassType){
 			if(stmt.ref instanceof QualRef && stmt.ref.decl.name.equals("length") && ((QualRef)stmt.ref).ref.decl.type.typeKind == TypeKind.ARRAY){
 				expectedNonFinalVariable((QualRef)stmt.ref);
 				return null;
@@ -167,12 +168,11 @@ public class TypeChecking implements Visitor<Object, Object> {
 			
 			TypeDenoter refTD = (TypeDenoter)stmt.ref.visit(this, null);
 			TypeDenoter expTD = (TypeDenoter)stmt.val.visit(this, null);
-			//System.out.println("let us seee da " + expTD); // TODO
 			
 			checkTypeDenoter(expTD.posn, refTD, expTD);
-		}else{
-			expectedBaseOrClassType(stmt.ref);
-		}
+		//}else{
+		//	expectedBaseOrClassType(stmt.ref);
+		//}
 		
 		return null;
 	}
@@ -414,6 +414,7 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitQRef(QualRef ref, Object arg){
+		checkNotMethodDecl(ref.decl);
 		checkNotMethodDecl(ref.ref.decl);
 		return ref.decl.type;
 	}

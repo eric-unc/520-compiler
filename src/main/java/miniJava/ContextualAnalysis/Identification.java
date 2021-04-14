@@ -302,7 +302,7 @@ public class Identification implements Visitor<Object, Object> {
 				return null;
 			}
 			
-			if(d.isPrivate)
+			if(d.isPrivate && cd != md.inClass)
 				reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference private " + d.name + " on line " + d.posn.getStartLineNum() + "!");
 			
 			ref.id.decl = d;
@@ -321,7 +321,7 @@ public class Identification implements Visitor<Object, Object> {
 						return null;
 					}
 					
-					if(d.isPrivate)
+					if(d.isPrivate && cd != md.inClass)
 						reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference private " + d.name + " on line " + d.posn.getStartLineNum() + "!");
 					
 					ref.id.decl = d;
@@ -352,7 +352,7 @@ public class Identification implements Visitor<Object, Object> {
 						return null;
 					}
 					
-					if(d.isPrivate)
+					if(d.isPrivate && cd != md.inClass)
 						reporter.addError("*** line " + ref.id.posn.getStartLineNum() + ": attempts to reference private " + d.name + " on line " + d.posn.getStartLineNum() + "!");
 					
 					ref.id.decl = d;
