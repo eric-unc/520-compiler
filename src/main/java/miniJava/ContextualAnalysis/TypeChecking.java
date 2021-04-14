@@ -37,6 +37,11 @@ public class TypeChecking implements Visitor<Object, Object> {
 			reporter.addError("*** line " + ct.posn.getStartLineNum() + ": expected a class declaration!");
 	}
 	
+	private void checkNotClassOrVarDecl(Declaration decl){
+		checkNotClassDecl(decl);
+		checkNotMethodDecl(decl);
+	}
+	
 	private void checkNotClassDecl(Declaration decl){
 		if(decl instanceof ClassDecl)
 			reporter.addError("*** line " + decl.posn.getStartLineNum() + ": is a class declaration, not a variable!");
@@ -162,6 +167,7 @@ public class TypeChecking implements Visitor<Object, Object> {
 			
 			TypeDenoter refTD = (TypeDenoter)stmt.ref.visit(this, null);
 			TypeDenoter expTD = (TypeDenoter)stmt.val.visit(this, null);
+			//System.out.println("let us seee da " + expTD); // TODO
 			
 			checkTypeDenoter(expTD.posn, refTD, expTD);
 		}else{
@@ -319,6 +325,7 @@ public class TypeChecking implements Visitor<Object, Object> {
 			checkNotClassDecl(((IdRef)expr.ref).decl);
 		}*/
 		
+		@SuppressWarnings("unused")
 		TypeDenoter td = (TypeDenoter) expr.ref.visit(this, null);
 		
 		return expr.ref.visit(this, null);
@@ -397,12 +404,12 @@ public class TypeChecking implements Visitor<Object, Object> {
 	public Object visitIdRef(IdRef ref, Object arg){
 		//System.out.println("i cry when angels deserve to die " + (ref.decl instanceof ClassDecl) + " " + ref.decl.type);
 		
-		//checkNotClassDecl(ref.decl); // XXX
+		checkNotClassOrVarDecl(ref.decl); // XXX
 		
 		//System.out.println("Did we see anything?");
 		//reporter.printErrors();
 		
-		return ref.decl.type;
+		return ref.decl.type != null ? ref.decl.type : new BaseType(TypeKind.ERROR, ref.posn);
 	}
 
 	@Override

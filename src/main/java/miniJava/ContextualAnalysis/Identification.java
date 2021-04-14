@@ -119,10 +119,11 @@ public class Identification implements Visitor<Object, Object> {
 	}
 
 	@Override
-	public Object visitVardeclStmt(VarDeclStmt stmt, Object arg){
+	public Object visitVardeclStmt(VarDeclStmt stmt, Object arg){ // TODO
 		MethodDecl md = (MethodDecl)arg;
 		stmt.varDecl.visit(this, null);
 		stmt.initExp.visit(this, md);
+		stmt.varDecl.isInitialized = true;
 		return null;
 	}
 

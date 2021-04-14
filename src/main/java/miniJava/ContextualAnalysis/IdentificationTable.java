@@ -107,8 +107,8 @@ public class IdentificationTable {
 			reporter.addError("*** line " + iden.posn.getStartLineNum() + ": attempts to reference " + iden.spelling + " which was not found!");
 		else if(ret instanceof MemberDecl && fromMeth != null && fromMeth.isStatic && !((MemberDecl)ret).isStatic)
 			reporter.addError("*** line " + iden.posn.getStartLineNum() + ": attempts to reference non-static " + ret.name + " on line " + ret.posn.getStartLineNum() + "!");
-		//else if(ret instanceof MemberDecl && fromMeth != null && fromMeth.isStatic && !((MemberDecl)ret).isPrivate)
-		//	reporter.addError("*** line " + iden.posn.getStartLineNum() + ": attempts to reference non-static " + ret.name + " on line " + ret.posn.getStartLineNum() + "!");
+		else if(ret instanceof VarDecl && !((VarDecl)ret).isInitialized)
+			reporter.addError("*** line " + iden.posn.getStartLineNum() + ": attempts to reference " + ret.name + " on line " + ret.posn.getStartLineNum() + " which is not initialized!");
 		else
 			iden.decl = ret;
 		

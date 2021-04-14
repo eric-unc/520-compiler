@@ -16,4 +16,6 @@ public class VarDecl extends LocalDecl {
 	public <A,R> R visit(Visitor<A,R> v, A o) {
 		return v.visitVarDecl(this, o);
 	}
+	
+	public boolean isInitialized = false;
 }
