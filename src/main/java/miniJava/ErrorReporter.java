@@ -1,4 +1,4 @@
-package miniJava.ContextualAnalysis;
+package miniJava;
 
 import java.util.ArrayList;
 

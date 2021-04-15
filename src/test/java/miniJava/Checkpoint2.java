@@ -32,7 +32,7 @@ public class Checkpoint2 {
 	}
 	
 	@Test
-	@Disabled
+	//@Disabled
 	void checkpoint2() throws IOException, InterruptedException {
 		File testDir = new File(PA2_TESTS);
 		int failures = 0;

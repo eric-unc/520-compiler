@@ -11,7 +11,6 @@ import com.ginsberg.junit.exit.FailOnSystemExit;
 
 import miniJava.AbstractSyntaxTrees.AST;
 import miniJava.AbstractSyntaxTrees.Package;
-import miniJava.ContextualAnalysis.ErrorReporter;
 import miniJava.ContextualAnalysis.Identification;
 import miniJava.ContextualAnalysis.TypeChecking;
 import miniJava.SyntacticAnalyzer.Parser;

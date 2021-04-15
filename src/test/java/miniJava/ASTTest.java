@@ -15,7 +15,7 @@ import miniJava.AbstractSyntaxTrees.ASTDisplay;
 import miniJava.SyntacticAnalyzer.Parser;
 import miniJava.SyntacticAnalyzer.Scanner;
 
-@Disabled
+//@Disabled
 public class ASTTest {
 	@Test
 	@FailOnSystemExit

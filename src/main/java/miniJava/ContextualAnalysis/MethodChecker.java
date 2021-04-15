@@ -1,5 +1,6 @@
 package miniJava.ContextualAnalysis;
 
+import miniJava.ErrorReporter;
 import miniJava.AbstractSyntaxTrees.*;
 import miniJava.AbstractSyntaxTrees.Package;
 import miniJava.SyntacticAnalyzer.SourcePosition;

@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import miniJava.AbstractSyntaxTrees.AST;
 import miniJava.AbstractSyntaxTrees.ASTDisplay;
 import miniJava.AbstractSyntaxTrees.Package;
-import miniJava.ContextualAnalysis.ErrorReporter;
 import miniJava.ContextualAnalysis.Identification;
 import miniJava.ContextualAnalysis.MethodChecker;
 import miniJava.ContextualAnalysis.TypeChecking;

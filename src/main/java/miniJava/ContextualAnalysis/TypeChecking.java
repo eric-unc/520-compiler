@@ -1,5 +1,6 @@
 package miniJava.ContextualAnalysis;
 
+import miniJava.ErrorReporter;
 import miniJava.AbstractSyntaxTrees.*;
 import miniJava.AbstractSyntaxTrees.Package;
 import miniJava.SyntacticAnalyzer.SourcePosition;
@@ -67,10 +68,6 @@ public class TypeChecking implements Visitor<Object, Object> {
 	
 	private void expectedArrayType(Reference ref){
 		reporter.addError("*** line " + ref.posn.getStartLineNum() + ": references " + ref.decl.name + " which is not an array!");
-	}
-	
-	private void expectedBaseOrClassType(Reference ref){
-		reporter.addError("*** line " + ref.posn.getStartLineNum() + ": references " + ref.decl.name + " is not a base type or class type!");
 	}
 	
 	private void expectedNonFinalVariable(QualRef ref){
@@ -160,19 +157,15 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitAssignStmt(AssignStmt stmt, Object arg){
-		//if(stmt.ref.decl.type instanceof BaseType || stmt.ref.decl.type instanceof ClassType){
-			if(stmt.ref instanceof QualRef && stmt.ref.decl.name.equals("length") && ((QualRef)stmt.ref).ref.decl.type.typeKind == TypeKind.ARRAY){
-				expectedNonFinalVariable((QualRef)stmt.ref);
-				return null;
-			}
+		if(stmt.ref instanceof QualRef && stmt.ref.decl.name.equals("length") && ((QualRef)stmt.ref).ref.decl.type.typeKind == TypeKind.ARRAY){
+			expectedNonFinalVariable((QualRef)stmt.ref);
+			return null;
+		}
 			
-			TypeDenoter refTD = (TypeDenoter)stmt.ref.visit(this, null);
-			TypeDenoter expTD = (TypeDenoter)stmt.val.visit(this, null);
+		TypeDenoter refTD = (TypeDenoter)stmt.ref.visit(this, null);
+		TypeDenoter expTD = (TypeDenoter)stmt.val.visit(this, null);
 			
-			checkTypeDenoter(expTD.posn, refTD, expTD);
-		//}else{
-		//	expectedBaseOrClassType(stmt.ref);
-		//}
+		checkTypeDenoter(expTD.posn, refTD, expTD);
 		
 		return null;
 	}
@@ -319,15 +312,7 @@ public class TypeChecking implements Visitor<Object, Object> {
 	}
 
 	@Override
-	public Object visitRefExpr(RefExpr expr, Object arg){ // TODO
-		//System.out.println("looking at " + ((IdRef)expr.ref).id);
-		/*if(expr.ref instanceof IdRef) {
-			checkNotClassDecl(((IdRef)expr.ref).decl);
-		}*/
-		
-		@SuppressWarnings("unused")
-		TypeDenoter td = (TypeDenoter) expr.ref.visit(this, null);
-		
+	public Object visitRefExpr(RefExpr expr, Object arg){
 		return expr.ref.visit(this, null);
 	}
 
@@ -402,13 +387,7 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitIdRef(IdRef ref, Object arg){
-		//System.out.println("i cry when angels deserve to die " + (ref.decl instanceof ClassDecl) + " " + ref.decl.type);
-		
-		checkNotClassOrVarDecl(ref.decl); // XXX
-		
-		//System.out.println("Did we see anything?");
-		//reporter.printErrors();
-		
+		checkNotClassOrVarDecl(ref.decl);
 		return ref.decl.type != null ? ref.decl.type : new BaseType(TypeKind.ERROR, ref.posn);
 	}
 

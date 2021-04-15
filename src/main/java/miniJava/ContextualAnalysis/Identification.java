@@ -1,5 +1,6 @@
 package miniJava.ContextualAnalysis;
 
+import miniJava.ErrorReporter;
 import miniJava.AbstractSyntaxTrees.*;
 import miniJava.AbstractSyntaxTrees.Package;
 
@@ -119,7 +120,7 @@ public class Identification implements Visitor<Object, Object> {
 	}
 
 	@Override
-	public Object visitVardeclStmt(VarDeclStmt stmt, Object arg){ // TODO
+	public Object visitVardeclStmt(VarDeclStmt stmt, Object arg){
 		MethodDecl md = (MethodDecl)arg;
 		stmt.varDecl.visit(this, null);
 		stmt.initExp.visit(this, md);

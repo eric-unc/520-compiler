@@ -3,6 +3,7 @@ package miniJava.ContextualAnalysis;
 import java.util.HashMap;
 import java.util.Stack;
 
+import miniJava.ErrorReporter;
 import miniJava.AbstractSyntaxTrees.*;
 import miniJava.SyntacticAnalyzer.Token;
 import miniJava.SyntacticAnalyzer.TokenType;
