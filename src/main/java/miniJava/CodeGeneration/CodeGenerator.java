@@ -68,25 +68,22 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitBaseType(BaseType type, Object arg){
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitClassType(ClassType type, Object arg){
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitArrayType(ArrayType type, Object arg){
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitBlockStmt(BlockStmt stmt, Object arg){
-		// TODO Auto-generated method stub
+		stmt.sl.forEach(s -> s.visit(this, null));
 		return null;
 	}
 
@@ -99,6 +96,8 @@ public class CodeGenerator implements Visitor<Object, Object> {
 	@Override
 	public Object visitAssignStmt(AssignStmt stmt, Object arg){
 		// TODO Auto-generated method stub
+		stmt.val.visit(this, null);
+		Machine.emit(STORE); // store?
 		return null;
 	}
 
@@ -121,14 +120,42 @@ public class CodeGenerator implements Visitor<Object, Object> {
 	}
 
 	@Override
-	public Object visitIfStmt(IfStmt stmt, Object arg){
-		// TODO Auto-generated method stub
+	public Object visitIfStmt(IfStmt stmt, Object arg){ // dunno if this works or not
+		stmt.cond.visit(this, null);
+		int toPatch_elseOrPastElse = Machine.nextInstrAddr();
+		Machine.emit(JUMPIF, 0, CB, -1);
+		stmt.thenStmt.visit(this, null);
+		int toPatch_end = Machine.nextInstrAddr();
+		Machine.emit(JUMP, CB, -1);
+		
+		if(stmt.elseStmt != null) {
+			int _else = Machine.nextInstrAddr();
+			stmt.elseStmt.visit(this, null);
+			Machine.patch(toPatch_elseOrPastElse, _else);
+		}else
+			Machine.patch(toPatch_elseOrPastElse, Machine.nextInstrAddr());
+		
+		Machine.patch(toPatch_end, Machine.nextInstrAddr());
+		
 		return null;
 	}
 
 	@Override
 	public Object visitWhileStmt(WhileStmt stmt, Object arg){
-		// TODO Auto-generated method stub
+		// jump to eval
+		int toPatch_whileEval = Machine.nextInstrAddr();
+		Machine.emit(JUMP, CB, -1);
+		
+		// body
+		int bodyAddr = Machine.nextInstrAddr();
+		stmt.body.visit(this, null);
+		
+		// eval conditional, and jump if true
+		int whileEvalAddr = Machine.nextInstrAddr();
+		stmt.cond.visit(this, null);
+		Machine.emit(JUMPIF, 1, CB, bodyAddr);
+		
+		Machine.patch(toPatch_whileEval, whileEvalAddr);
 		return null;
 	}
 
@@ -183,12 +210,28 @@ public class CodeGenerator implements Visitor<Object, Object> {
 				break;
 				
 			case AND_LOG:
+				Machine.emit(and);
+				break;
+				
 			case OR_LOG:
+				Machine.emit(or);
+				break;
 			
 			case PLUS:
+				Machine.emit(add);
+				break;
+				
 			case MINUS:
+				Machine.emit(sub);
+				break;
+				
 			case TIMES:
+				Machine.emit(mult);
+				break;
+				
 			case DIV:
+				Machine.emit(div);
+				break;
 			
 			default:
 				// should not happen
@@ -270,13 +313,25 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitBooleanLiteral(BooleanLiteral bool, Object arg){
-		// TODO Auto-generated method stub
+		switch(bool.spelling){
+			case "true":
+				Machine.emit(LOADL, Machine.trueRep);
+				break;
+				
+			case "false":
+				Machine.emit(LOADL, Machine.falseRep);
+				break;
+				
+			default:
+				// Should not happen
+		}
+		
 		return null;
 	}
 
 	@Override
 	public Object visitNullLiteral(NullLiteral nil, Object arg){
-		// TODO Auto-generated method stub
+		Machine.emit(LOADL, Machine.nullRep);
 		return null;
 	}
 

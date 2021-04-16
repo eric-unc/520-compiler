@@ -11,14 +11,13 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-/* Automated regression tester for Checkpoint 3 tests. 
+/** Automated regression tester for Checkpoint 3 tests. 
  * Created by Max Beckman-Harned and Jan Prins
  * Modified by Eric Schneider
  * Put your tests in "tests/pa3_tests" folder in your Eclipse workspace directory
  * If you preface your error messages / exceptions with *** then they will 
  * be displayed in the regression tester output when they appear during processing
  */
-
 public class Checkpoint3 {
         
 	//private static String projDir;
@@ -28,7 +27,7 @@ public class Checkpoint3 {
 	static final String BIN = "build/classes/java/main/";
         
 	@Test
-	//@Disabled
+	@Disabled
 	void checkpoint3() throws IOException, InterruptedException {
 
 		// project directory for miniJava and tester

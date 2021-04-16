@@ -59,6 +59,7 @@ I have taken some test files from others, including [Ben Dod](https://github.com
 * Added alternative constructor to `FieldDeclList.java`, `MethodDeclList.java`, and `ParameterDeclList.java` to accept one declaration for convenience, which is to be appended to the list.
 * Added abstract `equals` and `toPrettyString` methods in `TypeDenoter.java`, accompanied with implementation in `BaseType.java`, `ClassType.java`, and `ArrayType.java`. Added `equals` to `Identifier.java` and `Declaration.java`.
 * Added `isInitialized` field to `VarDecl.java`, defaulted to `false`, which is used for contextual analysis (a [local] variable cannot be used if it has not been initialized).
+* Added `main` field (of type `MethodDecl`) to `Package.java` to help with code generation.
 * Syntactical/code style changes/cleanup.
 
 ## Testing
@@ -66,7 +67,7 @@ This project uses JUnit for testing. I have my own tests, as well as added from 
 
 ## Credits
 * Eric Schneider
-* Jan Prins (`AbstractSyntaxTrees` package, `mJAM` package, checkpoint tests, `Test7.mjava`)
+* Jan Prins (`AbstractSyntaxTrees` package, `mJAM` package, checkpoint tests, `Test7.mjava`, `Test34.mjava`)
 * Max Beckman-Harned (checkpoint tests)
 * Ben Dod (`Test2.mjava`, `Test3.mjava`)
 * Changon Kim (`Test9.mjava`)

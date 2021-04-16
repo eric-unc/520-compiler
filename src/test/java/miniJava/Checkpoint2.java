@@ -11,13 +11,12 @@ import java.util.Scanner;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-/* Automated regression tester for Checkpoint 2 tests
+/** Automated regression tester for Checkpoint 2 tests
  * Created by Max Beckman-Harned and Jan Prins
  * Put your tests in "tests/pa2_tests" folder in your Eclipse workspace directory
  * If you preface your error messages / exceptions with ERROR or *** then they will be displayed if they appear during processing
  * Modified by Eric Schneider
  */
-
 public class Checkpoint2 {
 	static final String PA2_TESTS = "src/test/resources/miniJava/pa2_tests";
 	static final String BIN = "build/classes/java/main/";
@@ -32,7 +31,7 @@ public class Checkpoint2 {
 	}
 	
 	@Test
-	//@Disabled
+	@Disabled
 	void checkpoint2() throws IOException, InterruptedException {
 		File testDir = new File(PA2_TESTS);
 		int failures = 0;

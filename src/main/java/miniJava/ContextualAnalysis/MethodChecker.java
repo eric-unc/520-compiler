@@ -41,7 +41,7 @@ public class MethodChecker implements Visitor<Object, Object> {
 			MethodDecl possibleMain = (MethodDecl)cd.visit(this, null);
 			
 			if(possibleMain != null){
-				if(firstMain != null)
+				if(firstMain != null) // already found
 					unexpectedMainMethod(possibleMain.posn, firstMain.posn);
 				else
 					firstMain = possibleMain;
@@ -50,6 +50,8 @@ public class MethodChecker implements Visitor<Object, Object> {
 		
 		if(firstMain == null)
 			reporter.addError("*** No main found!");
+		else
+			prog.main = firstMain;
 		
 		return null;
 	}

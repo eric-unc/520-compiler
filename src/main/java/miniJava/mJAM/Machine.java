@@ -37,18 +37,30 @@ public final class Machine {
 	 * mJAM registers
 	 */
 	public enum Reg {
-		ZR, // zero, not used
-		CB, // code base
-		CT, // code top
-		CP, // code pointer
-		PB, // primitives base
-		PT, // primitives top
-		SB, // execution stack base
-		ST, // execution stack top
-		LB, // locals base (frame pointer)
-		HB, // heap base
-		HT, // heap top
-		OB; // object base (instance pointer)
+		/** zero, not used */
+		ZR,
+		/** code base */
+		CB,
+		/** code top */
+		CT,
+		/** code pointer */
+		CP,
+		/** primitives base */
+		PB,
+		/** primitives top */
+		PT, 
+		/** execution stack base */
+		SB,
+		/** execution stack top */
+		ST,
+		/** locals base (frame pointer) */
+		LB, 
+		/** heap base */
+		HB,
+		/** heap top */
+		HT,
+		/** object base (instance pointer) */
+		OB; 
 	}
 
 	public static Reg[] intToReg = Reg.values();

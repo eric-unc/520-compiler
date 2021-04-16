@@ -19,4 +19,5 @@ public class Package extends AST {
     }
 
     public ClassDeclList classDeclList;
+    public MethodDecl main;
 }
