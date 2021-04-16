@@ -134,13 +134,66 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitUnaryExpr(UnaryExpr expr, Object arg){
-		// TODO Auto-generated method stub
+		expr.expr.visit(this, null);
+		
+		switch(expr.operator.kind){
+			case NEG:
+				Machine.emit(not);
+				break;
+				
+			case MINUS:
+				Machine.emit(neg);
+				break;
+				
+			default:
+				// this shouldn't happen?
+		}
+		
 		return null;
 	}
 
 	@Override
 	public Object visitBinaryExpr(BinaryExpr expr, Object arg){
-		// TODO Auto-generated method stub
+		expr.left.visit(this, null);
+		expr.right.visit(this, null);
+		
+		switch(expr.operator.kind){
+			case MORE_THAN:
+				Machine.emit(gt);
+				break;
+				
+			case LESS_THAN:
+				Machine.emit(lt);
+				break;
+				
+			case MORE_EQUAL:
+				Machine.emit(ge);
+				break;
+				
+			case LESS_EQUAL:
+				Machine.emit(le);
+				break;
+				
+			case NOT_EQUALS:
+				Machine.emit(ne);
+				break;
+				
+			case EQUALS_OP:
+				Machine.emit(eq);
+				break;
+				
+			case AND_LOG:
+			case OR_LOG:
+			
+			case PLUS:
+			case MINUS:
+			case TIMES:
+			case DIV:
+			
+			default:
+				// should not happen
+		}
+		
 		return null;
 	}
 
@@ -164,7 +217,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitLiteralExpr(LiteralExpr expr, Object arg){
-		// TODO Auto-generated method stub
+		expr.lit.visit(this, null);
 		return null;
 	}
 
@@ -206,13 +259,12 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitOperator(Operator op, Object arg){
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitIntLiteral(IntLiteral num, Object arg){
-		// TODO Auto-generated method stub
+		Machine.emit(LOADL, Integer.parseInt(num.spelling));
 		return null;
 	}
 

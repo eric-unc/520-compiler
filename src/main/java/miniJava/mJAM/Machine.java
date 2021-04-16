@@ -13,10 +13,22 @@ public final class Machine {
 	 * mJAM instructions
 	 */
 	public enum Op {
-		LOAD, LOADA, LOADI, LOADL, STORE, STOREI, CALL, // direct call of instance method
+		LOAD,
+		LOADA,
+		LOADI,
+		LOADL,
+		STORE,
+		STOREI,
+		CALL, // direct call of instance method
 		CALLI, // indirect call of instance method
 		CALLD, // dynamic call of instance method
-		RETURN, PUSH, POP, JUMP, JUMPI, JUMPIF, HALT;
+		RETURN,
+		PUSH,
+		POP,
+		JUMP,
+		JUMPI,
+		JUMPIF,
+		HALT;
 	}
 
 	public static Op[] intToOp = Op.values();
@@ -45,7 +57,42 @@ public final class Machine {
 	 * mJAM primitives
 	 */
 	public enum Prim {
-		id, not, and, or, succ, pred, neg, add, sub, mult, div, mod, lt, le, ge, gt, eq, ne, eol, eof, get, put, geteol, puteol, getint, putint, putintnl, alloc, dispose, newobj, newarr, arraylen, arrayref, arrayupd, fieldref, fieldupd;
+		id,
+		not,
+		and,
+		or,
+		succ,
+		pred,
+		neg,
+		add,
+		sub,
+		mult,
+		div,
+		mod,
+		lt,
+		le,
+		ge,
+		gt,
+		eq,
+		ne,
+		eol,
+		eof,
+		get,
+		put,
+		geteol,
+		puteol,
+		getint,
+		putint,
+		putintnl,
+		alloc,
+		dispose,
+		newobj,
+		newarr,
+		arraylen,
+		arrayref,
+		arrayupd,
+		fieldref,
+		fieldupd;
 	}
 
 	public static Prim[] intToPrim = Prim.values();
