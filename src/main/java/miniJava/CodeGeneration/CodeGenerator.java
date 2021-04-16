@@ -1,52 +1,38 @@
 package miniJava.CodeGeneration;
 
 import miniJava.ErrorReporter;
-import miniJava.AbstractSyntaxTrees.ArrayType;
-import miniJava.AbstractSyntaxTrees.AssignStmt;
-import miniJava.AbstractSyntaxTrees.BaseType;
-import miniJava.AbstractSyntaxTrees.BinaryExpr;
-import miniJava.AbstractSyntaxTrees.BlockStmt;
-import miniJava.AbstractSyntaxTrees.BooleanLiteral;
-import miniJava.AbstractSyntaxTrees.CallExpr;
-import miniJava.AbstractSyntaxTrees.CallStmt;
-import miniJava.AbstractSyntaxTrees.ClassDecl;
-import miniJava.AbstractSyntaxTrees.ClassType;
-import miniJava.AbstractSyntaxTrees.FieldDecl;
-import miniJava.AbstractSyntaxTrees.IdRef;
-import miniJava.AbstractSyntaxTrees.Identifier;
-import miniJava.AbstractSyntaxTrees.IfStmt;
-import miniJava.AbstractSyntaxTrees.IntLiteral;
-import miniJava.AbstractSyntaxTrees.IxAssignStmt;
-import miniJava.AbstractSyntaxTrees.IxExpr;
-import miniJava.AbstractSyntaxTrees.LiteralExpr;
-import miniJava.AbstractSyntaxTrees.MethodDecl;
-import miniJava.AbstractSyntaxTrees.NewArrayExpr;
-import miniJava.AbstractSyntaxTrees.NewObjectExpr;
-import miniJava.AbstractSyntaxTrees.NullLiteral;
-import miniJava.AbstractSyntaxTrees.Operator;
+import miniJava.AbstractSyntaxTrees.*;
 import miniJava.AbstractSyntaxTrees.Package;
-import miniJava.AbstractSyntaxTrees.ParameterDecl;
-import miniJava.AbstractSyntaxTrees.QualRef;
-import miniJava.AbstractSyntaxTrees.RefExpr;
-import miniJava.AbstractSyntaxTrees.ReturnStmt;
-import miniJava.AbstractSyntaxTrees.ThisRef;
-import miniJava.AbstractSyntaxTrees.UnaryExpr;
-import miniJava.AbstractSyntaxTrees.VarDecl;
-import miniJava.AbstractSyntaxTrees.VarDeclStmt;
-import miniJava.AbstractSyntaxTrees.Visitor;
-import miniJava.AbstractSyntaxTrees.WhileStmt;
+import miniJava.mJAM.Machine;
+
+import static miniJava.mJAM.Machine.Op.*;
+import static miniJava.mJAM.Machine.Reg.*;
+import static miniJava.mJAM.Machine.Prim.*;
 
 public class CodeGenerator implements Visitor<Object, Object> {
+	@SuppressWarnings("unused")
 	private ErrorReporter reporter;
 	
 	public CodeGenerator(Package ast, ErrorReporter reporter){
 		this.reporter = reporter;
+		Machine.initCodeGen(); // not sure if this is necessary or not.
 		ast.visit(this, null);
 	}
 
 	@Override
 	public Object visitPackage(Package prog, Object arg){
-		// TODO Auto-generated method stub
+		// creates a new array of size 0 to pass to main
+		Machine.emit(LOADL, 0);
+		Machine.emit(newarr);
+		
+		// calling main
+		int toPatch_mainCall = Machine.nextInstrAddr();
+		Machine.emit(CALL, CB, -1);
+		Machine.emit(HALT);
+		
+		prog.classDeclList.forEach(c -> c.visit(this, null));
+		
+		// TODO: patch main
 		return null;
 	}
 
