@@ -4,14 +4,14 @@ A "miniJava" compiler, as created for COMP 520.
 Note that because of class requirements, my code is not as ideal as I want it to be. Please forgive me.
 
 ## Features supported
-Parses for correct syntax, builds an AST, perform contextual analysis (identification and type checking).
+Parses for correct syntax, builds an AST, perform contextual analysis (identification and type checking). Working on code generation.
 
 ## Usage
 The compiler should be used through the command line, through arguments:
 * The first argument is the file to be compiled.
 * A second optional argument that can be supplied is a "special mode" that can stop the compiler early, so no errors are generated. The following are supported:
 ** `--ast-only`: scans, parses, builds an AST, and prints the AST.
-** `--contextual-analysis-only`, scans, parses, builds an AST, performs contextual analysis (identification/type checking).
+** `--contextual-analysis-only`, scans, parses, builds an AST, performs contextual analysis (just identification/type checking).
 
 ## Grammar
 * Program ::= Class\* *end*
@@ -51,7 +51,7 @@ The grammar above uses EBNF with some POSIX conventions sprinkled in to make my 
 ## License
 As you can see in the [license file](LICENSE), this project is under the "Unlicense" which effectively releases it into the public domain. Basically, do what you want with my code. However, I don't recommend using the code for reference for COMP 520; Professor Prins explicitly doesn't allow this, and the particular subset to implement will change year-to-year. And of course, you will find it more rewarding to create something by yourself from scratch.
 
-I have taken some test files from others, including [Ben Dod](https://github.com/benjdod/someminijavatests), Changon Kim, and Professor Jan Prins, which are unlicensed. I have noted as such where I have used them. The classes in the `AbstractSyntaxTrees` package were made by Professor Prins with some changes as describes below.
+I have taken some test files from others, including [Ben Dod](https://github.com/benjdod/someminijavatests), Changon Kim, and Professor Jan Prins, which are unlicensed. I have noted as such where I have used them. The classes in the `AbstractSyntaxTrees` package were made by Professor Prins with some changes as describes below, and the classes in the `mJAM` package were made by him too (with unlisted modifications by me).
 
 ### Changes made to classes in the AbstractSyntaxTrees package
 * Added support for null (adding `NullLiteral.java`, and updating `Visitor.java` and `ASTDisplay.java` to support it).
@@ -66,7 +66,7 @@ This project uses JUnit for testing. I have my own tests, as well as added from 
 
 ## Credits
 * Eric Schneider
-* Jan Prins (AST package, checkpoint tests, `Test7.mjava`)
+* Jan Prins (`AbstractSyntaxTrees` package, `mJAM` package, checkpoint tests, `Test7.mjava`)
 * Max Beckman-Harned (checkpoint tests)
 * Ben Dod (`Test2.mjava`, `Test3.mjava`)
 * Changon Kim (`Test9.mjava`)
