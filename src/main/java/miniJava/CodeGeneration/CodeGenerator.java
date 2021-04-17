@@ -100,15 +100,17 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		
 		VarDescriptor newVD = new VarDescriptor();
 		newVD.size = 1; // TODO: see Machine.linkDataSize (which is 3)
-		newVD.offset = md.size;
-		md.size += newVD.size;
+		newVD.offset = (-1 * md.argsize) - 1;
+		md.argsize += newVD.size;
+		
+		pd.runtimeDescriptor = newVD;
 		
 		return null;
 	}
 
 	@Override
 	public Object visitVarDecl(VarDecl decl, Object arg){
-		// No real reason to visit this I think???
+		// TODO
 		return null;
 	}
 
@@ -137,12 +139,18 @@ public class CodeGenerator implements Visitor<Object, Object> {
 	@Override
 	public Object visitVardeclStmt(VarDeclStmt stmt, Object arg){
 		// TODO: really not sure what to do here
-		MethodDescriptor md = (MethodDescriptor)((MethodDecl)arg).runtimeDescriptor;
+		/*MethodDescriptor md = (MethodDescriptor)((MethodDecl)arg).runtimeDescriptor;
 		
 		VarDescriptor newVD = new VarDescriptor();
 		newVD.size = 1; // TODO: see Machine.linkDataSize (which is 3)
 		newVD.offset = md.size;
-		md.size += newVD.size;
+		md.size += newVD.size;*/
+		
+		
+		
+		Machine.emit(LOADL, -1);
+		stmt.varDecl.visit(this, null); // Machine.emit(Op.LOADL, /* size of class/type */);
+		stmt.initExp.visit(this, null);
 		return null;
 	}
 
@@ -399,7 +407,10 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		if(ref.decl instanceof LocalDecl){
 			LocalDecl ld = (LocalDecl)ref.decl;
 			//Machine.emit(LOAD, LB, ((VarDescriptor)ld.runtimeDescriptor).offset);
-			Machine.emit(LOAD, LB, 0);
+			if(ld instanceof VarDecl)
+				Machine.emit(LOAD, LB, 0); // TODO
+			else
+				Machine.emit(LOAD, LB, ((VarDescriptor)ld.runtimeDescriptor).offset);
 		}else if(ref.decl instanceof MemberDecl){
 			MemberDecl md = (MemberDecl)ref.decl;
 			
