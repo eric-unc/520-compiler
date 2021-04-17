@@ -94,9 +94,17 @@ public class MethodChecker implements Visitor<Object, Object> {
 				if(!(lastStatement instanceof ReturnStmt))
 					expectedReturn(md, lastStatement);
 			}
-		}else if(!(md.statementList.get(md.statementList.size() - 1) instanceof ReturnStmt)){ 
-			// append return to make life easier later
-			md.statementList.add(new ReturnStmt(null, null));
+		//}else if(!(md.statementList.get(md.statementList.size() - 1) instanceof ReturnStmt)){ 
+		//	// append return to make life easier later
+		//	md.statementList.add(new ReturnStmt(null, null));
+		//}
+		}else{
+			int size = md.statementList.size();
+			
+			if(size == 0)
+				md.statementList.add(new ReturnStmt(null, null));
+			else if(!(md.statementList.get(size - 1) instanceof ReturnStmt))
+				md.statementList.add(new ReturnStmt(null, null));
 		}
 		
 		return null;

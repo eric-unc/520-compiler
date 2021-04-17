@@ -145,7 +145,6 @@ public class TypeChecking implements Visitor<Object, Object> {
 	public Object visitVardeclStmt(VarDeclStmt stmt, Object arg){
 		TypeDenoter declTD = (TypeDenoter)stmt.varDecl.visit(this, null);
 		TypeDenoter	expTD = (TypeDenoter)stmt.initExp.visit(this, null);
-		System.out.println("vardecl stamt!");
 		
 		if(expTD != null)
 			checkTypeDenoter(expTD.posn, declTD, expTD);
@@ -214,8 +213,6 @@ public class TypeChecking implements Visitor<Object, Object> {
 		
 		if(stmt.returnExpr != null) {
 			TypeDenoter rTD = (TypeDenoter)stmt.returnExpr.visit(this, null);
-			if(rTD == null)
-				System.out.println("beep");
 			checkTypeDenoter(stmt.returnExpr.posn, md.type, rTD);
 		}else
 			checkTypeKind(stmt.posn, md.type.typeKind, TypeKind.VOID);
@@ -378,8 +375,6 @@ public class TypeChecking implements Visitor<Object, Object> {
 	@Override
 	public Object visitThisRef(ThisRef ref, Object arg){
 		// yes, this is very hacky, i am sorry
-		System.out.println(ref.decl);
-		System.out.println(ref.decl.type);
 		ClassDecl cd = (ClassDecl)ref.decl;
 		return new ClassType(new Identifier(new Token(TokenType.IDEN, cd.name, cd.posn), cd), cd.posn);
 		//return ref.decl.type;
