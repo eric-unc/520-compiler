@@ -29,7 +29,7 @@ sourceSets {
 		}
 
 		resources {
-			srcDirs = ['src/test/resources']
+			includes = ['src/test/resources']
 		}
 	}
 }
