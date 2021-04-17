@@ -25,7 +25,7 @@ The compiler should be used through the command line, through arguments:
 * ArgList ::= Expression(, Expression)*
 * Reference ::= (Id|**this**)(**.**Id)*
 * Statement ::= **{** Statement\* **}**
-			| **return** Expression**;**
+			| **return** (Expression)?**;**
 			| **if(**Expression**)** Statement (**else** Statement)?
 			| **while(**Expression**)** Statement
 			| Type Id **=** Expression**;**
@@ -60,6 +60,7 @@ I have taken some test files from others, including [Ben Dod](https://github.com
 * Added abstract `equals` and `toPrettyString` methods in `TypeDenoter.java`, accompanied with implementation in `BaseType.java`, `ClassType.java`, and `ArrayType.java`. Added `equals` to `Identifier.java` and `Declaration.java`.
 * Added `isInitialized` field to `VarDecl.java`, defaulted to `false`, which is used for contextual analysis (a [local] variable cannot be used if it has not been initialized).
 * Added `main` field (of type `MethodDecl`) to `Package.java` to help with code generation.
+* Added `RuntimeDescriptor.java`, with corresponding `MethodDescriptor.java`. Added `runtimeDescriptor` field to `Declaration.java`.
 * Syntactical/code style changes/cleanup.
 
 ## Testing

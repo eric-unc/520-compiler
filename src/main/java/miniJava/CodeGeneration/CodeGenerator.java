@@ -50,7 +50,8 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitMethodDecl(MethodDecl md, Object arg){
-		// TODO Auto-generated method stub
+		md.runtimeDescriptor = new MethodDescriptor(Machine.nextInstrAddr());
+		md.statementList.forEach(s -> s.visit(this, null));
 		return null;
 	}
 

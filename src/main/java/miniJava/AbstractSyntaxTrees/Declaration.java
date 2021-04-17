@@ -17,6 +17,7 @@ public abstract class Declaration extends AST {
 	
 	public String name;
 	public TypeDenoter type;
+	public RuntimeDescriptor runtimeDescriptor;
 	
 	public boolean equals(Declaration other){
 		return this.name.equals(other.name)/* && this.type.equals(other.type)*/;

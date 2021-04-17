@@ -224,7 +224,7 @@ public class Parser {
 	}
 	
 	/** Statement ::= <strong>{</strong> Statement* <strong>}</strong><br />
-	 		| <strong>return</strong> Expression<strong>;</strong><br />
+	 		| <strong>return</strong> (Expression)?<strong>;</strong><br />
 			| <strong>if(</strong>Expression<strong>)</strong> Statement (<strong>else</strong> Statement)?<br />
 			| <strong>while(</strong>Expression<strong>)</strong> Statement<br />
 			| Type <em>id</em> <strong>=</strong> Expression<strong>;</strong><br />
