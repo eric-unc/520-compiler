@@ -6,11 +6,14 @@ import java.io.FileNotFoundException;
 import miniJava.AbstractSyntaxTrees.AST;
 import miniJava.AbstractSyntaxTrees.ASTDisplay;
 import miniJava.AbstractSyntaxTrees.Package;
+import miniJava.CodeGeneration.CodeGenerator;
 import miniJava.ContextualAnalysis.Identification;
 import miniJava.ContextualAnalysis.MethodChecker;
 import miniJava.ContextualAnalysis.TypeChecking;
 import miniJava.SyntacticAnalyzer.Parser;
 import miniJava.SyntacticAnalyzer.Scanner;
+import miniJava.mJAM.Disassembler;
+import miniJava.mJAM.ObjectFile;
 
 public class Compiler {
 	
@@ -70,6 +73,32 @@ public class Compiler {
 		if(e.hasErrors()){
 			e.printErrors();
 			System.exit(4);
+		}
+		
+		@SuppressWarnings("unused")
+		CodeGenerator cd = new CodeGenerator((Package)ast, e);
+		
+		if(e.hasErrors()){
+			e.printErrors();
+			System.exit(4);
+		}
+		
+		String outputName = args[0].substring(0, args[0].indexOf('.')) + ".mJAM";
+		ObjectFile of = new ObjectFile(outputName);
+		
+		if(of.write()){
+			System.err.println("Could not write to " + outputName + "!");
+			System.exit(4);
+		}
+		
+		if(isSpecialMode && args[1].contains("--asm-too")){
+			String disOutputName = args[0].substring(0, args[0].indexOf('.')) + ".asm";
+			Disassembler dis = new Disassembler(outputName);
+			
+			if(dis.disassemble()){
+				System.err.println("Could not write to " + disOutputName + "!");
+				System.exit(4);
+			}
 		}
 		
 		System.exit(0);
