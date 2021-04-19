@@ -2,17 +2,52 @@ package miniJava;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.Test;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
-import com.ginsberg.junit.exit.ExpectSystemExitWithStatus;
-import com.ginsberg.junit.exit.FailOnSystemExit;
+import org.junit.jupiter.api.Test;
 
 class CodeGeneratorTest {
 
 	@Test
-	@ExpectSystemExitWithStatus(0)
 	void test35(){
 		System.out.println("Test 35");
-		Compiler.main(new String[]{MainTest.RES + "Test35.mjava", "--jit"});
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test35.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("3"));
+	}
+	
+	@Test
+	void test36(){
+		System.out.println("Test 36");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test36.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("10"));
 	}
 }

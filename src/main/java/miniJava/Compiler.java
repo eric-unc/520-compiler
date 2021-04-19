@@ -18,7 +18,7 @@ import miniJava.mJAM.ObjectFile;
 
 public class Compiler {
 	
-	private static boolean isSpecialMode;
+	public static boolean isSpecialMode;
 
 	public static void main(String[] args){
 		if(args.length == 0)
@@ -105,6 +105,7 @@ public class Compiler {
 		if(isSpecialMode && args[1].contains("--jit"))
 			Interpreter.interpret(outputName);
 		
-		System.exit(0);
+		if(!isSpecialMode)
+			System.exit(0);
 	}
 }

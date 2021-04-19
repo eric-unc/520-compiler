@@ -1,0 +1,18 @@
+public A {
+	public static void main(String[] args){
+		int x = 5;
+		Person p = new Person();
+		p.isCool = true;
+		p.n = 10;
+		
+		if(p.isCool)
+			System.out.println(p.n);
+		else
+			System.out.println(x);
+	}
+}
+
+public Person {
+	boolean isCool;
+	int n;
+}

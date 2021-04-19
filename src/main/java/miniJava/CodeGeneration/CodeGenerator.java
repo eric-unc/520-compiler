@@ -299,6 +299,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitBinaryExpr(BinaryExpr expr, Object arg){
+		// TODO: support short-circuiting
 		MethodDecl md = (MethodDecl)arg;
 		
 		expr.left.visit(this, md);
@@ -425,7 +426,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitThisRef(ThisRef ref, Object arg){
-		// TODO Auto-generated method stub
+		Machine.emit(LOADA, OB, 0);
 		return null;
 	}
 
@@ -452,7 +453,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitQRef(QualRef ref, Object arg){
-		// TODO: wip obviously
+		// TODO: arraylen support (and more)
 		MethodDecl md = (MethodDecl)arg;
 		
 		if(ref.ref.decl instanceof LocalDecl || ref.ref.decl instanceof MemberDecl){

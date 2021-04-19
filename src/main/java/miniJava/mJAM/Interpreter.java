@@ -14,6 +14,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import miniJava.Compiler;
+
 public class Interpreter {
 
 	// DATA STORE
@@ -862,10 +864,8 @@ public class Interpreter {
 		interpretProgram();
 		showStatus();
 		// mJAM exit code reflects normal termination or mJAM failure
-		if (status == halted)
-			System.exit(0);
-		else
-			System.exit(4);
+		if(!Compiler.isSpecialMode)
+			System.exit(status == halted ? 0 : 4);
 	}
 
 	public static void debug(String objectFileName, String sourceFileName) {

@@ -3,6 +3,10 @@ bin/*
 build/*
 *.class
 
+# Compiled by compiler
+miniJava/*.asm
+miniJava/*.mJAM
+
 # Log file
 *.log
 
