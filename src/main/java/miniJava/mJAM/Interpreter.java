@@ -263,6 +263,7 @@ public class Interpreter {
 
 	// Invoke primitive operation with argument(s) on the stack
 	// primitives are static and are not supplied an instance on the stack.
+	@SuppressWarnings("deprecation")
 	static void callPrimitive(int id) {
 
 		int addr, size, index;
