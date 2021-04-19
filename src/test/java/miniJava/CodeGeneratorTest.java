@@ -7,9 +7,12 @@ import java.io.PrintStream;
 
 import org.junit.jupiter.api.Test;
 
+import com.ginsberg.junit.exit.FailOnSystemExit;
+
 class CodeGeneratorTest {
 
 	@Test
+	@FailOnSystemExit
 	void test35(){
 		System.out.println("Test 35");
 		
@@ -31,6 +34,7 @@ class CodeGeneratorTest {
 	}
 	
 	@Test
+	@FailOnSystemExit
 	void test36(){
 		System.out.println("Test 36");
 		
@@ -49,5 +53,10 @@ class CodeGeneratorTest {
 		System.setOut(out);
 		
 		assertTrue(tempOut.toString().contains("10"));
+		assertTrue(tempOut.toString().contains("100"));
+		assertTrue(tempOut.toString().contains("101"));
+		assertTrue(tempOut.toString().contains("102"));
+		assertTrue(tempOut.toString().contains("103"));
+		assertTrue(tempOut.toString().contains("104"));
 	}
 }

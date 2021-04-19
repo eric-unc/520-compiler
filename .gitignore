@@ -4,8 +4,8 @@ build/*
 *.class
 
 # Compiled by compiler
-miniJava/*.asm
-miniJava/*.mJAM
+*.asm
+*.mJAM
 
 # Log file
 *.log

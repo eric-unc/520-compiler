@@ -41,7 +41,8 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		Machine.emit(CALL, CB, -1);
 		Machine.emit(HALT);
 		
-		prog.classDeclList.forEach(c -> c.visit(this, null));
+		prog.classDeclList.forEach(c -> c.visit(this, true));
+		prog.classDeclList.forEach(c -> c.visit(this, false));
 		
 		methodRefsToPatch.put(toPatch_mainCall, prog.main);
 		return null;
@@ -49,18 +50,14 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitClassDecl(ClassDecl cd, Object arg){
-		cd.runtimeDescriptor = new ClassDescriptor();
+		Boolean visitFields = (Boolean)arg;
 		
-		cd.fieldDeclList.forEach(fd -> {
-			fd.visit(this, cd.runtimeDescriptor);
+		if(visitFields) {
+			cd.runtimeDescriptor = new ClassDescriptor();
 			
-			/*if(fd.isStatic)
-				((ClassDescriptor)cd.runtimeDescriptor).staticSize += ((VarDescriptor)fd.runtimeDescriptor).size;
-			else
-				((ClassDescriptor)cd.runtimeDescriptor).objectSize += ((VarDescriptor)fd.runtimeDescriptor).size;*/
-		});
-		
-		cd.methodDeclList.forEach(md -> md.visit(this, null));
+			cd.fieldDeclList.forEach(fd ->  fd.visit(this, cd.runtimeDescriptor));
+		}else
+			cd.methodDeclList.forEach(md -> md.visit(this, null));
 		
 		return null;
 	}
@@ -194,8 +191,8 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		// each argument should be put onto the stack
 		stmt.argList.forEach(_arg -> _arg.visit(this, md));
 		
-		// visit reference if needed?
-		stmt.methodRef.visit(this, null);
+		// visit reference if needed? XXX
+		stmt.methodRef.visit(this, md);
 		
 		// then, we perform that beautiful call
 		MethodDecl calledMethod = (MethodDecl)stmt.methodRef.decl;
@@ -441,6 +438,8 @@ public class CodeGenerator implements Visitor<Object, Object> {
 			Machine.emit(LOAD, LB, ((VarDescriptor)ld.runtimeDescriptor).offset + extra);
 		}else if(ref.decl instanceof MemberDecl){
 			MemberDecl md = (MemberDecl)ref.decl;
+			
+			System.err.println(md.runtimeDescriptor);
 			
 			if(md.isStatic)
 				Machine.emit(LOAD, SB, ((VarDescriptor)md.runtimeDescriptor).offset + extra);
