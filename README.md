@@ -13,6 +13,7 @@ The compiler should be used through the command line, through arguments:
 ** `--ast-only`: scans, parses, builds an AST, and prints the AST.
 ** `--contextual-analysis-only`, scans, parses, builds an AST, performs contextual analysis (just identification/type checking).
 ** `--asm-too`, scans, parses, builds an AST, performs contextual analysis, code generation, and also outputs a dissambled `.asm` file.
+** `--jit`, scans, parses, builds an AST, performs contextual analysis, code generation, outputs a dissambled `.asm` file, runs file that was generated (not a true JIT compiler since it's saved to the disk).
 
 ## Grammar
 * Program ::= Class\* *end*

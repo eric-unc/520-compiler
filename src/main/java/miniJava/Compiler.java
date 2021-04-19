@@ -13,6 +13,7 @@ import miniJava.ContextualAnalysis.TypeChecking;
 import miniJava.SyntacticAnalyzer.Parser;
 import miniJava.SyntacticAnalyzer.Scanner;
 import miniJava.mJAM.Disassembler;
+import miniJava.mJAM.Interpreter;
 import miniJava.mJAM.ObjectFile;
 
 public class Compiler {
@@ -91,7 +92,7 @@ public class Compiler {
 			System.exit(4);
 		}
 		
-		if(isSpecialMode && args[1].contains("--asm-too")){
+		if(isSpecialMode && (args[1].contains("--asm-too") || args[1].contains("--jit"))){
 			String disOutputName = args[0].substring(0, args[0].indexOf('.')) + ".asm";
 			Disassembler dis = new Disassembler(outputName);
 			
@@ -100,6 +101,9 @@ public class Compiler {
 				System.exit(4);
 			}
 		}
+		
+		if(isSpecialMode && args[1].contains("--jit"))
+			Interpreter.interpret(outputName);
 		
 		System.exit(0);
 	}

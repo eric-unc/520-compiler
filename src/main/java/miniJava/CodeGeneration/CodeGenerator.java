@@ -162,7 +162,8 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		
 		if(stmt.initExp != null){
 			stmt.initExp.visit(this, null);
-			Machine.emit(STORE, LB, ((VarDescriptor)stmt.varDecl.runtimeDescriptor).offset);
+			// TODO: store
+			//Machine.emit(STORE, LB, ((VarDescriptor)stmt.varDecl.runtimeDescriptor).offset);
 		}
 		
 		return null;

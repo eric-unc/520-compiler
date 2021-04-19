@@ -13,6 +13,6 @@ class CodeGeneratorTest {
 	@ExpectSystemExitWithStatus(0)
 	void test35(){
 		System.out.println("Test 35");
-		Compiler.main(new String[]{MainTest.RES + "Test35.mjava", "--asm-too"});
+		Compiler.main(new String[]{MainTest.RES + "Test35.mjava", "--jit"});
 	}
 }
