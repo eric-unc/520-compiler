@@ -22,12 +22,8 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		Machine.initCodeGen(); // not sure if this is necessary or not.
 		ast.visit(this, null);
 		
-		methodRefsToPatch.forEach((toPatchCBOffset, md) -> {
-			//System.out.println(toPatchCBOffset + " " + md + " " + md.runtimeDescriptor);
-			
-			//if(md.runtimeDescriptor != null)
-				Machine.patch(toPatchCBOffset, ((MethodDescriptor)md.runtimeDescriptor).cbOffset);
-		});
+		methodRefsToPatch.forEach((toPatchCBOffset, md) -> 
+			Machine.patch(toPatchCBOffset, ((MethodDescriptor)md.runtimeDescriptor).cbOffset));
 	}
 
 	@Override
@@ -67,7 +63,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		ClassDescriptor rd = (ClassDescriptor)arg;
 		
 		VarDescriptor newVD = new VarDescriptor();
-		newVD.size = fd.type.typeKind != TypeKind.CLASS ? 1 : Machine.linkDataSize;
+		newVD.size = 1;
 		
 		if(fd.isStatic){ 
 			newVD.offset = rd.staticSize;
@@ -96,7 +92,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		MethodDescriptor md = (MethodDescriptor)((MethodDecl)arg).runtimeDescriptor;
 		
 		VarDescriptor newVD = new VarDescriptor();
-		newVD.size = pd.type.typeKind != TypeKind.CLASS ? 1 : Machine.linkDataSize;
+		newVD.size = 1;
 		newVD.offset = (-1 * md.argsize) - 1;
 		md.argsize += newVD.size;
 		
@@ -110,7 +106,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		MethodDescriptor md = (MethodDescriptor)((MethodDecl)arg).runtimeDescriptor;
 		
 		VarDescriptor newVD = new VarDescriptor();
-		newVD.size = decl.type.typeKind != TypeKind.CLASS ? 1 : Machine.linkDataSize;
+		newVD.size = 1;
 		newVD.offset = md.size;
 		md.size += newVD.size;
 		
@@ -170,9 +166,50 @@ public class CodeGenerator implements Visitor<Object, Object> {
 	public Object visitAssignStmt(AssignStmt stmt, Object arg){
 		MethodDecl md = (MethodDecl)arg;
 		// TODO lol
-		stmt.val.visit(this, md);
 		VarDescriptor vd = (VarDescriptor)stmt.ref.decl.runtimeDescriptor;
-		Machine.emit(STORE, OB, vd.offset);
+		
+		if(stmt.ref instanceof IdRef){
+			stmt.val.visit(this, md);
+			
+			if(stmt.ref.decl instanceof LocalDecl)
+				Machine.emit(STORE, LB, vd.offset);
+			else if(stmt.ref.decl instanceof FieldDecl){
+				FieldDecl fd = (FieldDecl)stmt.ref.decl;
+				Machine.emit(STORE, fd.isStatic ? SB : OB, vd.offset);
+			}
+		}else if(stmt.ref instanceof QualRef){
+			QualRef q = (QualRef)stmt.ref;
+			FieldDecl fd = (FieldDecl)stmt.ref.decl;
+			
+			if(fd.isStatic){
+				stmt.val.visit(this, md);
+				Machine.emit(STORE, SB, vd.offset);
+			}else{
+				stmt.ref.visit(this, true); // get address of ref, field index
+				stmt.val.visit(this, md);
+				Machine.emit(fieldupd);
+			}
+		} // other option is ThisRef which shouldn't compile.
+		
+		/*if(stmt.ref.decl instanceof LocalDecl){
+			stmt.val.visit(this, md);
+			Machine.emit(STORE, LB, vd.offset);
+		}else if(stmt.ref.decl instanceof FieldDecl){
+			FieldDecl fd = (FieldDecl)stmt.ref.decl;
+			
+			if(fd.isStatic){
+				stmt.val.visit(this, md);
+				Machine.emit(STORE, SB, vd.offset);
+			}else if(fd.inClass == md.inClass){ // TODO this probably won't work in a class has an instance of itself
+				stmt.val.visit(this, md);
+				Machine.emit(STORE, OB, vd.offset);
+			}else{
+				stmt.ref.visit(this, null);
+				stmt.val.visit(this, md);
+				Machine.emit(fieldupd);
+			}
+		}*/
+		
 		return null;
 	}
 
@@ -192,7 +229,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		stmt.argList.forEach(_arg -> _arg.visit(this, md));
 		
 		// visit reference if needed? XXX
-		stmt.methodRef.visit(this, md);
+		stmt.methodRef.visit(this, null);
 		
 		// then, we perform that beautiful call
 		MethodDecl calledMethod = (MethodDecl)stmt.methodRef.decl;
@@ -208,7 +245,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 			methodRefsToPatch.put(toPatch_methodCall, calledMethod);
 		}else{ // assume built-in
 			if(calledMethod.name.equals("println")){
-				Machine.emit(putint);
+				Machine.emit(putintnl);
 			} // else: error?
 		}
 		
@@ -229,7 +266,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 	}
 
 	@Override
-	public Object visitIfStmt(IfStmt stmt, Object arg){ // dunno if this works or not
+	public Object visitIfStmt(IfStmt stmt, Object arg){
 		MethodDecl md = (MethodDecl)arg;
 		
 		stmt.cond.visit(this, md);
@@ -360,9 +397,9 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitRefExpr(RefExpr expr, Object arg){
-		MethodDecl md = (MethodDecl)arg;
+		//MethodDecl md = (MethodDecl)arg;
 		
-		expr.ref.visit(this, md);
+		expr.ref.visit(this, null);
 		
 		return null;
 	}
@@ -429,41 +466,44 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitIdRef(IdRef ref, Object arg){
-		// TODO WIP
-		int extra = ref.decl.type.typeKind == TypeKind.CLASS ? 3 : 0;
-		
 		if(ref.decl instanceof LocalDecl){
 			LocalDecl ld = (LocalDecl)ref.decl;
 			
-			Machine.emit(LOAD, LB, ((VarDescriptor)ld.runtimeDescriptor).offset + extra);
+			Machine.emit(LOAD, LB, ((VarDescriptor)ld.runtimeDescriptor).offset);
 		}else if(ref.decl instanceof MemberDecl){
 			MemberDecl md = (MemberDecl)ref.decl;
 			
-			System.err.println(md.runtimeDescriptor);
-			
 			if(md.isStatic)
-				Machine.emit(LOAD, SB, ((VarDescriptor)md.runtimeDescriptor).offset + extra);
+				Machine.emit(LOAD, SB, ((VarDescriptor)md.runtimeDescriptor).offset);
 			else
-				Machine.emit(LOAD, OB, ((VarDescriptor)md.runtimeDescriptor).offset + extra);
+				Machine.emit(LOAD, OB, ((VarDescriptor)md.runtimeDescriptor).offset);
 		}
 		
 		return null;
 	}
 
 	@Override
-	public Object visitQRef(QualRef ref, Object arg){
+	public Object visitQRef(QualRef ref, Object arg){ // TODO: get/set
 		// TODO: arraylen support (and more)
-		MethodDecl md = (MethodDecl)arg;
+		//MethodDecl md = (MethodDecl)arg;
+		// arg: true if want address
+		Boolean b = arg != null ? (Boolean)arg : false;
 		
-		if(ref.ref.decl instanceof LocalDecl || ref.ref.decl instanceof MemberDecl){
-			ref.ref.visit(this, md);
-			
-			if(ref.id.decl instanceof MethodDecl){
-				// call will take care of it
-			}else if(ref.id.decl instanceof MemberDecl){
-				MemberDecl _md = (MemberDecl)ref.id.decl;
-				Machine.emit(LOADL, ((VarDescriptor)_md.runtimeDescriptor).offset);
-				Machine.emit(fieldref);
+		if(b){
+			MemberDecl _md = (MemberDecl)ref.id.decl;
+			ref.ref.visit(this, null/*md*/);
+			Machine.emit(LOADL, ((VarDescriptor)_md.runtimeDescriptor).offset);
+		}else{
+			if(ref.ref.decl instanceof LocalDecl || ref.ref.decl instanceof MemberDecl){
+				ref.ref.visit(this, null/*md*/);
+				
+				if(ref.id.decl instanceof MethodDecl){
+					// call will take care of it
+				}else if(ref.id.decl instanceof MemberDecl){
+					MemberDecl _md = (MemberDecl)ref.id.decl;
+					Machine.emit(LOADL, ((VarDescriptor)_md.runtimeDescriptor).offset);
+					Machine.emit(fieldref);
+				}
 			}
 		}
 		
@@ -509,5 +549,4 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		Machine.emit(LOADL, Machine.nullRep);
 		return null;
 	}
-
 }

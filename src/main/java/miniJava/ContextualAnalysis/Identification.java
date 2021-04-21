@@ -35,7 +35,7 @@ public class Identification implements Visitor<Object, Object> {
 			cd.fieldDeclList.forEach(table::enter);
 			cd.methodDeclList.forEach(table::enter);
 			
-			cd.fieldDeclList.forEach(fd -> fd.visit(this, null));
+			cd.fieldDeclList.forEach(fd -> fd.visit(this, cd));
 			cd.methodDeclList.forEach(md -> md.visit(this, cd));
 			
 			table.closeScope();
@@ -58,6 +58,10 @@ public class Identification implements Visitor<Object, Object> {
 	@Override
 	public Object visitFieldDecl(FieldDecl fd, Object arg){
 		fd.type.visit(this, null);
+		
+		ClassDecl context = (ClassDecl)arg;
+		fd.inClass = context;
+		
 		return null;
 	}
 

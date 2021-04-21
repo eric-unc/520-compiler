@@ -95,8 +95,6 @@ public final class Machine {
 		puteol,
 		getint,
 		putint,
-		/** for debugging only */
-		@Deprecated
 		putintnl,
 		alloc,
 		dispose,

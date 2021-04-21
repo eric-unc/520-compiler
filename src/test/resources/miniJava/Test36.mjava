@@ -9,17 +9,6 @@ class A {
 			System.out.println(p.n);
 		else
 			System.out.println(x);
-		
-		z_test();
-	}
-	
-	public static void z_test(){
-		int z = 100;
-		
-		while(z < 105){
-			System.out.println(z);
-			z = z + 1;
-		}
 	}
 }
 
