@@ -1,0 +1,22 @@
+class Test45 {
+	int n;
+	
+	public static void main(String[] args){
+		Test45 t = new Test45();
+		t.do1(); // prints 555, 666, 777, 888
+	}
+	
+	private void do1(){
+		n = 555;
+		System.out.println(n);
+		
+		n = 666;
+		System.out.println(this.n);
+		
+		this.n = 777;
+		System.out.println(n);
+		
+		this.n = 888;
+		System.out.println(this.n);
+	}
+}

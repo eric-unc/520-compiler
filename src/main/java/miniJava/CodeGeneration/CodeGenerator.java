@@ -228,30 +228,8 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		}else{ // assume built-in
 			if(calledMethod.name.equals("println")){
 				Machine.emit(putintnl);
-			}else
-				System.out.println("wtffff!");
+			} // else error?
 		}
-		
-		// visit reference if needed? XXX
-		/*stmt.methodRef.visit(this, null);
-		
-		// then, we perform that beautiful call
-		MethodDecl calledMethod = (MethodDecl)stmt.methodRef.decl;
-		int toPatch_methodCall = Machine.nextInstrAddr();
-		
-		if(calledMethod.runtimeDescriptor != null) {
-			// there's also a CALLD, but that's for OOP support later
-			if(calledMethod.isStatic)
-				Machine.emit(CALL, CB, -1);
-			else
-				Machine.emit(CALLI, CB, -1);
-			
-			methodRefsToPatch.put(toPatch_methodCall, calledMethod);
-		}else{ // assume built-in
-			if(calledMethod.name.equals("println")){
-				Machine.emit(putintnl);
-			} // else: error?
-		}*/
 		
 		return null;
 	}
@@ -542,7 +520,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 			}else if(ref.ref.decl instanceof ClassDecl){ // attempted static access
 				if(ref.id.decl instanceof MemberDecl && !ref.id.spelling.equals("out")){
 					MemberDecl _md = (MemberDecl)ref.id.decl;
-					Machine.emit(LOAD, SB, ((VarDescriptor)_md.runtimeDescriptor).offset);
+					Machine.emit(LOAD, _md.isStatic ? SB : OB, ((VarDescriptor)_md.runtimeDescriptor).offset);
 				}
 			}
 		}

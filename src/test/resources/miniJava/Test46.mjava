@@ -1,0 +1,16 @@
+class Test46 {
+	static int a;
+	
+	public static void main(String[] args){
+		int b = 111;
+		a = 222;
+		
+		int c = 1000 + method(a, b);
+		
+		System.out.println(c); // prints 1555
+	}
+	
+	public static int method(int i1, int i2){
+		return a + i1 + i2;
+	}
+}

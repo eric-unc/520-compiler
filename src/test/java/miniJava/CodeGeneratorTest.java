@@ -245,4 +245,78 @@ class CodeGeneratorTest {
 		assertTrue(tempOut.toString().contains("42"));
 		assertTrue(tempOut.toString().contains("22"));
 	}
+	
+	@Test
+	@FailOnSystemExit
+	void test44(){
+		System.out.println("Test 44");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test44.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("20"));
+		assertTrue(tempOut.toString().contains("21"));
+		assertTrue(tempOut.toString().contains("22"));
+		assertTrue(tempOut.toString().contains("23"));
+		assertTrue(tempOut.toString().contains("24"));
+		assertTrue(tempOut.toString().contains("25"));
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test45(){
+		System.out.println("Test 45");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test45.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("555"));
+		assertTrue(tempOut.toString().contains("666"));
+		assertTrue(tempOut.toString().contains("777"));
+		assertTrue(tempOut.toString().contains("888"));
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test46(){
+		System.out.println("Test 46");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test46.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("1555"));
+	}
 }

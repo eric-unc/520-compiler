@@ -1,0 +1,43 @@
+class Test44 {
+	public static void main(String[] args){
+		Person p = new Person();
+		p.doStuff(); // prints 20, 21, 22
+		
+		p.age = 23;
+		System.out.println(p.age); // prints 23
+		
+		p.friend.age = 24;
+		System.out.println(p.pet.owner.age); // prints 24
+		
+		p.pet.owner.friend.friend.age = 25;
+		System.out.println(p.friend.age); // prints 25
+	}
+}
+
+class Person {
+	public int age;
+	public Animal pet;
+	public Person friend;
+	
+	public void doStuff(){
+		age = 20;
+		
+		Animal cat = new Animal();
+		cat.owner = this;
+		pet = cat;
+		
+		friend = this; // don't judge :(
+		
+		System.out.println(this.age);
+		
+		age = 21;
+		System.out.println(pet.owner.age);
+		
+		this.age = 22;
+		System.out.println(friend.age);
+	}
+}
+
+class Animal {
+	public Person owner;
+}
