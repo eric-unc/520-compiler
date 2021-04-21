@@ -198,7 +198,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 	public Object visitIxAssignStmt(IxAssignStmt stmt, Object arg){
 		MethodDecl md = (MethodDecl)arg;
 		
-		stmt.ref.visit(this, md); // put array onto stack
+		stmt.ref.visit(this, null); // put array onto stack
 		stmt.ix.visit(this, md); // put desired index onto stack
 		stmt.exp.visit(this, md); // put new value onto stack
 		

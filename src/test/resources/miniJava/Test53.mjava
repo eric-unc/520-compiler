@@ -1,0 +1,51 @@
+class Test53 {
+	public static void main(String[] args){
+		Gun machineGun = new Gun();
+		machineGun.bullets = new Bullet[100];
+		
+		int i = 0;
+		
+		while(i < 100){
+			Bullet b = new Bullet();
+			b.type = 1111;
+			machineGun.bullets[i] = b;
+			i = i + 1;
+		}
+		
+		Bullet b = machineGun.bullets[5];
+		System.out.println(b.type); // prints 1111
+		
+		Gun pistol = new Gun();
+		pistol.bullets = new Bullet[10];
+		
+		pistol.bullets[0] = Bullet.makePistolBullet();
+		pistol.bullets[1] = Bullet.makePistolBullet();
+		
+		Bullet b1 = pistol.bullets[0];
+		Bullet b2 = pistol.bullets[1]; // note we can't use [] in a reference
+		Bullet b3 = pistol.bullets[2];
+		
+		if(pistol.bullets[0] == pistol.bullets[1])
+			System.out.println(3333);
+		
+		if(b1.type == 2222)
+			System.out.println(b1.type); // prints 2222
+		
+		if(pistol.bullets[2] == null)
+			System.out.println(4444); // prints 4444
+	}
+}
+
+class Gun {
+	public Bullet[] bullets;
+}
+
+class Bullet {
+	public int type;
+	
+	public static Bullet makePistolBullet(){
+		Bullet ret = new Bullet();
+		ret.type = 2222;
+		return ret;
+	}
+}
