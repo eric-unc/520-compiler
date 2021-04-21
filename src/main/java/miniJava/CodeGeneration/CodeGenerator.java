@@ -179,7 +179,6 @@ public class CodeGenerator implements Visitor<Object, Object> {
 				Machine.emit(STORE, fd.isStatic ? SB : OB, vd.offset);
 			}
 		}else if(stmt.ref instanceof QualRef){
-			//QualRef q = (QualRef)stmt.ref;
 			FieldDecl fd = (FieldDecl)stmt.ref.decl;
 			
 			if(fd.isStatic){
@@ -190,7 +189,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 				stmt.val.visit(this, md);
 				Machine.emit(fieldupd);
 			}
-		} // other option is ThisRef which shouldn't compile.
+		} // other option is ThisRef which won't get past contextual analysis
 		
 		return null;
 	}
@@ -432,12 +431,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		// then, we perform that beautiful call
 		MethodDecl calledMethod = (MethodDecl)expr.functionRef.decl;
 		
-		if(!calledMethod.isStatic){ // but we may need to put object on stack
-			/*if(calledMethod.inClass != md.inClass)
-				expr.functionRef.visit(this, null);
-			else
-				Machine.emit(LOADA, OB, 0); // dunno why it isn't working, but here's a hacky fix*/
-			
+		if(!calledMethod.isStatic){ // but we may need to put the object on stack first
 			// wow this is hacky lol
 			if(expr.functionRef instanceof QualRef && !(((QualRef)expr.functionRef).ref instanceof ThisRef)) 
 				expr.functionRef.visit(this, null);
@@ -448,10 +442,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		int toPatch_methodCall = Machine.nextInstrAddr();
 		
 		// there's also a CALLD, but that has to do with inheritance, which is not supported (yet)
-		if(calledMethod.isStatic)
-			Machine.emit(CALL, CB, -1);
-		else
-			Machine.emit(CALLI, CB, -1);
+		Machine.emit(calledMethod.isStatic ? CALL : CALLI, CB, -1);
 		
 		methodRefsToPatch.put(toPatch_methodCall, calledMethod);
 		
@@ -497,10 +488,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		}else if(ref.decl instanceof FieldDecl){
 			FieldDecl fd = (FieldDecl)ref.decl;
 			
-			if(fd.isStatic)
-				Machine.emit(LOAD, SB, ((VarDescriptor)fd.runtimeDescriptor).offset);
-			else
-				Machine.emit(LOAD, OB, ((VarDescriptor)fd.runtimeDescriptor).offset);
+			Machine.emit(LOAD, fd.isStatic ? SB : OB, ((VarDescriptor)fd.runtimeDescriptor).offset);
 		}
 		
 		return null;
@@ -512,9 +500,9 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		Boolean b = arg != null ? (Boolean)arg : false;
 		
 		if(b){
-			MemberDecl _md = (MemberDecl)ref.id.decl;
+			MemberDecl md = (MemberDecl)ref.id.decl;
 			ref.ref.visit(this, null);
-			Machine.emit(LOADL, ((VarDescriptor)_md.runtimeDescriptor).offset);
+			Machine.emit(LOADL, ((VarDescriptor)md.runtimeDescriptor).offset);
 		}else{
 			if(ref.ref.decl instanceof LocalDecl || ref.ref.decl instanceof MemberDecl){
 				ref.ref.visit(this, null);
@@ -522,10 +510,10 @@ public class CodeGenerator implements Visitor<Object, Object> {
 				if(ref.id.decl instanceof MethodDecl){
 					// call will take care of it
 				}else if(ref.id.decl instanceof MemberDecl){
-					MemberDecl _md = (MemberDecl)ref.id.decl;
+					MemberDecl md = (MemberDecl)ref.id.decl;
 					
-					if(_md.runtimeDescriptor != null){
-						Machine.emit(LOADL, ((VarDescriptor)_md.runtimeDescriptor).offset);
+					if(md.runtimeDescriptor != null){
+						Machine.emit(LOADL, ((VarDescriptor)md.runtimeDescriptor).offset);
 						Machine.emit(fieldref);
 					}else{
 						if(ref.ref.decl.type.typeKind == TypeKind.ARRAY && ref.id.spelling.equals("length"))
@@ -535,7 +523,6 @@ public class CodeGenerator implements Visitor<Object, Object> {
 			}else if(ref.ref.decl instanceof ClassDecl){ // attempted static access
 				if(ref.id.decl instanceof FieldDecl && !ref.id.spelling.equals("out")){
 					FieldDecl fd = (FieldDecl)ref.id.decl;
-					//System.out.println(fd.name);
 					Machine.emit(LOAD, fd.isStatic ? SB : OB, ((VarDescriptor)fd.runtimeDescriptor).offset);
 				}
 			}
