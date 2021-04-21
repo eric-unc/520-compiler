@@ -1,0 +1,68 @@
+class Test51 {
+	public static void main(String[] args){
+		Human h1 = new Human();
+		h1.canLove = true;
+		h1.canEat = true;
+		h1.age = 20;
+		
+		Human h2 = new Human();
+		h2.canLove = false;
+		h2.canEat = true;
+		h2.age = 19;
+		
+		boolean success = h1.goOnDate(h2);
+		
+		if(success){
+			System.out.println(1);
+			h2.goOnDate(h1); // do it again
+		}else{
+			h1.sleep(); // prints 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+			
+			int x = 111;
+			
+			if(h1.canLove){
+				Human h3 = new Human();
+				h3.canLove = true;
+				h3.canEat = true;
+				h3.age = 21;
+				
+				boolean success2 = h3.goOnDate(h1);
+				
+				if(success2){
+					System.out.println(x); // print 111
+					System.out.println(h1.age); // print 20
+				}
+			}
+		}
+		
+		int z = 999;
+		System.out.println(z);
+	}
+}
+
+class Human {
+	public boolean canLove;
+	public boolean canEat;
+	public int age;
+	
+	public boolean goOnDate(Human other){
+		// only adults can date
+		boolean fineAge = this.age >= 18 && other.age >= 18;
+		
+		// if only one person eats, then it is not a good date (too awkward).
+		boolean fineEatingStatus = (canEat && other.canEat) || (!canEat && !other.canEat);
+		
+		boolean fineLoveStatus = canLove && other.canLove;
+		
+		return fineAge && fineEatingStatus && fineLoveStatus;
+	}
+	
+	public void sleep(){
+		int i = 0;
+		
+		while(i != 10){
+			System.out.println(i + 1);
+			i = i + 1;
+		}
+	}
+}

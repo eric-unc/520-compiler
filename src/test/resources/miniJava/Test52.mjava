@@ -1,0 +1,31 @@
+class Test52 {
+	public static void main(String[] args){
+		Person p1 = new Person();
+		Heart h1 = new Heart();
+		p1.h = h1;
+		Vein v1 = new Vein();
+		v1.length = 111;
+		p1.h.v = v1;
+		System.out.println(h1.v.length); // prints 111
+		
+		Person p2 = new Person();
+		Heart h2 = new Heart();
+		p2.h = h2;
+		Vein v2 = new Vein();
+		v2.length = 222;
+		h2.v = v2;
+		System.out.println(p2.h.v.length); // prints 222
+	}
+}
+
+class Person {
+	public Heart h;
+}
+
+class Heart {
+	public Vein v;
+}
+
+class Vein {
+	public int length;
+}

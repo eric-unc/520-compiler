@@ -455,4 +455,65 @@ class CodeGeneratorTest {
 		assertTrue(tempOut.toString().contains("500"));
 		assertTrue(tempOut.toString().contains("1005"));
 	}
+	
+	@Test
+	@FailOnSystemExit
+	void test51(){
+		System.out.println("Test 51");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test51.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			out.println(tempOut.toString());
+			System.setOut(out);
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("1"));
+		assertTrue(tempOut.toString().contains("2"));
+		assertTrue(tempOut.toString().contains("3"));
+		assertTrue(tempOut.toString().contains("4"));
+		assertTrue(tempOut.toString().contains("5"));
+		assertTrue(tempOut.toString().contains("6"));
+		assertTrue(tempOut.toString().contains("7"));
+		assertTrue(tempOut.toString().contains("8"));
+		assertTrue(tempOut.toString().contains("9"));
+		assertTrue(tempOut.toString().contains("10"));
+		assertTrue(tempOut.toString().contains("111"));
+		assertTrue(tempOut.toString().contains("20"));
+		assertTrue(tempOut.toString().contains("999"));
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test52(){
+		System.out.println("Test 52");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test52.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			out.println(tempOut.toString());
+			System.setOut(out);
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("111"));
+		assertTrue(tempOut.toString().contains("222"));
+	}
 }
