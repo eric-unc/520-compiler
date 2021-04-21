@@ -80,4 +80,26 @@ class CodeGeneratorTest {
 		assertTrue(tempOut.toString().contains("103"));
 		assertTrue(tempOut.toString().contains("104"));
 	}
+	
+	@Test
+	@FailOnSystemExit
+	void test38(){
+		System.out.println("Test 38");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test38.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("19"));
+	}
 }

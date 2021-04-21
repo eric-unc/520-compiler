@@ -133,31 +133,30 @@ public class CodeGenerator implements Visitor<Object, Object> {
 	@Override
 	public Object visitBlockStmt(BlockStmt stmt, Object arg){
 		MethodDecl md = (MethodDecl)arg;
+		
+		int originalSize = ((MethodDescriptor)md.runtimeDescriptor).size;
+		
 		stmt.sl.forEach(s -> s.visit(this, md));
+		
+		int added = ((MethodDescriptor)md.runtimeDescriptor).size - originalSize;
+		
+		if(added != 0){
+			Machine.emit(POP, added);
+			((MethodDescriptor)md.runtimeDescriptor).size = originalSize;
+		}
+		
 		return null;
 	}
 
 	@Override
 	public Object visitVardeclStmt(VarDeclStmt stmt, Object arg){
 		MethodDecl md = (MethodDecl)arg;
-		// TODO: really not sure what to do here
-		/*MethodDescriptor md = (MethodDescriptor)((MethodDecl)arg).runtimeDescriptor;
+		stmt.varDecl.visit(this, md);
 		
-		VarDescriptor newVD = new VarDescriptor();
-		newVD.size = 1; // TODO: see Machine.linkDataSize (which is 3)
-		newVD.offset = md.size;
-		md.size += newVD.size;*/
-		
-		
-		
-		//Machine.emit(LOADL, -1);
-		stmt.varDecl.visit(this, md); // Machine.emit(Op.LOADL, /* size of class/type */);
-		
-		if(stmt.initExp != null){
-			stmt.initExp.visit(this, null);
-			// TODO: store
-			//Machine.emit(STORE, LB, ((VarDescriptor)stmt.varDecl.runtimeDescriptor).offset);
-		}
+		if(stmt.initExp != null)
+			stmt.initExp.visit(this, md);
+		else
+			Machine.emit(PUSH, 1); // an "empty" value
 		
 		return null;
 	}
@@ -165,7 +164,6 @@ public class CodeGenerator implements Visitor<Object, Object> {
 	@Override
 	public Object visitAssignStmt(AssignStmt stmt, Object arg){
 		MethodDecl md = (MethodDecl)arg;
-		// TODO lol
 		VarDescriptor vd = (VarDescriptor)stmt.ref.decl.runtimeDescriptor;
 		
 		if(stmt.ref instanceof IdRef){
@@ -178,7 +176,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 				Machine.emit(STORE, fd.isStatic ? SB : OB, vd.offset);
 			}
 		}else if(stmt.ref instanceof QualRef){
-			QualRef q = (QualRef)stmt.ref;
+			//QualRef q = (QualRef)stmt.ref;
 			FieldDecl fd = (FieldDecl)stmt.ref.decl;
 			
 			if(fd.isStatic){
@@ -190,25 +188,6 @@ public class CodeGenerator implements Visitor<Object, Object> {
 				Machine.emit(fieldupd);
 			}
 		} // other option is ThisRef which shouldn't compile.
-		
-		/*if(stmt.ref.decl instanceof LocalDecl){
-			stmt.val.visit(this, md);
-			Machine.emit(STORE, LB, vd.offset);
-		}else if(stmt.ref.decl instanceof FieldDecl){
-			FieldDecl fd = (FieldDecl)stmt.ref.decl;
-			
-			if(fd.isStatic){
-				stmt.val.visit(this, md);
-				Machine.emit(STORE, SB, vd.offset);
-			}else if(fd.inClass == md.inClass){ // TODO this probably won't work in a class has an instance of itself
-				stmt.val.visit(this, md);
-				Machine.emit(STORE, OB, vd.offset);
-			}else{
-				stmt.ref.visit(this, null);
-				stmt.val.visit(this, md);
-				Machine.emit(fieldupd);
-			}
-		}*/
 		
 		return null;
 	}

@@ -1,0 +1,16 @@
+class Test38 {
+	public static void main(String[] args){
+		int x = 38;
+		int y = 19;
+		
+		if(true){
+			// these variables are evil (I will not elaborate)
+			int x_lol = 999;
+			int y_lol = 666;
+		}
+		
+		int z = 86;
+		
+		System.out.println(y); // should be 19
+	}
+}
