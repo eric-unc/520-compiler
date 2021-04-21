@@ -1,0 +1,17 @@
+class Test40 {
+	public static void main(String[] args){
+		int[] love = new int[4];
+		
+		love[0] = 666;
+		love[1] = 777;
+		love[2] = 888;
+		love[3] = 999;
+		
+		int i = 0;
+		
+		while(i != love.length){
+			System.out.println(love[i]); // should print 666, 777, 888, 999
+			i = i + 1;
+		}
+	}
+}

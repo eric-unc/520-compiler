@@ -1,0 +1,18 @@
+class Test39 {
+	static int a;
+	static int b;
+	
+	public static void main(String[] args){
+		int x = 111;
+		a = 222;
+		b = 333;
+		A.b = 444;
+		
+		System.out.println(a); // should print 222
+		System.out.println(A.b); // should print 444
+	}
+}
+
+class A {
+	public static int b;
+}

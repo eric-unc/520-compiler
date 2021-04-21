@@ -3,7 +3,7 @@ class Test37 {
 		int z = 100;
 		
 		while(z < 105){
-			System.out.println(z);
+			System.out.println(z); // prints 100, 101, 102, 103, 104
 			z = z + 1;
 		}
 	}

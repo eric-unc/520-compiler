@@ -1,4 +1,4 @@
-class A {
+class Test36 {
 	public static void main(String[] args){
 		int x = 5;
 		Person p = new Person();
@@ -6,7 +6,7 @@ class A {
 		p.n = 10;
 		
 		if(p.isCool)
-			System.out.println(p.n);
+			System.out.println(p.n); // prints 10
 		else
 			System.out.println(x);
 	}

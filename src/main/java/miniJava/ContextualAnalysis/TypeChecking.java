@@ -279,12 +279,12 @@ public class TypeChecking implements Visitor<Object, Object> {
 			case LESS_THAN:
 			case MORE_EQUAL:
 			case LESS_EQUAL:
-			case NOT_EQUALS:
 				checkTypeKind(expr.left.posn, TypeKind.INT, left.typeKind);
 				checkTypeKind(expr.right.posn, TypeKind.INT, right.typeKind);
 				return new BaseType(TypeKind.BOOLEAN, expr.posn);
-				
+			
 			case EQUALS_OP:
+			case NOT_EQUALS:
 				checkTypeDenoter(expr.posn, left, right);
 				return new BaseType(TypeKind.BOOLEAN, expr.posn);
 				

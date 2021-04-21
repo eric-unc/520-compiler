@@ -1,0 +1,20 @@
+class Test42 {
+	public static void main(String[] args){
+		boolean a = 5 < -1 || false;
+		boolean b = false || 5 == 5;
+		boolean c = true || 5 / 0 == 4; // no error
+		boolean d = 5 != 0 || 9 > 1;
+		
+		boolean e = false && 3 / 0 == 5; // no error
+		boolean f = 10000 > 5 && (true == false);
+		boolean g = true && true;
+		
+		if(a) System.out.println(111);
+		if(b) System.out.println(222); // should print
+		if(c) System.out.println(333); // should print
+		if(d) System.out.println(444); // should print
+		if(e) System.out.println(555);
+		if(f) System.out.println(666);
+		if(g) System.out.println(777); // should print
+	}
+}

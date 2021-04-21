@@ -10,7 +10,32 @@ import org.junit.jupiter.api.Test;
 import com.ginsberg.junit.exit.FailOnSystemExit;
 
 class CodeGeneratorTest {
-
+	@Test
+	@FailOnSystemExit
+	void test34(){
+		fail(); // XXX currently only passing superficially
+		System.out.println("Test 34");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test34.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		for(int i = 3; i <= 15; i++)
+			assertTrue(tempOut.toString().contains("" + i));
+		
+		assertTrue(tempOut.toString().contains("999"));
+	}
+	
 	@Test
 	@FailOnSystemExit
 	void test35(){
@@ -101,5 +126,123 @@ class CodeGeneratorTest {
 		System.setOut(out);
 		
 		assertTrue(tempOut.toString().contains("19"));
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test39(){
+		System.out.println("Test 39");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test39.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("222"));
+		assertTrue(tempOut.toString().contains("444"));
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test40(){
+		System.out.println("Test 40");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test40.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("666"));
+		assertTrue(tempOut.toString().contains("777"));
+		assertTrue(tempOut.toString().contains("888"));
+		assertTrue(tempOut.toString().contains("999"));
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test41(){
+		System.out.println("Test 41");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test41.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("Program has failed due to division by zero"));
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test42(){
+		System.out.println("Test 42");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test42.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("222"));
+		assertTrue(tempOut.toString().contains("333"));
+		assertTrue(tempOut.toString().contains("444"));
+		assertTrue(tempOut.toString().contains("777"));
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test43(){
+		System.out.println("Test 43");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test43.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("42"));
+		assertTrue(tempOut.toString().contains("22"));
 	}
 }

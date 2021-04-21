@@ -4,13 +4,12 @@ class Test38 {
 		int y = 19;
 		
 		if(true){
-			// these variables are evil (I will not elaborate)
 			int x_lol = 999;
 			int y_lol = 666;
 		}
 		
 		int z = 86;
 		
-		System.out.println(y); // should be 19
+		System.out.println(y); // prints 19
 	}
 }

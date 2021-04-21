@@ -9,7 +9,7 @@
  *     you have sufficient functionality
  *   
  *   When interpreted using mJAM the compiled code 
- *   should print 1 ... 15 999
+ *   should print 1, 2, ... 15, 999
  *
  **************************************************************/
 
@@ -29,11 +29,11 @@ class PA4Test
         // System.out.println(x);  
 
         /* 3: System.out.println */
-        System.out.println(3);
+        System.out.println(3); // prints
          
         /* 4: conditional statement */
         if (x != -1)
-        	System.out.println(4);
+        	System.out.println(4); // prints
         else
             System.out.println(-1);
         

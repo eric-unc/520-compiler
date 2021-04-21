@@ -17,6 +17,8 @@ public class CodeGenerator implements Visitor<Object, Object> {
 	// the line to patch -> the method it should have
 	private HashMap<Integer, MethodDecl> methodRefsToPatch = new HashMap<>();
 	
+	private int staticSize = 0;
+	
 	public CodeGenerator(Package ast, ErrorReporter reporter){
 		this.reporter = reporter;
 		Machine.initCodeGen(); // not sure if this is necessary or not.
@@ -66,8 +68,8 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		newVD.size = 1;
 		
 		if(fd.isStatic){ 
-			newVD.offset = rd.staticSize;
-			rd.staticSize += newVD.size;
+			newVD.offset = staticSize;
+			staticSize += newVD.size;
 		}else{
 			newVD.offset = rd.objectSize;
 			rd.objectSize += newVD.size;
@@ -194,9 +196,14 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitIxAssignStmt(IxAssignStmt stmt, Object arg){
-		stmt.ref.visit(this, null); // put array onto stack
-		stmt.exp.visit(this, null); // put new value onto stack
+		MethodDecl md = (MethodDecl)arg;
+		
+		stmt.ref.visit(this, md); // put array onto stack
+		stmt.ix.visit(this, md); // put desired index onto stack
+		stmt.exp.visit(this, md); // put new value onto stack
+		
 		Machine.emit(arrayupd);
+		
 		return null;
 	}
 
@@ -207,8 +214,26 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		// each argument should be put onto the stack
 		stmt.argList.forEach(_arg -> _arg.visit(this, md));
 		
-		// visit reference if needed? XXX
 		stmt.methodRef.visit(this, null);
+		
+		MethodDecl calledMethod = (MethodDecl)stmt.methodRef.decl;
+		
+		if(calledMethod.inClass != null) {
+			int toPatch_methodCall = Machine.nextInstrAddr();
+			Machine.emit(calledMethod.isStatic ? CALL : CALLI, CB, -1);
+			methodRefsToPatch.put(toPatch_methodCall, calledMethod);
+			
+			if(md.type.typeKind != TypeKind.VOID)
+				Machine.emit(POP, 1);
+		}else{ // assume built-in
+			if(calledMethod.name.equals("println")){
+				Machine.emit(putintnl);
+			}else
+				System.out.println("wtffff!");
+		}
+		
+		// visit reference if needed? XXX
+		/*stmt.methodRef.visit(this, null);
 		
 		// then, we perform that beautiful call
 		MethodDecl calledMethod = (MethodDecl)stmt.methodRef.decl;
@@ -226,7 +251,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 			if(calledMethod.name.equals("println")){
 				Machine.emit(putintnl);
 			} // else: error?
-		}
+		}*/
 		
 		return null;
 	}
@@ -312,10 +337,47 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitBinaryExpr(BinaryExpr expr, Object arg){
-		// TODO: support short-circuiting
 		MethodDecl md = (MethodDecl)arg;
 		
 		expr.left.visit(this, md);
+		
+		// Bitwise special cases.
+		switch(expr.operator.kind){
+			case AND_LOG:
+				int toPatch_and = Machine.nextInstrAddr();
+				Machine.emit(JUMPIF, Machine.falseRep, CB, -1);
+				
+				expr.right.visit(this, null);
+				
+				int toPatch_orAnd = Machine.nextInstrAddr();
+				Machine.emit(JUMP, CB, -1);
+				
+				int retFalseAddr = Machine.nextInstrAddr();
+				Machine.emit(LOADL, Machine.falseRep);
+				
+				Machine.patch(toPatch_and, retFalseAddr);
+				Machine.patch(toPatch_orAnd, Machine.nextInstrAddr());
+				return null;
+				
+			case OR_LOG:
+				int toPatch_or = Machine.nextInstrAddr();
+				Machine.emit(JUMPIF, Machine.trueRep, CB, -1);
+				
+				expr.right.visit(this, null);
+				
+				int toPatch_andOr = Machine.nextInstrAddr();
+				Machine.emit(JUMP, CB, -1);
+				
+				int retTrueAddr = Machine.nextInstrAddr();
+				Machine.emit(LOADL, Machine.trueRep);
+				
+				Machine.patch(toPatch_or, retTrueAddr);
+				Machine.patch(toPatch_andOr, Machine.nextInstrAddr());
+				return null;
+				
+			default: // continue
+		}
+		
 		expr.right.visit(this, md);
 		
 		switch(expr.operator.kind){
@@ -341,14 +403,6 @@ public class CodeGenerator implements Visitor<Object, Object> {
 				
 			case EQUALS_OP:
 				Machine.emit(eq);
-				break;
-				
-			case AND_LOG:
-				Machine.emit(and);
-				break;
-				
-			case OR_LOG:
-				Machine.emit(or);
 				break;
 			
 			case PLUS:
@@ -376,8 +430,6 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitRefExpr(RefExpr expr, Object arg){
-		//MethodDecl md = (MethodDecl)arg;
-		
 		expr.ref.visit(this, null);
 		
 		return null;
@@ -385,9 +437,9 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitIxExpr(IxExpr expr, Object arg){
+		expr.ref.visit(this, null); // put array
 		expr.ixExpr.visit(this, null); // put ix on stack
-		//expr.ref.decl
-		// TODO not sure how to access array???
+		Machine.emit(arrayref);
 		return null;
 	}
 
@@ -462,26 +514,35 @@ public class CodeGenerator implements Visitor<Object, Object> {
 	}
 
 	@Override
-	public Object visitQRef(QualRef ref, Object arg){ // TODO: get/set
-		// TODO: arraylen support (and more)
-		//MethodDecl md = (MethodDecl)arg;
+	public Object visitQRef(QualRef ref, Object arg){
 		// arg: true if want address
 		Boolean b = arg != null ? (Boolean)arg : false;
 		
 		if(b){
 			MemberDecl _md = (MemberDecl)ref.id.decl;
-			ref.ref.visit(this, null/*md*/);
+			ref.ref.visit(this, null);
 			Machine.emit(LOADL, ((VarDescriptor)_md.runtimeDescriptor).offset);
 		}else{
 			if(ref.ref.decl instanceof LocalDecl || ref.ref.decl instanceof MemberDecl){
-				ref.ref.visit(this, null/*md*/);
+				ref.ref.visit(this, null);
 				
 				if(ref.id.decl instanceof MethodDecl){
 					// call will take care of it
 				}else if(ref.id.decl instanceof MemberDecl){
 					MemberDecl _md = (MemberDecl)ref.id.decl;
-					Machine.emit(LOADL, ((VarDescriptor)_md.runtimeDescriptor).offset);
-					Machine.emit(fieldref);
+					
+					if(_md.runtimeDescriptor != null){
+						Machine.emit(LOADL, ((VarDescriptor)_md.runtimeDescriptor).offset);
+						Machine.emit(fieldref);
+					}else{
+						if(ref.ref.decl.type.typeKind == TypeKind.ARRAY && ref.id.spelling.equals("length"))
+							Machine.emit(arraylen);
+					}
+				}
+			}else if(ref.ref.decl instanceof ClassDecl){ // attempted static access
+				if(ref.id.decl instanceof MemberDecl && !ref.id.spelling.equals("out")){
+					MemberDecl _md = (MemberDecl)ref.id.decl;
+					Machine.emit(LOAD, SB, ((VarDescriptor)_md.runtimeDescriptor).offset);
 				}
 			}
 		}

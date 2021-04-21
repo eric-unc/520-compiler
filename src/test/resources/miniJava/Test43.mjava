@@ -1,0 +1,20 @@
+class Test43 {
+	public static void main(String[] args){
+		Friend f = new Friend();
+		f.age = 21;
+		f.sayHi(); // should print 42
+		System.out.println(f.getNextBirthday()); // should print 22
+	}
+}
+
+class Friend {
+	public int age;
+	
+	public void sayHi(){
+		System.out.println(42);
+	}
+	
+	public int getNextBirthday(){
+		return age + 1;
+	}
+}

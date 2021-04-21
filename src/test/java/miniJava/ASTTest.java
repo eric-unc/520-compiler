@@ -15,7 +15,7 @@ import miniJava.AbstractSyntaxTrees.ASTDisplay;
 import miniJava.SyntacticAnalyzer.Parser;
 import miniJava.SyntacticAnalyzer.Scanner;
 
-@Disabled
+//@Disabled
 public class ASTTest {
 	@Test
 	@FailOnSystemExit
@@ -192,6 +192,23 @@ public class ASTTest {
 	void test35(){
 		try {
 			FileInputStream stream = new FileInputStream(MainTest.RES + "Test35.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ASTDisplay display = new ASTDisplay(); 
+			display.showTree(ast);
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test39(){
+		try {
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test39.mjava");
 			Scanner scanner = new Scanner(stream);
 			Parser parser = new Parser(scanner);
 			AST ast = parser.parse();
