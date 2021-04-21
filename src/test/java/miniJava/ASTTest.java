@@ -254,4 +254,21 @@ public class ASTTest {
 			fail();
 		}
 	}
+	
+	@Test
+	@FailOnSystemExit
+	void test49(){
+		try {
+			FileInputStream stream = new FileInputStream(MainTest.RES + "Test49.mjava");
+			Scanner scanner = new Scanner(stream);
+			Parser parser = new Parser(scanner);
+			AST ast = parser.parse();
+			
+			ASTDisplay display = new ASTDisplay(); 
+			display.showTree(ast);
+		}catch(FileNotFoundException e){
+			e.printStackTrace();
+			fail();
+		}
+	}
 }

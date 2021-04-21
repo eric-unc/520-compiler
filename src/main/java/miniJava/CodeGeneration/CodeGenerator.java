@@ -429,13 +429,21 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		// each argument should be put onto the stack
 		expr.argList.forEach(_arg -> _arg.visit(this, md));
 		
-		//expr.functionRef.visit(this, null);
-		
 		// then, we perform that beautiful call
 		MethodDecl calledMethod = (MethodDecl)expr.functionRef.decl;
 		
-		if(!calledMethod.isStatic) // need to put object on stack
-			expr.functionRef.visit(this, null);
+		if(!calledMethod.isStatic){ // but we may need to put object on stack
+			/*if(calledMethod.inClass != md.inClass)
+				expr.functionRef.visit(this, null);
+			else
+				Machine.emit(LOADA, OB, 0); // dunno why it isn't working, but here's a hacky fix*/
+			
+			// wow this is hacky lol
+			if(expr.functionRef instanceof QualRef && !(((QualRef)expr.functionRef).ref instanceof ThisRef)) 
+				expr.functionRef.visit(this, null);
+			else
+				Machine.emit(LOADA, OB, 0);
+		}
 		
 		int toPatch_methodCall = Machine.nextInstrAddr();
 		

@@ -13,17 +13,17 @@ class CodeGeneratorTest {
 	@Test
 	@FailOnSystemExit
 	void test34(){
-		//fail(); // XXX currently only passing superficially
 		System.out.println("Test 34");
 		
 		PrintStream out = System.out;
 		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
-		//System.setOut(new PrintStream(tempOut));
+		System.setOut(new PrintStream(tempOut));
 		
 		try {
 			Compiler.main(new String[]{MainTest.RES + "Test34.mjava", "--jit"});
 		}catch(Exception e){
 			e.printStackTrace();
+			out.println(tempOut.toString());
 			System.setOut(out);
 			fail();
 		}
@@ -31,7 +31,7 @@ class CodeGeneratorTest {
 		out.println(tempOut.toString());
 		System.setOut(out);
 		
-		for(int i = 3; i <= 15; i++)
+		for(int i = 1; i <= 15; i++)
 			assertTrue(tempOut.toString().contains("" + i));
 		
 		assertTrue(tempOut.toString().contains("999"));
@@ -50,6 +50,7 @@ class CodeGeneratorTest {
 			Compiler.main(new String[]{MainTest.RES + "Test35.mjava", "--jit"});
 		}catch(Exception e){
 			e.printStackTrace();
+			out.println(tempOut.toString());
 			System.setOut(out);
 			fail();
 		}
@@ -73,6 +74,7 @@ class CodeGeneratorTest {
 			Compiler.main(new String[]{MainTest.RES + "Test36.mjava", "--jit"});
 		}catch(Exception e){
 			e.printStackTrace();
+			out.println(tempOut.toString());
 			System.setOut(out);
 			fail();
 		}
@@ -96,6 +98,7 @@ class CodeGeneratorTest {
 			Compiler.main(new String[]{MainTest.RES + "Test37.mjava", "--jit"});
 		}catch(Exception e){
 			e.printStackTrace();
+			out.println(tempOut.toString());
 			System.setOut(out);
 			fail();
 		}
@@ -123,6 +126,7 @@ class CodeGeneratorTest {
 			Compiler.main(new String[]{MainTest.RES + "Test38.mjava", "--jit"});
 		}catch(Exception e){
 			e.printStackTrace();
+			out.println(tempOut.toString());
 			System.setOut(out);
 			fail();
 		}
@@ -146,6 +150,7 @@ class CodeGeneratorTest {
 			Compiler.main(new String[]{MainTest.RES + "Test39.mjava", "--jit"});
 		}catch(Exception e){
 			e.printStackTrace();
+			out.println(tempOut.toString());
 			System.setOut(out);
 			fail();
 		}
@@ -170,6 +175,7 @@ class CodeGeneratorTest {
 			Compiler.main(new String[]{MainTest.RES + "Test40.mjava", "--jit"});
 		}catch(Exception e){
 			e.printStackTrace();
+			out.println(tempOut.toString());
 			System.setOut(out);
 			fail();
 		}
@@ -196,6 +202,7 @@ class CodeGeneratorTest {
 			Compiler.main(new String[]{MainTest.RES + "Test41.mjava", "--jit"});
 		}catch(Exception e){
 			e.printStackTrace();
+			out.println(tempOut.toString());
 			System.setOut(out);
 			fail();
 		}
@@ -219,6 +226,7 @@ class CodeGeneratorTest {
 			Compiler.main(new String[]{MainTest.RES + "Test42.mjava", "--jit"});
 		}catch(Exception e){
 			e.printStackTrace();
+			out.println(tempOut.toString());
 			System.setOut(out);
 			fail();
 		}
@@ -245,6 +253,7 @@ class CodeGeneratorTest {
 			Compiler.main(new String[]{MainTest.RES + "Test43.mjava", "--jit"});
 		}catch(Exception e){
 			e.printStackTrace();
+			out.println(tempOut.toString());
 			System.setOut(out);
 			fail();
 		}
@@ -269,6 +278,7 @@ class CodeGeneratorTest {
 			Compiler.main(new String[]{MainTest.RES + "Test44.mjava", "--jit"});
 		}catch(Exception e){
 			e.printStackTrace();
+			out.println(tempOut.toString());
 			System.setOut(out);
 			fail();
 		}
@@ -297,6 +307,7 @@ class CodeGeneratorTest {
 			Compiler.main(new String[]{MainTest.RES + "Test45.mjava", "--jit"});
 		}catch(Exception e){
 			e.printStackTrace();
+			out.println(tempOut.toString());
 			System.setOut(out);
 			fail();
 		}
@@ -323,6 +334,7 @@ class CodeGeneratorTest {
 			Compiler.main(new String[]{MainTest.RES + "Test46.mjava", "--jit"});
 		}catch(Exception e){
 			e.printStackTrace();
+			out.println(tempOut.toString());
 			System.setOut(out);
 			fail();
 		}
@@ -346,6 +358,7 @@ class CodeGeneratorTest {
 			Compiler.main(new String[]{MainTest.RES + "Test47.mjava", "--jit"});
 		}catch(Exception e){
 			e.printStackTrace();
+			out.println(tempOut.toString());
 			System.setOut(out);
 			fail();
 		}
@@ -373,6 +386,7 @@ class CodeGeneratorTest {
 			Compiler.main(new String[]{MainTest.RES + "Test48.mjava", "--jit"});
 		}catch(Exception e){
 			e.printStackTrace();
+			out.println(tempOut.toString());
 			System.setOut(out);
 			fail();
 		}
@@ -386,5 +400,59 @@ class CodeGeneratorTest {
 		assertTrue(tempOut.toString().contains("40"));
 		assertTrue(tempOut.toString().contains("30"));
 		assertTrue(tempOut.toString().contains("301"));
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test49(){
+		System.out.println("Test 49");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test49.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			out.println(tempOut.toString());
+			System.setOut(out);
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("111"));
+		assertTrue(tempOut.toString().contains("222"));
+		assertTrue(tempOut.toString().contains("333"));
+		assertTrue(tempOut.toString().contains("666"));
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test50(){
+		System.out.println("Test 50");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test50.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			out.println(tempOut.toString());
+			System.setOut(out);
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("111"));
+		assertTrue(tempOut.toString().contains("223"));
+		assertTrue(tempOut.toString().contains("500"));
+		assertTrue(tempOut.toString().contains("1005"));
 	}
 }

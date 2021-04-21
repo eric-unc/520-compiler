@@ -1,0 +1,29 @@
+class Test50 {
+	public static void main(String[] args){
+		Factory f = new Factory();
+		f.seize(); // prints 111, 223, 500, 1005
+	}
+}
+
+// I apologize that these names are increasingly esoteric but I find real words more palable then A, B, etc.
+class Factory {
+	int a;
+	
+	public void seize(){
+		a = 111;
+		System.out.println(calcWorkers(this));
+		System.out.println(calcBosses(this, 1));
+		
+		this.a = 500;
+		System.out.println(this.calcWorkers(this));
+		System.out.println(this.calcBosses(this, 5));
+	}
+	
+	public int calcWorkers(Factory f){
+		return f.a;
+	}
+	
+	public int calcBosses(Factory f, int workers){
+		return this.a + f.a + workers;
+	}
+}

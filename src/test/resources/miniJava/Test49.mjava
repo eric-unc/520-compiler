@@ -1,0 +1,26 @@
+class Test49 {
+	public static void main(String[] args){
+		Fun a = new Fun();
+		a.doIt(); // prints 111, 222, 333, 666
+	}
+}
+
+class Fun {
+	int a;
+	
+	public void doIt(){
+		int local = 0;
+		
+		a = 111;
+		local = method(222, 333);
+		
+		System.out.println(local);
+	}
+	
+	int method(int x, int y){
+		System.out.println(a);
+		System.out.println(x);
+		System.out.println(y);
+		return a + x + y;
+	}
+}
