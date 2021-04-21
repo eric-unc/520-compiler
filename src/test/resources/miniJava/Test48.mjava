@@ -1,0 +1,14 @@
+class Test48 {
+	public static void main(String[] args){
+		fun(10, 20, 30); // prints 10, 5, 20, 40, 30, 301
+	}
+	
+	static void fun(int a, int b, int c){
+		System.out.println(a);
+		System.out.println(a / 2);
+		System.out.println(b);
+		System.out.println(b * 2);
+		System.out.println(c);
+		System.out.println(c * 10 + 1);
+	}
+}

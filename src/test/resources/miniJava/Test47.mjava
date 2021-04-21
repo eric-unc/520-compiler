@@ -1,0 +1,23 @@
+class Test47 {
+	int a;
+	
+	public static void main(String[] args){
+		int b = 111;
+		
+		Test47 t = new Test47();
+		t.a = 222;
+		
+		System.out.println(t.a - 1); // prints 221
+		
+		int c = 1000 + t.method(t.a, b); // prints 222, 223, 111
+		
+		System.out.println(c); // prints 1555
+	}
+	
+	int method(int i1, int i2){
+		System.out.println(a);
+		System.out.println(i1 + 1);
+		System.out.println(i2);
+		return a + i1 + i2;
+	}
+}

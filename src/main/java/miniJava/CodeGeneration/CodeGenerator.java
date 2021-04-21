@@ -91,11 +91,12 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitParameterDecl(ParameterDecl pd, Object arg){
-		MethodDescriptor md = (MethodDescriptor)((MethodDecl)arg).runtimeDescriptor;
+		MethodDecl decl = ((MethodDecl)arg);
+		MethodDescriptor md = (MethodDescriptor)decl.runtimeDescriptor;
 		
 		VarDescriptor newVD = new VarDescriptor();
 		newVD.size = 1;
-		newVD.offset = (-1 * md.argsize) - 1;
+		newVD.offset = (-1 * decl.parameterDeclList.size()) +  md.argsize;
 		md.argsize += newVD.size;
 		
 		pd.runtimeDescriptor = newVD;
@@ -428,8 +429,14 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		// each argument should be put onto the stack
 		expr.argList.forEach(_arg -> _arg.visit(this, md));
 		
+		//expr.functionRef.visit(this, null);
+		
 		// then, we perform that beautiful call
 		MethodDecl calledMethod = (MethodDecl)expr.functionRef.decl;
+		
+		if(!calledMethod.isStatic) // need to put object on stack
+			expr.functionRef.visit(this, null);
+		
 		int toPatch_methodCall = Machine.nextInstrAddr();
 		
 		// there's also a CALLD, but that has to do with inheritance, which is not supported (yet)
@@ -479,13 +486,13 @@ public class CodeGenerator implements Visitor<Object, Object> {
 			LocalDecl ld = (LocalDecl)ref.decl;
 			
 			Machine.emit(LOAD, LB, ((VarDescriptor)ld.runtimeDescriptor).offset);
-		}else if(ref.decl instanceof MemberDecl){
-			MemberDecl md = (MemberDecl)ref.decl;
+		}else if(ref.decl instanceof FieldDecl){
+			FieldDecl fd = (FieldDecl)ref.decl;
 			
-			if(md.isStatic)
-				Machine.emit(LOAD, SB, ((VarDescriptor)md.runtimeDescriptor).offset);
+			if(fd.isStatic)
+				Machine.emit(LOAD, SB, ((VarDescriptor)fd.runtimeDescriptor).offset);
 			else
-				Machine.emit(LOAD, OB, ((VarDescriptor)md.runtimeDescriptor).offset);
+				Machine.emit(LOAD, OB, ((VarDescriptor)fd.runtimeDescriptor).offset);
 		}
 		
 		return null;
@@ -518,9 +525,10 @@ public class CodeGenerator implements Visitor<Object, Object> {
 					}
 				}
 			}else if(ref.ref.decl instanceof ClassDecl){ // attempted static access
-				if(ref.id.decl instanceof MemberDecl && !ref.id.spelling.equals("out")){
-					MemberDecl _md = (MemberDecl)ref.id.decl;
-					Machine.emit(LOAD, _md.isStatic ? SB : OB, ((VarDescriptor)_md.runtimeDescriptor).offset);
+				if(ref.id.decl instanceof FieldDecl && !ref.id.spelling.equals("out")){
+					FieldDecl fd = (FieldDecl)ref.id.decl;
+					//System.out.println(fd.name);
+					Machine.emit(LOAD, fd.isStatic ? SB : OB, ((VarDescriptor)fd.runtimeDescriptor).offset);
 				}
 			}
 		}
