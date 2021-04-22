@@ -542,4 +542,29 @@ class CodeGeneratorTest {
 		assertTrue(tempOut.toString().contains("2222"));
 		assertTrue(tempOut.toString().contains("4444"));
 	}
+	
+	@Test
+	@FailOnSystemExit
+	void test54(){
+		System.out.println("Test 54");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test54.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			out.println(tempOut.toString());
+			System.setOut(out);
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("5000"));
+		assertTrue(tempOut.toString().contains("1050"));
+	}
 }

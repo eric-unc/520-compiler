@@ -1,0 +1,15 @@
+class Test54 {
+	public static void main(String[] args){
+		int x = 0;
+		
+		while(x < 5000){
+			int a = 100;
+			x = x + 1;
+		}
+		
+		int y = 1050;
+		
+		System.out.println(x); // should print 5000
+		System.out.println(y); // should print 1050
+	}
+}
