@@ -6,6 +6,9 @@ Note that because of class requirements, my code is not as ideal as I want it to
 ## Features supported
 Parses for correct syntax, builds an AST, perform contextual analysis (identification and type checking). Working on code generation.
 
+### Extensions (PA5)
+* Modulus (%) support (see `ModTest.java`).
+
 ## Usage
 The compiler should be used through the command line, through arguments:
 * The first argument is the file to be compiled.
@@ -39,7 +42,7 @@ The compiler should be used through the command line, through arguments:
 * EqualityExpression ::= RelationalExpression ((**==**|**!=**) RelationalExpression)*
 * RelationalExpression ::= AdditiveExpression ((**<=**|**<**|**>**|**>=**) AdditiveExpression)?
 * AdditiveExpression ::= MultiplicativeExpression ((**+**|**-**) MultiplicativeExpression)*
-* Multiplicative ::= UnaryExpression ((\*|**/**) UnaryExpression)*
+* Multiplicative ::= UnaryExpression ((\*|**/**|**%**) UnaryExpression)*
 * UnaryExpression ::= ((**-**|**!**) UnaryExpression) | PureExpression
 * PureExpression ::= **(**Expression**)**
 			| Literal

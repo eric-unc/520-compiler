@@ -399,6 +399,10 @@ public class CodeGenerator implements Visitor<Object, Object> {
 				Machine.emit(div);
 				break;
 			
+			case MOD:
+				Machine.emit(mod);
+				break;
+			
 			default:
 				// should not happen
 		}

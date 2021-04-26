@@ -210,6 +210,9 @@ public class Scanner {
 						}
 					}else
 						return new Token(DIV, "/", oneCharPos);
+				case '%':
+					readChar();
+					return new Token(MOD, "%", oneCharPos);
 				default:
 					Token t = new Token(ERROR, "" + curChar, oneCharPos);
 					throw new ScannerException(t, lineNum, lineWidth);

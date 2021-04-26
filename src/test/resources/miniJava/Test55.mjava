@@ -1,0 +1,7 @@
+class Test55 {
+	public static void main(String[] args){
+		System.out.println(10 % 5); // prints 0
+		System.out.println(10 % 4); // prints 2
+		System.out.println(10 % 3); // prints 1
+	}
+}

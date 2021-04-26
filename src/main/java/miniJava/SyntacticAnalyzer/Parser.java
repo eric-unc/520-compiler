@@ -542,13 +542,13 @@ public class Parser {
 		return ret;
 	}
 	
-	/** MultiplicativeExpression ::= UnaryExpression ((<strong>*</strong>|<strong>/</strong>) UnaryExpression)* */
+	/** MultiplicativeExpression ::= UnaryExpression ((<strong>*</strong>|<strong>/</strong>|<strong>%</strong>) UnaryExpression)* */
 	private Expression parseMultiplicativeExpression(){
 		HalfPosition start = scanner.getHalfPosition();
 		
 		Expression ret = parseUnaryExpression();
 
-		while(currToken.getType() == TIMES || currToken.getType() == DIV){
+		while(currToken.getType() == TIMES || currToken.getType() == DIV || currToken.getType() == MOD){
 			Expression e1 = ret;
 			
 			Operator op = new Operator(currToken);

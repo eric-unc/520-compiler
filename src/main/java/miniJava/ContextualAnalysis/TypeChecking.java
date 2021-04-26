@@ -298,6 +298,7 @@ public class TypeChecking implements Visitor<Object, Object> {
 			case MINUS:
 			case TIMES:
 			case DIV:
+			case MOD:
 				checkTypeKind(expr.left.posn, TypeKind.INT, left.typeKind);
 				checkTypeKind(expr.right.posn, TypeKind.INT, right.typeKind);
 				return new BaseType(TypeKind.INT, expr.posn);

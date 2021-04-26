@@ -73,4 +73,5 @@ public enum TokenType {
 	MINUS,		// -
 	TIMES,		// *
 	DIV,		// /
+	MOD,		// %
 }
