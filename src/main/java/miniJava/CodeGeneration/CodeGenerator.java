@@ -251,10 +251,13 @@ public class CodeGenerator implements Visitor<Object, Object> {
 			if(md.type.typeKind != TypeKind.VOID)
 				Machine.emit(POP, 1);
 		}else{ // assume built-in
-			if(calledMethod.name.equals("println")){
+			if(calledMethod.name.equals("println"))
 				Machine.emit(putintnl);
-			} // else error?
 		}
+		
+		// if we aren't doing anything with the return value, we need to yeet it
+		if(calledMethod.type.typeKind != TypeKind.VOID)
+			Machine.emit(POP, 1);
 		
 		return null;
 	}

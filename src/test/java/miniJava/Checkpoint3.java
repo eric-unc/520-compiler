@@ -71,6 +71,7 @@ public class Checkpoint3 {
 			}
 			if (returnCode == 130) {
 				System.err.println("### miniJava Compiler hangs on test " + x.getName());
+				fail();
 				failures++;
 				continue;
 			}

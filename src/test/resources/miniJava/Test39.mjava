@@ -1,11 +1,13 @@
 class Test39 {
 	static int a;
 	static int b;
+	static boolean z;
 	
 	public static void main(String[] args){
 		int x = 111;
 		a = 222;
 		b = 333;
+		z = false;
 		A.b = 444;
 		
 		System.out.println(a); // should print 222

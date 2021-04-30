@@ -1,0 +1,22 @@
+class Test61 {
+	static int a;
+	static int b;
+	static int c;
+	//public static int x;
+	
+	public static void main(String[] args){
+		init();
+		
+		System.out.println(a);
+		System.out.println(b);
+		System.out.println(c);
+		//System.out.println(x);
+	}
+	
+	static void init(){
+		a = 2222;
+		b = 3333;
+		c = 4444;
+		//x = 5555;
+	}
+}

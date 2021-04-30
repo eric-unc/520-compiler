@@ -106,4 +106,31 @@ class StaticInitBlockTest {
 		assertTrue(tempOut.toString().contains("2222"));
 		assertTrue(tempOut.toString().contains("3333"));
 	}
+	
+	@Test
+	@FailOnSystemExit
+	void test61(){
+		System.out.println("Test 61");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test61.mjava", "--jit"});
+		}catch(Exception e){
+			e.printStackTrace();
+			out.println(tempOut.toString());
+			System.setOut(out);
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("2222"));
+		assertTrue(tempOut.toString().contains("3333"));
+		assertTrue(tempOut.toString().contains("4444"));
+		assertTrue(tempOut.toString().contains("5555"));
+	}
 }
