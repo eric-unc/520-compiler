@@ -1,0 +1,15 @@
+class Test59 {
+	static {
+		System.out.println(1111);
+	}
+	
+	public static void main(String[] args){
+		
+	}
+}
+
+class A {
+	static {
+		System.out.println(2222);
+	}
+}

@@ -68,7 +68,7 @@ I have taken some test files from others, including [Ben Dod](https://github.com
 * Added `isInitialized` field to `VarDecl.java`, defaulted to `false`, which is used for contextual analysis (a [local] variable cannot be used if it has not been initialized).
 * Added `main` field (of type `MethodDecl`) to `Package.java` to help with code generation.
 * Added `RuntimeDescriptor.java`, with corresponding `MethodDescriptor.java`, `ClassDescriptor.java`, `VarDescriptor.java`. Added `runtimeDescriptor` field to `Declaration.java`.
-* Added `StaticBlockDecl.java`.
+* Added `StaticBlockDecl.java`, accompanied with a `staticBlockDecl` field in `ClassDecl.java`.
 * Syntactical/code style changes/cleanup.
 
 ## Testing

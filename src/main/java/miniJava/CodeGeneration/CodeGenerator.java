@@ -27,9 +27,20 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		methodRefsToPatch.forEach((toPatchCBOffset, md) -> 
 			Machine.patch(toPatchCBOffset, ((MethodDescriptor)md.runtimeDescriptor).cbOffset));
 	}
+	
+	private static enum ClassDeclVisitStage {
+		STATIC_BLOCK,
+		FIELDS,
+		METHODS,
+	}
 
 	@Override
 	public Object visitPackage(Package prog, Object arg){
+		prog.classDeclList.forEach(c -> c.visit(this, ClassDeclVisitStage.FIELDS));
+		
+		// generate calls to static blocks
+		prog.classDeclList.forEach(c -> c.visit(this, ClassDeclVisitStage.STATIC_BLOCK));
+		
 		// creates a new array of size 0 to pass to main
 		Machine.emit(LOADL, 0);
 		Machine.emit(newarr);
@@ -39,8 +50,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		Machine.emit(CALL, CB, -1);
 		Machine.emit(HALT);
 		
-		prog.classDeclList.forEach(c -> c.visit(this, true));
-		prog.classDeclList.forEach(c -> c.visit(this, false));
+		prog.classDeclList.forEach(c -> c.visit(this, ClassDeclVisitStage.METHODS));
 		
 		methodRefsToPatch.put(toPatch_mainCall, prog.main);
 		return null;
@@ -48,14 +58,29 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitClassDecl(ClassDecl cd, Object arg){
-		Boolean visitFields = (Boolean)arg;
+		ClassDeclVisitStage stage = (ClassDeclVisitStage)arg;
 		
-		if(visitFields) {
-			cd.runtimeDescriptor = new ClassDescriptor();
-			
-			cd.fieldDeclList.forEach(fd ->  fd.visit(this, cd.runtimeDescriptor));
-		}else
-			cd.methodDeclList.forEach(md -> md.visit(this, null));
+		switch(stage) {
+			case STATIC_BLOCK:
+				if(cd.staticBlockDecl != null){
+					int toPatch_staticBlockCall = Machine.nextInstrAddr();
+					Machine.emit(CALL, CB, -1);
+					
+					methodRefsToPatch.put(toPatch_staticBlockCall, cd.staticBlockDecl);
+				}
+				
+				break;
+				
+			case FIELDS:
+				cd.runtimeDescriptor = new ClassDescriptor();
+				
+				cd.fieldDeclList.forEach(fd ->  fd.visit(this, cd.runtimeDescriptor));
+				break;
+				
+			case METHODS:
+				cd.methodDeclList.forEach(md -> md.visit(this, null));
+				break;
+		}
 		
 		return null;
 	}
@@ -67,7 +92,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		VarDescriptor newVD = new VarDescriptor();
 		newVD.size = 1;
 		
-		if(fd.isStatic){ 
+		if(fd.isStatic){
 			newVD.offset = staticSize;
 			staticSize += newVD.size;
 		}else{

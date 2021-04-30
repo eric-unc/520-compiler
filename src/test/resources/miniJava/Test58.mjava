@@ -1,0 +1,14 @@
+class Test58 {
+	// should error in contextual analysis
+	static {
+		
+	}
+	
+	static {
+		
+	}
+	
+	public static void main(String[] args){
+		
+	}
+}

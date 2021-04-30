@@ -18,8 +18,8 @@ public class MethodDeclList implements Iterable<MethodDecl> {
 		methodDeclList.add(md);
 	}
 
-	public void add(MethodDecl cd){
-		methodDeclList.add(cd);
+	public void add(MethodDecl md){
+		methodDeclList.add(md);
 	}
 
 	public MethodDecl get(int i){

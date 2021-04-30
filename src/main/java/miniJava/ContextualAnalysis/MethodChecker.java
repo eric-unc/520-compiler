@@ -11,7 +11,15 @@ import miniJava.SyntacticAnalyzer.SourcePosition;
  * 	<li>A main method.</li>
  * 	<li>That each non-void method ends with a return.</li>
  * </ul>
+ * 
+ * Decorates:
+ * <ul>
+ * 	<li>A Package with the main method.</li>
+ * 	<li>Methods without a <code>return</code> at the end with one.</li>
+ *  <li>A ClassDecl with a StaticBlockDecl.</li>
+ * </ul>
  *
+ * @author Eric Schneider
  */
 public class MethodChecker implements Visitor<Object, Object> {
 	private ErrorReporter reporter;
@@ -62,6 +70,11 @@ public class MethodChecker implements Visitor<Object, Object> {
 		
 		for(MethodDecl md : cd.methodDeclList) {
 			md.visit(this, null);
+			
+			if(md.name.equals("_static")){
+				cd.staticBlockDecl = (StaticBlockDecl) md;
+				continue;
+			}
 			
 			if(!md.isPrivate && md.isStatic && md.type.typeKind == TypeKind.VOID && md.name.equals("main") && md.parameterDeclList.size() == 1){
 				ParameterDecl pd = md.parameterDeclList.get(0);

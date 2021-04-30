@@ -64,7 +64,7 @@ public class Parser {
 	private void parseClassMember(FieldDeclList fdl, MethodDeclList mdl){
 		FieldDecl fd;
 		
-		if(currToken.getType() != SEMI){
+		if(currToken.getType() != STATIC){
 			fd = parseFieldDeclaration();
 		}else{
 			Token stat = takeIt();
