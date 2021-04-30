@@ -4,10 +4,11 @@ A "miniJava" compiler, as created for COMP 520.
 Note that because of class requirements, my code is not as ideal as I want it to be. Please forgive me.
 
 ## Features supported
-Parses for correct syntax, builds an AST, perform contextual analysis (identification and type checking). Working on code generation.
+Parses for correct syntax, builds an AST, perform contextual analysis (identification and type checking), on code generation. Working on a static initialization block.
 
 ### Extensions (PA5)
 * Modulus (%) support (see `ModTest.java`).
+* Static initialization block support (see `StaticInitBlockTest.java`).
 
 ## Usage
 The compiler should be used through the command line, through arguments:
@@ -21,10 +22,11 @@ The compiler should be used through the command line, through arguments:
 ## Grammar
 * Program ::= Class\* *end*
 * Class ::= **class** Id **{** ClassMember\* **}**
-* ClassMember ::= FieldDeclaration (FieldTail|Method)
+* ClassMember ::= FieldDeclaration (FieldTail|Method) | **static** StaticBlock
 * FieldDeclaration ::= (**public**|**private**)? **static**? (Type|**void**) Id
 * FieldTail ::= **;**
 * Method ::= **(**ParamList\* **){**Statement\* **}**
+* StaticBlock ::= **{** Statement\* **}**
 * Type ::= **boolean**|((**int**|Id)(**[]**)?)
 * ParamList ::= Type Id(, Type Id)*
 * ArgList ::= Expression(, Expression)*
@@ -66,6 +68,7 @@ I have taken some test files from others, including [Ben Dod](https://github.com
 * Added `isInitialized` field to `VarDecl.java`, defaulted to `false`, which is used for contextual analysis (a [local] variable cannot be used if it has not been initialized).
 * Added `main` field (of type `MethodDecl`) to `Package.java` to help with code generation.
 * Added `RuntimeDescriptor.java`, with corresponding `MethodDescriptor.java`, `ClassDescriptor.java`, `VarDescriptor.java`. Added `runtimeDescriptor` field to `Declaration.java`.
+* Added `StaticBlockDecl.java`.
 * Syntactical/code style changes/cleanup.
 
 ## Testing

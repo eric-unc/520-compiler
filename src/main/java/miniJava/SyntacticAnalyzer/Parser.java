@@ -60,9 +60,24 @@ public class Parser {
 		return new ClassDecl(cn, fdl, mdl, new SourcePosition(start, scanner.getHalfPosition()));
 	}
 	
-	/** ClassMember ::= FieldDeclaration (FieldTail|Method) */
+	/** ClassMember ::= FieldDeclaration (FieldTail|Method) | <strong>static</strong> StaticBlock */
 	private void parseClassMember(FieldDeclList fdl, MethodDeclList mdl){
-		FieldDecl fd = parseFieldDeclaration();
+		FieldDecl fd;
+		
+		if(currToken.getType() != SEMI){
+			fd = parseFieldDeclaration();
+		}else{
+			Token stat = takeIt();
+			
+			if(currToken.getType() == L_BRACKET){
+				parseStaticBlock(mdl, stat);
+				return;
+			}else{
+				fd = parseFieldDeclaration();
+				fd.isStatic = true;
+				fd.posn.adjustToStart(stat.getPosition());
+			}
+		}
 		
 		if(currToken.getType() == SEMI){
 			 parseFieldTail(fd, fdl);
@@ -134,6 +149,22 @@ public class Parser {
 		takeIt();
 		
 		mdl.add(new MethodDecl(fd, p1, sl, new SourcePosition(start, scanner.getHalfPosition())));
+	}
+	
+	/** StaticBlock ::= <strong>{</strong> Statement\* <strong>}</strong> */
+	private void parseStaticBlock(MethodDeclList mdl, Token stat){
+		HalfPosition start = stat.getPosition().getStart();
+		
+		take(L_BRACKET);
+		
+		StatementList sl = new StatementList();
+		while(currToken.getType() != R_BRACKET){
+			sl.add(parseStatement());
+		}
+		
+		takeIt();
+		
+		mdl.add(new StaticBlockDecl(sl, new SourcePosition(start, scanner.getHalfPosition())));
 	}
 	
 	/** Type ::= Type ::= <strong>boolean</strong>|((<strong>int</strong>|Id)(<strong>[]</strong>)?) */

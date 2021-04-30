@@ -1,0 +1,18 @@
+class Test57 {
+	public static int x;
+	static int y;
+	private static int z;
+	
+	static {
+		System.out.println(111);
+		x = 222;
+		y = 333;
+		z = 444;
+	}
+	
+	public static void main(String[] args){
+		System.out.println(x);
+		System.out.println(y);
+		System.out.println(z);
+	}
+}

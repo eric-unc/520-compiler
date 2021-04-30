@@ -1,8 +1,8 @@
 package miniJava.SyntacticAnalyzer;
 
 public class SourcePosition {
-	private final HalfPosition start;
-	private final HalfPosition end;
+	private HalfPosition start;
+	private HalfPosition end;
 	
 	public SourcePosition(HalfPosition pos){
 		this(pos, pos);
@@ -11,6 +11,14 @@ public class SourcePosition {
 	public SourcePosition(HalfPosition start, HalfPosition end){
 		this.start = start;
 		this.end = end;
+	}
+	
+	public HalfPosition getStart(){
+		return start;
+	}
+	
+	public HalfPosition getEnd(){
+		return end;
 	}
 
 	public int getStartLineNum(){
@@ -27,6 +35,14 @@ public class SourcePosition {
 
 	public int getEndLineWidth(){
 		return end.getLineWidth();
+	}
+	
+	public void adjustToStart(SourcePosition other){
+		this.start = other.start;
+	}
+	
+	public void adjustToEnd(SourcePosition other){
+		this.end = other.end;
 	}
 	
 	@Override
