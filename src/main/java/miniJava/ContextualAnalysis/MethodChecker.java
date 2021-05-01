@@ -10,13 +10,14 @@ import miniJava.SyntacticAnalyzer.SourcePosition;
  * <ul>
  * 	<li>A main method.</li>
  * 	<li>That each non-void method ends with a return.</li>
+ *  <li>Constructor names make sense.</li>
  * </ul>
  * 
  * Decorates:
  * <ul>
  * 	<li>A Package with the main method.</li>
  * 	<li>Methods without a <code>return</code> at the end with one.</li>
- *  <li>A ClassDecl with a StaticBlockDecl.</li>
+ *  <li>A ClassDecl with a StaticBlockDecl and a ConstructorDecl.</li>
  * </ul>
  *
  * @author Eric Schneider
@@ -31,6 +32,10 @@ public class MethodChecker implements Visitor<Object, Object> {
 	
 	private void unexpectedMainMethod(SourcePosition other, SourcePosition first){
 		reporter.addError("*** line " + other.getStartLineNum() + ": declared main method conflicts with first main method on line " + first.getStartLineNum() + "!");
+	}
+	
+	private void unexpectedConstructor(ConstructorDecl consDecl, ClassDecl classDecl){
+		reporter.addError("*** line " + consDecl.posn.getStartLineNum() + ": constructor declared with name that does not match with the class name " + classDecl.name + "!");
 	}
 	
 	private void emptyMethod(MethodDecl md){
@@ -73,6 +78,13 @@ public class MethodChecker implements Visitor<Object, Object> {
 			
 			if(md.name.equals("_static")){
 				cd.staticBlockDecl = (StaticBlockDecl) md;
+				continue;
+			}else if(md.name.equals("_constructor")){
+				cd.constructorDecl = (ConstructorDecl) md;
+				
+				if(!cd.constructorDecl.givenName.spelling.equals(cd.constructorDecl.inClass.name))
+					unexpectedConstructor(cd.constructorDecl, cd.constructorDecl.inClass);
+				
 				continue;
 			}
 			

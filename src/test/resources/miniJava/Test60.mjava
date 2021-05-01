@@ -4,18 +4,13 @@ class Test60 {
 	public static int c;
 	
 	static {
-		do_the_same();
+		A.a = 5555;
+		a = 1111;
+		b = 2222;
 	}
 	
 	static int makeC(){
 		return 3333;
-	}
-	
-	static void do_the_same(){
-		A.a = 5555;
-		a = 1111;
-		b = 2222;
-		c = makeC();
 	}
 	
 	public static void main(String[] args){
@@ -28,4 +23,8 @@ class Test60 {
 
 class A {
 	static int a;
+	
+	static {
+		Test60.c = Test60.makeC();
+	}
 }

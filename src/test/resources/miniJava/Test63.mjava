@@ -1,0 +1,30 @@
+class Test63 {
+	int a;
+	
+	Test63(){
+		System.out.println(55555);
+		a = 66666;
+	}
+	
+	public static void main(String[] args){
+		Test63 t = new Test63(); // prints 55555
+		System.out.println(t.a); // prints 66666
+		int y = 100000;
+		System.out.println(A.getX(new A())); // prints 77777
+	}
+}
+
+class A {
+	public int x;
+	
+	A(){
+		this.x = 77777;
+	}
+	
+	/**
+	 * obviously a bit unusual but we can't do <code>new A().a</code> due to ref limitations
+	 */
+	public static int getX(A a){
+		return a.x;
+	}
+}

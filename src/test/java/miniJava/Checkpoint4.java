@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
  * Put your tests in "tests/pa4_tests" folder in your Eclipse workspace directory
  * If you preface your compiler error messages with *** then they will be displayed 
  */
-//@Disabled
+@Disabled
 public class Checkpoint4 {
 	
 	//private static String projDir;
@@ -136,7 +136,7 @@ public class Checkpoint4 {
     private static int executeTest(File x) throws IOException, InterruptedException {
     	String testPath = x.getPath().replace(".java", ".mJAM");
     	//ProcessBuilder pb = new ProcessBuilder("java", "mJAM.Interpreter", testPath);
-    	ProcessBuilder pb = new ProcessBuilder("java", "-cp", BIN, "miniJava.Compiler", x.getPath(), "--jit");
+    	ProcessBuilder pb = new ProcessBuilder("java", "-cp", BIN, "miniJava.Compiler", x.getPath(), "--run");
     	// ^ yes this means it will be compiled again, but i'm lazy lol
     	pb.directory(classPath);
     	Process process = pb.start();

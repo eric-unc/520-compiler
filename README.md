@@ -1,32 +1,34 @@
 # 520-compiler
 A "miniJava" compiler, as created for COMP 520.
 
-Note that because of class requirements, my code is not as ideal as I want it to be. Please forgive me.
+Note that partly owing to class and time requirements, my code is not as perfect as I want it to be. Please forgive me.
 
 ## Features supported
-Parses for correct syntax, builds an AST, perform contextual analysis (identification and type checking), on code generation. Working on a static initialization block.
+Parses for correct syntax, builds an AST, perform contextual analysis (identification and type checking), on code generation. Working on constructors.
 
 ### Extensions (PA5)
 * Modulus (%) support (see `ModTest.java`).
 * Static initialization block support (see `StaticInitBlockTest.java`).
+* Simple constructor support (see `ConstructorTest.java`). Currently no support for parameters.
 
 ## Usage
 The compiler should be used through the command line, through arguments:
 * The first argument is the file to be compiled.
 * A second optional argument that can be supplied is a "special mode" that can stop the compiler early, so no errors are generated. The following are supported:
-** `--ast-only`: scans, parses, builds an AST, and prints the AST.
-** `--contextual-analysis-only`, scans, parses, builds an AST, performs contextual analysis (just identification/type checking).
-** `--asm-too`, scans, parses, builds an AST, performs contextual analysis, code generation, and also outputs a dissambled `.asm` file.
-** `--jit`, scans, parses, builds an AST, performs contextual analysis, code generation, outputs a dissambled `.asm` file, runs file that was generated (not a true JIT compiler since it's saved to the disk).
+    * `--ast-only`: scans, parses, builds an AST, and prints the AST.
+    * `--contextual-analysis-only`, scans, parses, builds an AST, performs contextual analysis (just identification/type checking).
+    * `--asm-too`, scans, parses, builds an AST, performs contextual analysis, code generation, and also outputs a dissambled `.asm` file.
+    * `--run`, scans, parses, builds an AST, performs contextual analysis, code generation, outputs a dissambled `.asm` file, runs file that was generated.
 
 ## Grammar
 * Program ::= Class\* *end*
 * Class ::= **class** Id **{** ClassMember\* **}**
-* ClassMember ::= FieldDeclaration (FieldTail|Method) | **static** StaticBlock
+* ClassMember ::= FieldDeclaration (FieldTail|Method) | **static** StaticBlock | Constructor
 * FieldDeclaration ::= (**public**|**private**)? **static**? (Type|**void**) Id
 * FieldTail ::= **;**
 * Method ::= **(**ParamList\* **){**Statement\* **}**
 * StaticBlock ::= **{** Statement\* **}**
+* Constructor ::= Id **(**ParamList\* **){**Statement\* **}**
 * Type ::= **boolean**|((**int**|Id)(**[]**)?)
 * ParamList ::= Type Id(, Type Id)*
 * ArgList ::= Expression(, Expression)*
@@ -69,6 +71,7 @@ I have taken some test files from others, including [Ben Dod](https://github.com
 * Added `main` field (of type `MethodDecl`) to `Package.java` to help with code generation.
 * Added `RuntimeDescriptor.java`, with corresponding `MethodDescriptor.java`, `ClassDescriptor.java`, `VarDescriptor.java`. Added `runtimeDescriptor` field to `Declaration.java`.
 * Added `StaticBlockDecl.java`, accompanied with a `staticBlockDecl` field in `ClassDecl.java`.
+* Added `ConstructorDecl.java`, accompanied with a `constructorDecl` field in `ClassDecl.java`.
 * Syntactical/code style changes/cleanup.
 
 ## Testing

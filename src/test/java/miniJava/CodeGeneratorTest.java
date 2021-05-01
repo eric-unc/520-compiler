@@ -20,7 +20,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test34.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test34.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -47,7 +47,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test35.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test35.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -71,7 +71,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test36.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test36.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -95,7 +95,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test37.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test37.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -123,7 +123,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test38.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test38.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -147,7 +147,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test39.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test39.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -172,7 +172,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test40.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test40.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -199,7 +199,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test41.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test41.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -223,7 +223,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test42.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test42.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -250,7 +250,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test43.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test43.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -275,7 +275,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test44.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test44.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -304,7 +304,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test45.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test45.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -331,7 +331,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test46.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test46.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -355,7 +355,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test47.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test47.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -383,7 +383,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test48.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test48.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -412,7 +412,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test49.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test49.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -439,7 +439,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test50.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test50.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -466,7 +466,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test51.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test51.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -502,7 +502,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test52.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test52.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -527,7 +527,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test53.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test53.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -553,7 +553,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test54.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test54.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -578,7 +578,7 @@ class CodeGeneratorTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test62.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test62.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());

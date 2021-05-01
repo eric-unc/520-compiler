@@ -23,7 +23,7 @@ class StaticInitBlockTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test57.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test57.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -65,7 +65,7 @@ class StaticInitBlockTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test59.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test59.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -90,7 +90,7 @@ class StaticInitBlockTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test60.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test60.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -117,7 +117,7 @@ class StaticInitBlockTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test61.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test61.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());

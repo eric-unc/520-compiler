@@ -21,7 +21,7 @@ class ModTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test55.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test55.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());
@@ -47,7 +47,7 @@ class ModTest {
 		System.setOut(new PrintStream(tempOut));
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test56.mjava", "--jit"});
+			Compiler.main(new String[]{MainTest.RES + "Test56.mjava", "--run"});
 		}catch(Exception e){
 			e.printStackTrace();
 			out.println(tempOut.toString());

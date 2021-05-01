@@ -497,11 +497,21 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitNewObjectExpr(NewObjectExpr expr, Object arg){
+		MethodDecl md = (MethodDecl)arg;
 		ClassDecl cd = (ClassDecl)expr.classtype.classDecl;
 		
 		Machine.emit(LOADL, -1);
 		Machine.emit(LOADL, ((ClassDescriptor)cd.runtimeDescriptor).objectSize);
 		Machine.emit(newobj);
+		
+		if(cd.constructorDecl != null){
+			// This will dup the last value on the stack, which happens to be the newly created object.
+			Machine.emit(LOAD, ST, -1);
+			
+			int toPatch_constructorCall = Machine.nextInstrAddr();
+			Machine.emit(CALLI, CB, -1);
+			methodRefsToPatch.put(toPatch_constructorCall, cd.constructorDecl);
+		}
 		
 		return null;
 	}

@@ -22,4 +22,5 @@ public class ClassDecl extends Declaration {
 	public FieldDeclList fieldDeclList;
 	public MethodDeclList methodDeclList;
 	public StaticBlockDecl staticBlockDecl;
+	public ConstructorDecl constructorDecl;
 }

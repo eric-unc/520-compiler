@@ -92,7 +92,7 @@ public class Compiler {
 			System.exit(4);
 		}
 		
-		if(isSpecialMode && (args[1].contains("--asm-too") || args[1].contains("--jit"))){
+		if(isSpecialMode && (args[1].contains("--asm-too") || args[1].contains("--run"))){
 			String disOutputName = args[0].substring(0, args[0].indexOf('.')) + ".asm";
 			Disassembler dis = new Disassembler(outputName);
 			
@@ -102,7 +102,7 @@ public class Compiler {
 			}
 		}
 		
-		if(isSpecialMode && args[1].contains("--jit"))
+		if(isSpecialMode && args[1].contains("--run"))
 			Interpreter.interpret(outputName);
 		
 		if(!isSpecialMode)
