@@ -9,7 +9,7 @@ Parses for correct syntax, builds an AST, perform contextual analysis (identific
 ### Extensions (PA5)
 * Modulus (%) support (see `ModTest.java`).
 * Static initialization block support (see `StaticInitBlockTest.java`).
-* Simple constructor support (see `ConstructorTest.java`). Currently no support for parameters.
+* Constructor support, with support for parameters (see `ConstructorTest.java`). Does not yet support modifiers.
 
 ## Usage
 The compiler should be used through the command line, through arguments:

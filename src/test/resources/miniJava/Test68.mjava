@@ -1,0 +1,20 @@
+class Test68 {
+	public static void main(String[] args){
+		Triangle t = new Triangle();
+		System.out.println(t.l1);
+		System.out.println(t.l2);
+		System.out.println(t.l3);
+	}
+}
+
+class Triangle {
+	int l1;
+	int l2;
+	int l3;
+	
+	Triangle(int l1, int l2, int l3){
+		this.l1 = l1;
+		this.l2 = l2;
+		this.l3 = l3;
+	}
+}

@@ -109,4 +109,19 @@ class ConstructorTest {
 			}
 		}
 	}
+	
+	@Test
+	@ExpectSystemExitWithStatus(4)
+	void test68(){
+		System.out.println("Test 68");
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test68.mjava"});
+		}catch(Exception e){
+			if(!(e instanceof SystemExitPreventedException)){
+				e.printStackTrace();
+				fail();
+			}
+		}
+	}
 }
