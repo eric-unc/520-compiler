@@ -90,7 +90,7 @@ public class IdentificationTable {
 	/**
 	 * This is just here to context to certain internalized names.
 	 */
-	private String localizeDeclName(Declaration d){
+	private static String localizeDeclName(Declaration d){
 		switch(d.name){
 			case "_static":
 				return "a static initialization block";
