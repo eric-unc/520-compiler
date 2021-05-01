@@ -20,7 +20,6 @@ class BubbleSort {
 	// Initialize, Sort, and Print
 	public void test(int sz){
 		init(sz);
-		System.out.println(7777); // test
 		sort();
 		print();
 	}
@@ -59,20 +58,16 @@ class BubbleSort {
 
 	// Initialize array of integers
 	private void init(int sz){
-		System.out.println(1111); // test
 		numberList = new int[sz];
 		size = numberList.length;
 
 		int incr = 17; // gcd(size,incr) == 1
 		int i = 1;
-		int TEST = 55555;
 
 		while(i <= size){
 			numberList[mod(i * incr, size)] = i;
 			i = i + 1;
 		}
-		
-		System.out.println(9999); // test
 	}
 
 	// a mod b

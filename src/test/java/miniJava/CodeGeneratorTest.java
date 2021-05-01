@@ -589,7 +589,7 @@ class CodeGeneratorTest {
 		out.println(tempOut.toString());
 		System.setOut(out);
 		
-		assertTrue(tempOut.toString().contains("1"));
-		assertTrue(tempOut.toString().contains("2"));
+		for(int i = 1; i <= 10; i++)
+			assertTrue(tempOut.toString().contains("" + i));
 	}
 }

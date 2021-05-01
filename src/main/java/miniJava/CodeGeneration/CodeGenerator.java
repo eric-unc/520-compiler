@@ -240,9 +240,16 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		// each argument should be put onto the stack
 		stmt.argList.forEach(_arg -> _arg.visit(this, md));
 		
-		stmt.methodRef.visit(this, null);
+		//stmt.methodRef.visit(this, null);
 		
 		MethodDecl calledMethod = (MethodDecl)stmt.methodRef.decl;
+		
+		if(!calledMethod.isStatic){ // but we may need to put the object on stack first
+			if(stmt.methodRef instanceof QualRef && !(((QualRef)stmt.methodRef).ref instanceof ThisRef)) 
+				stmt.methodRef.visit(this, null);
+			else
+				Machine.emit(LOADA, OB, 0);
+		}
 		
 		if(calledMethod.inClass != null) {
 			int toPatch_methodCall = Machine.nextInstrAddr();
