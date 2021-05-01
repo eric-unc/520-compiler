@@ -95,6 +95,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		if(fd.isStatic){
 			newVD.offset = staticSize;
 			staticSize += newVD.size;
+			Machine.emit(PUSH, 1); // an "empty" stack value
 		}else{
 			newVD.offset = rd.objectSize;
 			rd.objectSize += newVD.size;

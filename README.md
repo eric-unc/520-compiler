@@ -76,7 +76,7 @@ This project uses JUnit for testing. I have my own tests, as well as added from 
 
 ## Credits
 * Eric Schneider
-* Jan Prins (`AbstractSyntaxTrees` package, `mJAM` package, checkpoint tests, `Test7.mjava`, `Test34.mjava`, `Test35.mjava`)
+* Jan Prins (`AbstractSyntaxTrees` package, `mJAM` package, checkpoint tests, `Test7.mjava`, `Test34.mjava`, `Test35.mjava`, `Test62.mjava`)
 * Max Beckman-Harned (checkpoint tests)
 * Ben Dod (`Test2.mjava`, `Test3.mjava`)
 * Changon Kim (`Test9.mjava`)

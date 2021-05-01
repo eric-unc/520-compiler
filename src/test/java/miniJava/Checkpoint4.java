@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 
@@ -17,7 +18,7 @@ import org.junit.jupiter.api.Test;
  * Put your tests in "tests/pa4_tests" folder in your Eclipse workspace directory
  * If you preface your compiler error messages with *** then they will be displayed 
  */
-
+//@Disabled
 public class Checkpoint4 {
 	
 	//private static String projDir;

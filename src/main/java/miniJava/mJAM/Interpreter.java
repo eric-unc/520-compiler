@@ -23,7 +23,6 @@ public class Interpreter {
 
 	// DATA STORE REGISTERS AND OTHER REGISTERS
 	final static int CB = 0, SB = 0, HB = 1024; // = upper bound of data array + 1
-										
 
 	static int CT, CP, ST, HT, LB, OB, status, temp;
 
