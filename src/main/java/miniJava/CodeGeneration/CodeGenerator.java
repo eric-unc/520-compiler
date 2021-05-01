@@ -505,8 +505,10 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		Machine.emit(newobj);
 		
 		if(cd.constructorDecl != null){
-			// This will dup the last value on the stack, which happens to be the newly created object.
-			Machine.emit(LOAD, ST, -1);
+			expr.argList.forEach(_arg -> _arg.visit(this, md));
+			
+			// This will duplicate the address of newly created object on the stack
+			Machine.emit(LOAD, ST, -1 - expr.argList.size());
 			
 			int toPatch_constructorCall = Machine.nextInstrAddr();
 			Machine.emit(CALLI, CB, -1);

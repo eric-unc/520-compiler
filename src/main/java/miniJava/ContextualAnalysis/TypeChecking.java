@@ -63,7 +63,7 @@ public class TypeChecking implements Visitor<Object, Object> {
 	}
 	
 	private void expectedArgs(int lineNum, MethodDecl md, int attemptedNumOfArgs){
-		reporter.addError("*** line " + lineNum + ": tried to call " + md.name + " with " + attemptedNumOfArgs + " args, but it needed " + md.parameterDeclList.size() + "!");
+		reporter.addError("*** line " + lineNum + ": tried to call " + ContextualAnalysis.localizeDeclName(md) + " with " + attemptedNumOfArgs + " args, but it needed " + md.parameterDeclList.size() + "!");
 	}
 	
 	private void expectedArrayType(Reference ref){
@@ -361,10 +361,29 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitNewObjectExpr(NewObjectExpr expr, Object arg){
-		if(!expr.classtype.className.spelling.equals("String"))
-			return expr.classtype;
-		else
+		if(expr.classtype.className.spelling.equals("String"))
 			return new BaseType(TypeKind.UNSUPPORTED, expr.posn);
+		
+		ClassDecl cd = (ClassDecl)expr.classtype.classDecl;
+		
+		// actual identification happens in MethodChecker which maybe isn't a great idea but oh well.
+		for(MethodDecl md : cd.methodDeclList)
+			if(md.name.equals("_constructor")){
+				if(md.parameterDeclList.size() != expr.argList.size()){
+					expectedArgs(expr.posn.getStartLineNum(), md, expr.argList.size());
+				}else{
+					for(int i = 0; i < md.parameterDeclList.size(); i++){
+						Expression passedArg = expr.argList.get(i);
+						ParameterDecl param = md.parameterDeclList.get(i);
+						
+						checkTypeDenoter(passedArg.posn, (TypeDenoter)param.visit(this, null), (TypeDenoter)passedArg.visit(this, null));
+					}
+				}
+				
+				break;
+			}
+		
+		return expr.classtype;
 	}
 
 	@Override

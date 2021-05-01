@@ -134,7 +134,6 @@ public class Checkpoint4 {
     }
 	
     private static int executeTest(File x) throws IOException, InterruptedException {
-    	String testPath = x.getPath().replace(".java", ".mJAM");
     	//ProcessBuilder pb = new ProcessBuilder("java", "mJAM.Interpreter", testPath);
     	ProcessBuilder pb = new ProcessBuilder("java", "-cp", BIN, "miniJava.Compiler", x.getPath(), "--run");
     	// ^ yes this means it will be compiled again, but i'm lazy lol

@@ -50,7 +50,7 @@ The compiler should be used through the command line, through arguments:
 * UnaryExpression ::= ((**-**|**!**) UnaryExpression) | PureExpression
 * PureExpression ::= **(**Expression**)**
 			| Literal
-			| **new** (**int[**Expression**]**|Id(**()**|**[**Expression**]**))
+			| **new** (**int[**Expression**]**|Id(**(**ArgList?**)**|**[**Expression**]**))
 			| Reference(**[**Expression**]**|**(**ArgList?**)**)?
 * Id ::= \[\w**$_**][\w\d]+
 * Literal ::= \d(\d)+ | **true** | **false** | **null**
@@ -71,7 +71,7 @@ I have taken some test files from others, including [Ben Dod](https://github.com
 * Added `main` field (of type `MethodDecl`) to `Package.java` to help with code generation.
 * Added `RuntimeDescriptor.java`, with corresponding `MethodDescriptor.java`, `ClassDescriptor.java`, `VarDescriptor.java`. Added `runtimeDescriptor` field to `Declaration.java`.
 * Added `StaticBlockDecl.java`, accompanied with a `staticBlockDecl` field in `ClassDecl.java`.
-* Added `ConstructorDecl.java`, accompanied with a `constructorDecl` field in `ClassDecl.java`.
+* Added `ConstructorDecl.java`, accompanied with a `constructorDecl` field in `ClassDecl.java`. Modified `NewObjectExpr.java` to include an `argList` field.
 * Syntactical/code style changes/cleanup.
 
 ## Testing

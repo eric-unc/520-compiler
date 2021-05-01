@@ -43,7 +43,7 @@ public class MethodChecker implements Visitor<Object, Object> {
 	}
 	
 	private void expectedReturn(MethodDecl md, Statement s){
-		reporter.addError("*** line " + s.posn.getStartLineNum() + ": last statement of method " + md.name + " (declared on line " + md.posn.getStartLineNum() + ") is not a return statement!");
+		reporter.addError("*** line " + s.posn.getStartLineNum() + ": last statement of method " + ContextualAnalysis.localizeDeclName(md)+ " (declared on line " + md.posn.getStartLineNum() + ") is not a return statement!");
 	}
 	
 	@Override

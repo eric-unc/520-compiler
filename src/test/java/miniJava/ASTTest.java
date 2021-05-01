@@ -16,6 +16,7 @@ import miniJava.SyntacticAnalyzer.Parser;
 import miniJava.SyntacticAnalyzer.Scanner;
 
 //@Disabled
+@SuppressWarnings("unused")
 public class ASTTest {
 	@Test
 	@FailOnSystemExit

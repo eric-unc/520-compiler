@@ -246,7 +246,11 @@ public class Identification implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitNewObjectExpr(NewObjectExpr expr, Object arg){
+		MethodDecl md = (MethodDecl)arg;
+		
 		expr.classtype.visit(this, null);
+		expr.argList.forEach(e -> e.visit(this, md));
+		
 		return null;
 	}
 

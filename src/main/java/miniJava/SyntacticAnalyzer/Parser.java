@@ -656,7 +656,7 @@ public class Parser {
 	
 	/** PureExpression ::= <strong>(</strong>Expression<strong>)</strong><br />
 			| <em>literal</em><br />
-			| <strong>new</strong> (<strong>int[</strong>Expression<strong>]</strong>|<em>id</em>(<strong>()</strong>|<strong>[</strong>Expression<strong>]</strong>))<br />
+			| <strong>new</strong> (<strong>int[</strong>Expression<strong>]</strong>|<em>id</em>(<strong>(</strong>ArgList?</strong>)</strong>|<strong>[</strong>Expression<strong>]</strong>))<br />
 			| Reference(<strong>[</strong>Expression<strong>]</strong>|<strong>(</strong>ArgList?<strong>)</strong>)?
 	*/
 	private Expression parsePureExpression(){
@@ -703,8 +703,14 @@ public class Parser {
 					
 					if(currToken.getType() == L_PAREN){ // new id()
 						takeIt();
+						
+						ExprList el = new ExprList();
+						
+						if(currToken.getType() != R_PAREN)
+							el = parseArgList();
+						
 						take(R_PAREN);
-						return new NewObjectExpr(ct, new SourcePosition(start, scanner.getHalfPosition()));
+						return new NewObjectExpr(ct, el, new SourcePosition(start, scanner.getHalfPosition()));
 					}else{ // new id[expr]
 						take(L_SQ_BRACK);
 						Expression e = parseExpression();

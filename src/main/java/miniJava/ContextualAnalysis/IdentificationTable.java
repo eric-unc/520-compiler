@@ -73,7 +73,7 @@ public class IdentificationTable {
 		if(getLevel() >= 4){
 			for(int i = table.size() - 1; i >= 3; i--){
 				if(table.get(i).containsKey(dec.name)){
-					reporter.addError("*** line " + dec.posn.getStartLineNum() + ": attempts to declare " + localizeDeclName(dec) + " with conflicting declaration on line " + table.get(i).get(dec.name).posn.getStartLineNum() + "!");
+					reporter.addError("*** line " + dec.posn.getStartLineNum() + ": attempts to declare " + ContextualAnalysis.localizeDeclName(dec) + " with conflicting declaration on line " + table.get(i).get(dec.name).posn.getStartLineNum() + "!");
 					return;
 				}
 			}
@@ -81,23 +81,9 @@ public class IdentificationTable {
 			table.peek().put(dec.name, dec);
 		}else{
 			if(table.peek().containsKey(dec.name))
-				reporter.addError("*** line " + dec.posn.getStartLineNum() + ": attempts to declare " + localizeDeclName(dec) + " with conflicting declaration on line " + table.peek().get(dec.name).posn.getStartLineNum() + "!");
+				reporter.addError("*** line " + dec.posn.getStartLineNum() + ": attempts to declare " + ContextualAnalysis.localizeDeclName(dec) + " with conflicting declaration on line " + table.peek().get(dec.name).posn.getStartLineNum() + "!");
 			else
 				table.peek().put(dec.name, dec);
-		}
-	}
-	
-	/**
-	 * This is just here to context to certain internalized names.
-	 */
-	private static String localizeDeclName(Declaration d){
-		switch(d.name){
-			case "_static":
-				return "a static initialization block";
-			case "_constructor":
-				return "a constructor";
-			default:
-				return d.name;
 		}
 	}
 	
