@@ -247,6 +247,15 @@ public class ASTDisplay implements Visitor<String,Object> {
         return null;
     }
     
+    public Object visitForStmt(ForStmt stmt, String arg){
+    	show(arg, stmt);
+    	stmt.initStmt.visit(this, indent(arg));
+    	stmt.cond.visit(this, indent(arg));
+    	stmt.increStmt.visit(this, indent(arg));
+    	stmt.body.visit(this, indent(arg));
+    	return null;
+    }
+    
 
 	///////////////////////////////////////////////////////////////////////////////
 	//

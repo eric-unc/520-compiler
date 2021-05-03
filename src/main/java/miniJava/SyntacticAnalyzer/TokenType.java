@@ -24,6 +24,7 @@ public enum TokenType {
 	IF,			// if keyword
 	ELSE,		// else keyword
 	WHILE,		// while keyword
+	FOR,		// for keyword
 
 	// Modifiers
 	PUBLIC,		// public keyword

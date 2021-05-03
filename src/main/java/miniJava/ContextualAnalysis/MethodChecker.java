@@ -195,6 +195,11 @@ public class MethodChecker implements Visitor<Object, Object> {
 	public Object visitWhileStmt(WhileStmt stmt, Object arg){
 		return null;
 	}
+	
+	@Override
+	public Object visitForStmt(ForStmt stmt, Object arg){
+		return null;
+	}
 
 	@Override
 	public Object visitUnaryExpr(UnaryExpr expr, Object arg){

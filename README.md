@@ -1,7 +1,7 @@
 # 520-compiler
-A "miniJava" compiler, as created for COMP 520.
+A "miniJava" compiler, as created for COMP 520, aimed at the mJAM VM.
 
-Note that partly owing to class and time requirements, my code is not as perfect as I want it to be. Please forgive me.
+Note that partly owing to class requirements, time requirements, and mJAM restrictions, my code is not as perfect as I want it to be. Please forgive me.
 
 ## Features supported
 The compiler parses for correct syntax, builds an AST, perform contextual analysis (identification and type checking), on code generation. miniJava supports variables, integer and boolean operations, simple control logic, arrays, and some level of OOP. Working on for loops.
@@ -37,6 +37,7 @@ The compiler should be used through the command line, through arguments:
 			| **{** Statement\* **}**
 			| **if(**Expression**)** Statement (**else** Statement)?
 			| **while(**Expression**)** Statement
+			| **for(**PureStatement?**;** Expression?**;** PureStatement?**)** Statement
 * PureStatement ::= **return** (Expression)?**
 			| Type Id **=** Expression
 			| Reference(**[**Expression**]**)? **=** Expression
@@ -73,6 +74,7 @@ I have taken some test files from others, including [Ben Dod](https://github.com
 * Added `RuntimeDescriptor.java`, with corresponding `MethodDescriptor.java`, `ClassDescriptor.java`, `VarDescriptor.java`. Added `runtimeDescriptor` field to `Declaration.java`.
 * Added `StaticBlockDecl.java`, accompanied with a `staticBlockDecl` field in `ClassDecl.java`.
 * Added `ConstructorDecl.java`, accompanied with a `constructorDecl` field in `ClassDecl.java`. Modified `NewObjectExpr.java` to include an `argList` field.
+* Added `ForStmt.java`, accompanied with an update to `Visitor.java`.
 * Syntactical/code style changes/cleanup.
 
 ## Testing

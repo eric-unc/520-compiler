@@ -326,6 +326,42 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		Machine.patch(toPatch_whileEval, whileEvalAddr);
 		return null;
 	}
+	
+	@Override
+	public Object visitForStmt(ForStmt stmt, Object arg){ // XXX
+		MethodDecl md = (MethodDecl)arg;
+		
+		// first stmt can add stuff
+		int originalSize = ((MethodDescriptor)md.runtimeDescriptor).size;
+		stmt.initStmt.visit(this, md);
+		
+		// jump to eval
+		int toPatch_forEval = Machine.nextInstrAddr();
+		Machine.emit(JUMP, CB, -1);
+		
+		// body
+		int bodyAddr = Machine.nextInstrAddr();
+		stmt.body.visit(this, md);
+		
+		// increment
+		stmt.increStmt.visit(this, null);
+		
+		// eval conditional, and jump if true
+		int forEvalAddr = Machine.nextInstrAddr();
+		stmt.cond.visit(this, md);
+		Machine.emit(JUMPIF, 1, CB, bodyAddr);
+		
+		Machine.patch(toPatch_forEval, forEvalAddr);
+		
+		int added = ((MethodDescriptor)md.runtimeDescriptor).size - originalSize;
+		
+		if(added != 0){
+			Machine.emit(POP, added);
+			((MethodDescriptor)md.runtimeDescriptor).size = originalSize;
+		}
+		
+		return null;
+	}
 
 	@Override
 	public Object visitUnaryExpr(UnaryExpr expr, Object arg){

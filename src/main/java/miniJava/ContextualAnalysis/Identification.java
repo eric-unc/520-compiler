@@ -189,6 +189,20 @@ public class Identification implements Visitor<Object, Object> {
 		
 		return null;
 	}
+	
+	@Override
+	public Object visitForStmt(ForStmt stmt, Object arg){
+		MethodDecl md = (MethodDecl)arg;
+		
+		table.openScope();
+		stmt.initStmt.visit(this, md);
+		stmt.cond.visit(this, md);
+		stmt.increStmt.visit(this, md);
+		stmt.body.visit(this, md);
+		table.closeScope();
+		
+		return null;
+	}
 
 	@Override
 	public Object visitUnaryExpr(UnaryExpr expr, Object arg){

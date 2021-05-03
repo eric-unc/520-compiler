@@ -250,6 +250,23 @@ public class TypeChecking implements Visitor<Object, Object> {
 		
 		return null;
 	}
+	
+	@Override
+	public Object visitForStmt(ForStmt stmt, Object arg){
+		MethodDecl md = (MethodDecl)arg;
+		
+		stmt.initStmt.visit(this, md);
+		
+		TypeDenoter condTD = (TypeDenoter)stmt.cond.visit(this, null);
+		checkTypeKind(stmt.cond.posn, TypeKind.BOOLEAN, condTD.typeKind);
+		
+		stmt.increStmt.visit(this, md);
+		
+		checkNotSolitaryDeclaration(stmt.body);
+		stmt.body.visit(this, md);
+		
+		return null;
+	}
 
 	@Override
 	public Object visitUnaryExpr(UnaryExpr expr, Object arg){
