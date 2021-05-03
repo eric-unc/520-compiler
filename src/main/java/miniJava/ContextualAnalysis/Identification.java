@@ -251,6 +251,11 @@ public class Identification implements Visitor<Object, Object> {
 		expr.classtype.visit(this, null);
 		expr.argList.forEach(e -> e.visit(this, md));
 		
+		for(MethodDecl _md : ((ClassDecl)expr.classtype.classDecl).methodDeclList)
+			if(_md.name.equals("_constructor"))
+				if(_md.isPrivate && _md.inClass != md.inClass)
+					reporter.addError("*** line " + expr.posn.getStartLineNum() + ": attempts to reference private constructor on line " + _md.posn.getStartLineNum() + "!");
+		
 		return null;
 	}
 
