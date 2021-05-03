@@ -1,5 +1,5 @@
 class Test71 {
-	private Test71(){
+	public Test71(){
 		System.out.println(555);
 	}
 	

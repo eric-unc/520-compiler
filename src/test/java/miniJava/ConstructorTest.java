@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.ginsberg.junit.exit.ExpectSystemExitWithStatus;
@@ -14,6 +15,7 @@ import com.ginsberg.junit.exit.SystemExitPreventedException;
 class ConstructorTest {
 
 	@Test
+	@DisplayName("Simple constructors")
 	@FailOnSystemExit
 	void test63(){
 		System.out.println("Test 63");
@@ -40,6 +42,7 @@ class ConstructorTest {
 	}
 	
 	@Test
+	@DisplayName("Two constructors in the same class correctly erroring")
 	@ExpectSystemExitWithStatus(4)
 	void test64(){
 		System.out.println("Test 64");
@@ -55,6 +58,7 @@ class ConstructorTest {
 	}
 	
 	@Test
+	@DisplayName("Constructor with three arguments")
 	@FailOnSystemExit
 	void test65(){
 		System.out.println("Test 65");
@@ -81,6 +85,7 @@ class ConstructorTest {
 	}
 	
 	@Test
+	@DisplayName("Attempted construction without parameters correctly failing")
 	@ExpectSystemExitWithStatus(4)
 	void test66(){
 		System.out.println("Test 66");
@@ -96,6 +101,7 @@ class ConstructorTest {
 	}
 	
 	@Test
+	@DisplayName("Attempted construction with incorrect type of parameters correctly failing")
 	@ExpectSystemExitWithStatus(4)
 	void test67(){
 		System.out.println("Test 67");
@@ -111,6 +117,7 @@ class ConstructorTest {
 	}
 	
 	@Test
+	@DisplayName("Attempted construction with too many parameters correctly failing")
 	@ExpectSystemExitWithStatus(4)
 	void test68(){
 		System.out.println("Test 68");
@@ -126,6 +133,7 @@ class ConstructorTest {
 	}
 	
 	@Test
+	@DisplayName("Constructor with public modifier")
 	@FailOnSystemExit
 	void test69(){
 		System.out.println("Test 69");
@@ -150,6 +158,7 @@ class ConstructorTest {
 	}
 	
 	@Test
+	@DisplayName("Constructors of all modifiers")
 	@FailOnSystemExit
 	void test70(){
 		System.out.println("Test 70");
@@ -176,6 +185,7 @@ class ConstructorTest {
 	}
 	
 	@Test
+	@DisplayName("Construction with private constructor outside of class correctly failing")
 	@ExpectSystemExitWithStatus(4)
 	void test71(){
 		System.out.println("Test 71");

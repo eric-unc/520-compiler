@@ -4,12 +4,12 @@ A "miniJava" compiler, as created for COMP 520.
 Note that partly owing to class and time requirements, my code is not as perfect as I want it to be. Please forgive me.
 
 ## Features supported
-Parses for correct syntax, builds an AST, perform contextual analysis (identification and type checking), on code generation. Working on constructors.
+The compiler parses for correct syntax, builds an AST, perform contextual analysis (identification and type checking), on code generation. miniJava supports variables, integer and boolean operations, simple control logic, arrays, and some level of OOP.
 
 ### Extensions (PA5)
 * Modulus (%) support (see `ModTest.java`).
 * Static initialization block support (see `StaticInitBlockTest.java`).
-* Constructor support, with support for parameters (see `ConstructorTest.java`). Does not yet support modifiers.
+* Constructor support, with support for parameters (see `ConstructorTest.java`).
 
 ## Usage
 The compiler should be used through the command line, through arguments:

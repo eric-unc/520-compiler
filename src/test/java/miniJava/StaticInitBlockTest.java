@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.ginsberg.junit.exit.ExpectSystemExitWithStatus;
@@ -14,6 +15,7 @@ import com.ginsberg.junit.exit.SystemExitPreventedException;
 class StaticInitBlockTest {
 
 	@Test
+	@DisplayName("Basic static initialization block")
 	@FailOnSystemExit
 	void test57(){
 		System.out.println("Test 57");
@@ -41,6 +43,7 @@ class StaticInitBlockTest {
 	}
 
 	@Test
+	@DisplayName("Two static initialization blocks in the same class correctly erroring")
 	@ExpectSystemExitWithStatus(4)
 	void test58(){
 		System.out.println("Test 58");
@@ -56,6 +59,7 @@ class StaticInitBlockTest {
 	}
 	
 	@Test
+	@DisplayName("Two static initialization blocks")
 	@FailOnSystemExit
 	void test59(){
 		System.out.println("Test 59");
@@ -81,6 +85,7 @@ class StaticInitBlockTest {
 	}
 	
 	@Test
+	@DisplayName("Two static initialization blocks, but more complicated")
 	@FailOnSystemExit
 	void test60(){
 		System.out.println("Test 60");
@@ -108,6 +113,7 @@ class StaticInitBlockTest {
 	}
 	
 	@Test
+	@DisplayName("More static initialization")
 	@FailOnSystemExit
 	void test61(){
 		System.out.println("Test 61");

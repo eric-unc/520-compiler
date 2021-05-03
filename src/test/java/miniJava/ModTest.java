@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.ginsberg.junit.exit.FailOnSystemExit;
@@ -12,6 +13,7 @@ import com.ginsberg.junit.exit.FailOnSystemExit;
 class ModTest {
 
 	@Test
+	@DisplayName("Basic modulus arithmetic")
 	@FailOnSystemExit
 	void test55(){
 		System.out.println("Test 55");
@@ -38,6 +40,7 @@ class ModTest {
 	}
 
 	@Test
+	@DisplayName("Mod by zero correctly erroring")
 	@FailOnSystemExit
 	void test56(){
 		System.out.println("Test 56");
