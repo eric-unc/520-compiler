@@ -199,4 +199,29 @@ class ConstructorTest {
 			}
 		}
 	}
+	
+	@Test
+	@DisplayName("Default constructor still working")
+	@FailOnSystemExit
+	void test72(){
+		System.out.println("Test 72");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test72.mjava", "--run"});
+		}catch(Exception e){
+			e.printStackTrace();
+			out.println(tempOut.toString());
+			System.setOut(out);
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("1111"));
+	}
 }

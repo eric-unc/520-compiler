@@ -350,13 +350,10 @@ public class Parser {
 		return r;
 	}
 	
-	/** Statement ::= <strong>{</strong> Statement* <strong>}</strong><br />
-	 		| <strong>return</strong> (Expression)?<strong>;</strong><br />
+	/** Statement ::= SimpleStatement<strong>;</strong><br />
+	 		| <strong>{</strong> Statement* <strong>}</strong><br />
 			| <strong>if(</strong>Expression<strong>)</strong> Statement (<strong>else</strong> Statement)?<br />
-			| <strong>while(</strong>Expression<strong>)</strong> Statement<br />
-			| Type <em>id</em> <strong>=</strong> Expression<strong>;</strong><br />
-			| Reference(<strong>[</strong>Expression<strong>]</strong>)? <strong>=</strong> Expression<strong>;</strong><br />
-			| Reference<strong>(</strong>ArgList?<strong>);</strong><br />
+			| <strong>while(</strong>Expression<strong>)</strong> Statement
 	*/
 	private Statement parseStatement(){
 		HalfPosition start = scanner.getHalfPosition();
@@ -395,9 +392,8 @@ public class Parser {
 					takeIt();
 					Statement ifFS = parseStatement();
 					return new IfStmt(ifE, ifTS, ifFS, new SourcePosition(start, scanner.getHalfPosition()));
-				}else{
+				}else
 					return new IfStmt(ifE, ifTS, new SourcePosition(start, scanner.getHalfPosition()));
-				}
 				
 			case WHILE:
 				takeIt();
@@ -406,6 +402,32 @@ public class Parser {
 				take(R_PAREN);
 				Statement whileS = parseStatement();
 				return new WhileStmt(whileE, whileS, new SourcePosition(start, scanner.getHalfPosition()));
+			
+			default:
+				Statement ret = parsePureStatement(SEMI);
+				take(SEMI);
+				return ret;
+		}
+	}
+	
+	/** PureStatement ::= <strong>return</strong> (Expression)?<br />
+			| Type <em>id</em> <strong>=</strong> Expression<br />
+			| Reference(<strong>[</strong>Expression<strong>]</strong>)? <strong>=</strong> Expression<br />
+			| Reference<strong>(</strong>ArgList?<strong>)</strong>
+	 */
+	private Statement parsePureStatement(TokenType expectedEnd){
+		HalfPosition start = scanner.getHalfPosition();
+		
+		switch(currToken.getType()){
+			case RETURN:
+				takeIt();
+				
+				Expression retE = null;
+				
+				if(currToken.getType() != expectedEnd)
+					retE = parseExpression();
+				
+				return new ReturnStmt(retE, new SourcePosition(start, scanner.getHalfPosition()));
 			
 			// The following very messy parts are for the last three rules.
 			// int/bool part of first statement (missing iden):
@@ -418,7 +440,6 @@ public class Parser {
 				
 				take(EQUALS);
 				Expression val = parseExpression();
-				take(SEMI);
 				return new VarDeclStmt(vd, val, new SourcePosition(start, scanner.getHalfPosition()));
 			
 			// this part of second/third (missing iden)
@@ -432,7 +453,6 @@ public class Parser {
 					
 					take(EQUALS);
 					Expression ixVal = parseExpression();
-					take(SEMI);
 					
 					return new IxAssignStmt(r, arrLoc, ixVal, new SourcePosition(start, scanner.getHalfPosition()));
 				}else if(currToken.getType() == L_PAREN){ // third rule ::= Reference(ArgList?);
@@ -444,12 +464,12 @@ public class Parser {
 						el = parseArgList();
 					
 					take(R_PAREN);
-					take(SEMI);
+
 					return new CallStmt(r, el, new SourcePosition(start, scanner.getHalfPosition()));
 				}else{ // second rule without [] ::= Reference = Expression;
 					take(EQUALS);
 					Expression asVal = parseExpression();
-					take(SEMI);
+
 					return new AssignStmt(r, asVal, new SourcePosition(start, scanner.getHalfPosition()));
 				}
 			
@@ -465,7 +485,7 @@ public class Parser {
 						
 						take(EQUALS);
 						Expression e = parseExpression();
-						take(SEMI);
+
 						return new VarDeclStmt(varD, e, new SourcePosition(start, scanner.getHalfPosition()));
 						
 					case L_SQ_BRACK: // first or second rule with []
@@ -477,7 +497,7 @@ public class Parser {
 							take(R_SQ_BRACK);
 							take(EQUALS);
 							Expression newVal = parseExpression();
-							take(SEMI);
+							
 							return new IxAssignStmt(idR, ix, newVal, new SourcePosition(start, scanner.getHalfPosition()));
 						}else{ // first rule; Ref[] id = Expr;
 							takeIt();
@@ -488,7 +508,7 @@ public class Parser {
 							VarDecl vDecl = new VarDecl(td4, name3, new SourcePosition(start, scanner.getHalfPosition()));
 							take(EQUALS);
 							Expression newVal = parseExpression();
-							take(SEMI);
+
 							return new VarDeclStmt(vDecl, newVal, new SourcePosition(start, scanner.getHalfPosition()));
 						}
 					
@@ -510,16 +530,15 @@ public class Parser {
 							Expression e2 = parseExpression();
 							take(R_SQ_BRACK);
 							
-							
 							take(EQUALS);
 							Expression e3 = parseExpression();
-							take(SEMI);
+							
 							return new IxAssignStmt(r2, e2, e3, new SourcePosition(start, scanner.getHalfPosition()));
 						}else if(currToken.getType() == EQUALS){ // second without [
 							// like thing.q = 5
 							takeIt();
 							Expression newVal = parseExpression();
-							take(SEMI);
+
 							return new AssignStmt(r2, newVal, new SourcePosition(start, scanner.getHalfPosition()));
 						}else{ // third, like thing.q()
 							take(L_PAREN);
@@ -530,7 +549,7 @@ public class Parser {
 								el = parseArgList();
 							
 							take(R_PAREN);
-							take(SEMI);
+
 							return new CallStmt(r2, el, new SourcePosition(start, scanner.getHalfPosition()));
 						}
 					
@@ -538,7 +557,7 @@ public class Parser {
 						Reference ref = new IdRef(id, new SourcePosition(start, scanner.getHalfPosition()));
 						takeIt();
 						Expression e2 = parseExpression();
-						take(SEMI);
+
 						return new AssignStmt(ref, e2, new SourcePosition(start, scanner.getHalfPosition()));
 					
 					// assume ( for final case)
@@ -553,7 +572,7 @@ public class Parser {
 							el = parseArgList();
 
 						takeIt();
-						take(SEMI);
+
 						return new CallStmt(ref2, el, new SourcePosition(start, scanner.getHalfPosition()));
 				}
 		}

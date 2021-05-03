@@ -4,7 +4,7 @@ A "miniJava" compiler, as created for COMP 520.
 Note that partly owing to class and time requirements, my code is not as perfect as I want it to be. Please forgive me.
 
 ## Features supported
-The compiler parses for correct syntax, builds an AST, perform contextual analysis (identification and type checking), on code generation. miniJava supports variables, integer and boolean operations, simple control logic, arrays, and some level of OOP.
+The compiler parses for correct syntax, builds an AST, perform contextual analysis (identification and type checking), on code generation. miniJava supports variables, integer and boolean operations, simple control logic, arrays, and some level of OOP. Working on for loops.
 
 ### Extensions (PA5)
 * Modulus (%) support (see `ModTest.java`).
@@ -33,13 +33,14 @@ The compiler should be used through the command line, through arguments:
 * ParamList ::= Type Id(, Type Id)*
 * ArgList ::= Expression(, Expression)*
 * Reference ::= (Id|**this**)(**.**Id)*
-* Statement ::= **{** Statement\* **}**
-			| **return** (Expression)?**;**
+* Statement ::= PureStatement**;**
+			| **{** Statement\* **}**
 			| **if(**Expression**)** Statement (**else** Statement)?
 			| **while(**Expression**)** Statement
-			| Type Id **=** Expression**;**
-			| Reference(**[**Expression**]**)? **=** Expression**;**
-			| Reference**(**ArgList?**);**
+* PureStatement ::= **return** (Expression)?**
+			| Type Id **=** Expression
+			| Reference(**[**Expression**]**)? **=** Expression
+			| Reference**(**ArgList?**)**
 * Expression ::= OrExpression
 * OrExpression ::= AndExpression (**||** AndExpression)*
 * AndExpression ::= EqualityExpression (**&&** EqualityExpression)*
