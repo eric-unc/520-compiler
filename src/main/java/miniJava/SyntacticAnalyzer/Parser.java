@@ -80,7 +80,7 @@ public class Parser {
 			Token iden = takeIt();
 			
 			if(currToken.getType() == L_PAREN){ // assume constructor
-				parseConstructor(mdl, iden);
+				parseConstructor(mdl, false, iden);
 				return;
 			}else{ // whoops, that's just a type then
 				TypeDenoter type = new ClassType(new Identifier(iden), new SourcePosition(start, scanner.getHalfPosition()));
@@ -94,6 +94,57 @@ public class Parser {
 				Identifier name = new Identifier(take(IDEN));
 				
 				fd = new FieldDecl(false, false, type, name.spelling, new SourcePosition(start, scanner.getHalfPosition()));
+			}
+		}else if(currToken.getType() == PUBLIC){
+			takeIt();
+			
+			if(currToken.getType() == STATIC || currToken.getType() == VOID || currToken.getType() == INT || currToken.getType() == BOOLEAN){
+				fd = parseFieldDeclaration();
+			}else{
+				Token iden = take(IDEN);
+				
+				if(currToken.getType() == L_PAREN){ // assume constructor
+					parseConstructor(mdl, false, iden);
+					return;
+				}else{ // that's a type then
+					TypeDenoter type = new ClassType(new Identifier(iden), new SourcePosition(start, scanner.getHalfPosition()));
+					
+					if(currToken.getType() == L_SQ_BRACK){
+						takeIt();
+						take(R_SQ_BRACK);
+						type = new ArrayType(type, new SourcePosition(start, scanner.getHalfPosition()));
+					}
+					
+					Identifier name = new Identifier(take(IDEN));
+					
+					fd = new FieldDecl(false, false, type, name.spelling, new SourcePosition(start, scanner.getHalfPosition()));
+				}
+			}
+		}else if(currToken.getType() == PRIVATE){
+			takeIt();
+			
+			if(currToken.getType() == STATIC || currToken.getType() == VOID || currToken.getType() == INT || currToken.getType() == BOOLEAN){
+				fd = parseFieldDeclaration();
+				fd.isPrivate = true;
+			}else{
+				Token iden = take(IDEN);
+				
+				if(currToken.getType() == L_PAREN){ // assume constructor
+					parseConstructor(mdl, true, iden);
+					return;
+				}else{ // that's a type then
+					TypeDenoter type = new ClassType(new Identifier(iden), new SourcePosition(start, scanner.getHalfPosition()));
+					
+					if(currToken.getType() == L_SQ_BRACK){
+						takeIt();
+						take(R_SQ_BRACK);
+						type = new ArrayType(type, new SourcePosition(start, scanner.getHalfPosition()));
+					}
+					
+					Identifier name = new Identifier(take(IDEN));
+					
+					fd = new FieldDecl(true, false, type, name.spelling, new SourcePosition(start, scanner.getHalfPosition()));
+				}
 			}
 		}else{
 			fd = parseFieldDeclaration();
@@ -187,7 +238,7 @@ public class Parser {
 	}
 	
 	/** Id **(**ParamList\* **){**Statement\* **}** */
-	private void parseConstructor(MethodDeclList mdl, Token id){
+	private void parseConstructor(MethodDeclList mdl, boolean isPrivate, Token id){
 		HalfPosition start = id.getPosition().getStart();
 		
 		take(L_PAREN);
@@ -209,7 +260,7 @@ public class Parser {
 		
 		takeIt();
 		
-		mdl.add(new ConstructorDecl(false, new Identifier(id), p1, sl, new SourcePosition(start, scanner.getHalfPosition())));
+		mdl.add(new ConstructorDecl(isPrivate, new Identifier(id), p1, sl, new SourcePosition(start, scanner.getHalfPosition())));
 	}
 	
 	/** Type ::= Type ::= <strong>boolean</strong>|((<strong>int</strong>|Id)(<strong>[]</strong>)?) */

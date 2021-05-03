@@ -28,7 +28,7 @@ The compiler should be used through the command line, through arguments:
 * FieldTail ::= **;**
 * Method ::= **(**ParamList\* **){**Statement\* **}**
 * StaticBlock ::= **{** Statement\* **}**
-* Constructor ::= Id **(**ParamList\* **){**Statement\* **}**
+* Constructor ::= (**public**|**private**)? Id **(**ParamList\* **){**Statement\* **}**
 * Type ::= **boolean**|((**int**|Id)(**[]**)?)
 * ParamList ::= Type Id(, Type Id)*
 * ArgList ::= Expression(, Expression)*

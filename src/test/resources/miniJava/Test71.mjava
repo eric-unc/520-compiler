@@ -1,0 +1,16 @@
+class Test71 {
+	private Test71(){
+		System.out.println(555);
+	}
+	
+	public static void main(String[] args){
+		Test71 t = new Test71();
+		A a = new A(); // error
+	}
+}
+
+class A {
+	private A(){
+		System.out.println(666);
+	}
+}

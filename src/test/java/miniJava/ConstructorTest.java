@@ -45,7 +45,7 @@ class ConstructorTest {
 		System.out.println("Test 64");
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test64.mjava"});
+			Compiler.main(new String[]{MainTest.RES + "Test64.mjava", "--run"});
 		}catch(Exception e){
 			if(!(e instanceof SystemExitPreventedException)){
 				e.printStackTrace();
@@ -86,7 +86,7 @@ class ConstructorTest {
 		System.out.println("Test 66");
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test66.mjava"});
+			Compiler.main(new String[]{MainTest.RES + "Test66.mjava", "--run"});
 		}catch(Exception e){
 			if(!(e instanceof SystemExitPreventedException)){
 				e.printStackTrace();
@@ -101,7 +101,7 @@ class ConstructorTest {
 		System.out.println("Test 67");
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test67.mjava"});
+			Compiler.main(new String[]{MainTest.RES + "Test67.mjava", "--run"});
 		}catch(Exception e){
 			if(!(e instanceof SystemExitPreventedException)){
 				e.printStackTrace();
@@ -116,7 +116,72 @@ class ConstructorTest {
 		System.out.println("Test 68");
 		
 		try {
-			Compiler.main(new String[]{MainTest.RES + "Test68.mjava"});
+			Compiler.main(new String[]{MainTest.RES + "Test68.mjava", "--run"});
+		}catch(Exception e){
+			if(!(e instanceof SystemExitPreventedException)){
+				e.printStackTrace();
+				fail();
+			}
+		}
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test69(){
+		System.out.println("Test 69");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test69.mjava", "--run"});
+		}catch(Exception e){
+			e.printStackTrace();
+			out.println(tempOut.toString());
+			System.setOut(out);
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("555"));
+	}
+	
+	@Test
+	@FailOnSystemExit
+	void test70(){
+		System.out.println("Test 70");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test70.mjava", "--run"});
+		}catch(Exception e){
+			e.printStackTrace();
+			out.println(tempOut.toString());
+			System.setOut(out);
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("555"));
+		assertTrue(tempOut.toString().contains("666"));
+		assertTrue(tempOut.toString().contains("777"));
+	}
+	
+	@Test
+	@ExpectSystemExitWithStatus(4)
+	void test71(){
+		System.out.println("Test 71");
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test71.mjava", "--run"});
 		}catch(Exception e){
 			if(!(e instanceof SystemExitPreventedException)){
 				e.printStackTrace();

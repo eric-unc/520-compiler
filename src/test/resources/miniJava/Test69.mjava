@@ -1,0 +1,9 @@
+class Test69 {
+	public Test69(){
+		System.out.println(555);
+	}
+	
+	public static void main(String[] args){
+		Test69 t = new Test69();
+	}
+}

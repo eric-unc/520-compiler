@@ -1,0 +1,23 @@
+class Test70 {
+	private Test70(){
+		System.out.println(555);
+	}
+	
+	public static void main(String[] args){
+		Test70 t = new Test70();
+		A a = new A();
+		B b = new B();
+	}
+}
+
+class A {
+	public A(){
+		System.out.println(666);
+	}
+}
+
+class B {
+	B(){
+		System.out.println(777);
+	}
+}
