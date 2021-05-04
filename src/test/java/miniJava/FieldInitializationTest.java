@@ -120,4 +120,79 @@ class FieldInitializationTest {
 			}
 		}
 	}
+	
+	@Test
+	@DisplayName("Simple non-static initialization")
+	@FailOnSystemExit
+	void test86(){
+		System.out.println("Test 86");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test86.mjava", "--run"});
+		}catch(Exception e){
+			e.printStackTrace();
+			out.println(tempOut.toString());
+			System.setOut(out);
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("11111"));
+	}
+	
+	@Test
+	@DisplayName("Static initialization using method")
+	@FailOnSystemExit
+	void test87(){
+		System.out.println("Test 87");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test87.mjava", "--run"});
+		}catch(Exception e){
+			e.printStackTrace();
+			out.println(tempOut.toString());
+			System.setOut(out);
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("11111"));
+	}
+	
+	@Test
+	@DisplayName("Complex Static initialization")
+	@FailOnSystemExit
+	void test88(){
+		System.out.println("Test 88");
+		
+		PrintStream out = System.out;
+		ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(tempOut));
+		
+		try {
+			Compiler.main(new String[]{MainTest.RES + "Test88.mjava", "--run"});
+		}catch(Exception e){
+			e.printStackTrace();
+			out.println(tempOut.toString());
+			System.setOut(out);
+			fail();
+		}
+		
+		out.println(tempOut.toString());
+		System.setOut(out);
+		
+		assertTrue(tempOut.toString().contains("11125"));
+	}
 }

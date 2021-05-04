@@ -4,7 +4,7 @@ A "miniJava" compiler, as created for COMP 520, aimed at the mJAM VM.
 Note that partly owing to class requirements, time requirements, and mJAM restrictions, my code is not as perfect as I want it to be. Please forgive me.
 
 ## Features supported
-The compiler parses for correct syntax, builds an AST, perform contextual analysis (identification and type checking), on code generation. miniJava supports variables, integer and boolean operations, simple control logic, arrays, and some level of OOP. Working on field initialization.
+The compiler parses for correct syntax, builds an AST, perform contextual analysis (identification and type checking), on code generation. miniJava supports variables, integer and boolean operations, simple control logic, arrays, and some level of OOP.
 
 ### Extensions (PA5)
 * Modulus (%) support (see `ModTest.java`).
@@ -12,7 +12,7 @@ The compiler parses for correct syntax, builds an AST, perform contextual analys
 * Constructor support, with support for parameters (see `ConstructorTest.java`).
 * System.exit support (see `SystemExitTest.java`). Doesn't do anything with the parameter, just halts.
 * Basic for loop support, with optional components (see `ForTest.java`).
-* Field initialization (currently only static initialization) (see `FieldInitializationTest.java`).
+* Field initialization, _including non-static initialization_ (see `FieldInitializationTest.java`).
 
 ## Usage
 The compiler should be used through the command line, through arguments:

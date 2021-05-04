@@ -1,0 +1,12 @@
+class Test87 {
+	public int x = getX();
+	
+	public int getX(){
+		return 11111;
+	}
+	
+	public static void main(String[] args){
+		Test87 t = new Test87();
+		System.out.println(t.x); // prints 11111
+	}
+}

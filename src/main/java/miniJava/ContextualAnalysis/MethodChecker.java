@@ -82,7 +82,7 @@ public class MethodChecker implements Visitor<Object, Object> {
 			}else if(md.name.equals("_constructor")){
 				cd.constructorDecl = (ConstructorDecl) md;
 				
-				if(!cd.constructorDecl.givenName.spelling.equals(cd.constructorDecl.inClass.name))
+				if(!cd.constructorDecl.givenName.equals(cd.constructorDecl.inClass.name))
 					unexpectedConstructor(cd.constructorDecl, cd.constructorDecl.inClass);
 				
 				continue;

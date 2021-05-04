@@ -1,0 +1,25 @@
+class A {
+	public static int x = 20;
+}
+
+class B {
+	private int y = 5;
+	
+	public int getY(){
+		return y;
+	}
+}
+
+class Test88 {
+	public B b = new B();
+	public int x = getX() + A.x + b.getY();
+	
+	public int getX(){
+		return 11100;
+	}
+	
+	public static void main(String[] args){
+		Test88 t = new Test88();
+		System.out.println(t.x); // prints 11125
+	}
+}

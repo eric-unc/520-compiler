@@ -268,7 +268,7 @@ public class Parser {
 		
 		takeIt();
 		
-		mdl.add(new ConstructorDecl(isPrivate, new Identifier(id), p1, sl, new SourcePosition(start, scanner.getHalfPosition())));
+		mdl.add(new ConstructorDecl(isPrivate, id.getValue(), p1, sl, new SourcePosition(start, scanner.getHalfPosition())));
 	}
 	
 	/** Type ::= Type ::= <strong>boolean</strong>|((<strong>int</strong>|Id)(<strong>[]</strong>)?) */

@@ -84,6 +84,14 @@ public class CodeGenerator implements Visitor<Object, Object> {
 				break;
 				
 			case METHODS:
+				// creates a new constructor if there is none
+				if(cd.constructorDecl == null){
+					cd.constructorDecl = new ConstructorDecl(false, cd.name, new ParameterDeclList(), new StatementList(), null);
+					//cd.constructorDecl.runtimeDescriptor = new MethodDescriptor(0);
+					cd.methodDeclList.add(cd.constructorDecl);
+					cd.constructorDecl.inClass = cd;
+				}
+				
 				cd.methodDeclList.forEach(md -> md.visit(this, null));
 				break;
 		}
@@ -125,6 +133,18 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		md.runtimeDescriptor = new MethodDescriptor(Machine.nextInstrAddr());
 		
 		md.parameterDeclList.forEach(pd -> pd.visit(this, md));
+		
+		if(md.name.equals("_constructor") && md.inClass.toInitialize != null){ // yes, this is hacky, 
+			md.inClass.toInitialize.forEach(fd -> {
+				fd.initExpression.visit(this, null);
+				Machine.emit(STORE, OB, ((VarDescriptor)fd.runtimeDescriptor).offset);
+			});
+			
+			if(md.posn == null){ // then it's a virtual method
+				Machine.emit(RETURN, 0, 0, 0);
+			}
+		}
+		
 		md.statementList.forEach(s -> s.visit(this, md));
 		return null;
 	}
@@ -553,6 +573,9 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		Machine.emit(newobj);
 		
 		// TODO: field initializations
+		/*cd.toInitialize.forEach(fd -> {
+			fd.initExpression.visit(this, null);
+		});*/
 		
 		if(cd.constructorDecl != null){
 			expr.argList.forEach(_arg -> _arg.visit(this, null));
