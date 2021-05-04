@@ -12,6 +12,11 @@ public class FieldDecl extends MemberDecl {
 	public FieldDecl(boolean isPrivate, boolean isStatic, TypeDenoter t, String name, SourcePosition posn){
 		super(isPrivate, isStatic, t, name, posn);
 	}
+	
+	public FieldDecl(boolean isPrivate, boolean isStatic, Expression initExpression, TypeDenoter t, String name, SourcePosition posn){
+		super(isPrivate, isStatic, t, name, posn);
+		this.initExpression = initExpression;
+	}
 
 	public FieldDecl(MemberDecl md, SourcePosition posn){
 		super(md, posn);
@@ -22,4 +27,7 @@ public class FieldDecl extends MemberDecl {
 	}
 
 	public ClassDecl inClass;
+	
+	/** only for ACTUAL field declarations */
+	public Expression initExpression;
 }

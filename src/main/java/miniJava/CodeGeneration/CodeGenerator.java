@@ -330,7 +330,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 	}
 	
 	@Override
-	public Object visitForStmt(ForStmt stmt, Object arg){ // XXX
+	public Object visitForStmt(ForStmt stmt, Object arg){
 		MethodDecl md = (MethodDecl)arg;
 		
 		// first stmt can add stuff

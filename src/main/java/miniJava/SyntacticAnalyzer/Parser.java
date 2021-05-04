@@ -150,7 +150,7 @@ public class Parser {
 			fd = parseFieldDeclaration();
 		}
 		
-		if(currToken.getType() == SEMI){
+		if(currToken.getType() == EQUALS || currToken.getType() == SEMI){
 			 parseFieldTail(fd, fdl);
 		}else{
 			parseMethod(fd, mdl);
@@ -190,9 +190,17 @@ public class Parser {
 		if(fd.type.typeKind == TypeKind.VOID)
 			throw new ParserException(VOID, IDEN, scanner); // TODO: the position is technically off
 		
+		if(currToken.getType() == EQUALS){
+			takeIt();
+			Expression initExpression = parseExpression();
+			fd.initExpression = initExpression;
+			take(SEMI);
+		}else
+			take(SEMI);
+		
 		fdl.add(fd);
 		
-		take(SEMI);
+		
 	}
 	
 	/** Method ::= **(**ParamList\* **){**Statement\* **}** */

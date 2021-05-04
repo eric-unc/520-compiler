@@ -112,6 +112,10 @@ public class ASTDisplay implements Visitor<String,Object> {
     			+ (f.isStatic ? " static) " :") ") + f.toString());
     	f.type.visit(this, indent(arg));
     	show(indent(arg), quote(f.name) + " fieldname");
+    	
+    	if(f.initExpression != null)
+    		f.initExpression.visit(this, indent(arg));
+    	
         return null;
     }
     
