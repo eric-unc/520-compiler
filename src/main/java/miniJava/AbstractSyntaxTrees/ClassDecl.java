@@ -5,6 +5,8 @@
  */
 package miniJava.AbstractSyntaxTrees;
 
+import java.util.ArrayList;
+
 import miniJava.SyntacticAnalyzer.SourcePosition;
 
 public class ClassDecl extends Declaration {
@@ -13,6 +15,7 @@ public class ClassDecl extends Declaration {
 		super(cn, null, posn);
 		fieldDeclList = fdl;
 		methodDeclList = mdl;
+		toInitialize = new ArrayList<>();
 	}
 
 	public <A, R> R visit(Visitor<A, R> v, A o){
@@ -21,6 +24,10 @@ public class ClassDecl extends Declaration {
 
 	public FieldDeclList fieldDeclList;
 	public MethodDeclList methodDeclList;
+	
 	public StaticBlockDecl staticBlockDecl;
 	public ConstructorDecl constructorDecl;
+	
+	/** only non-static is used */
+	public ArrayList<FieldDecl> toInitialize;
 }

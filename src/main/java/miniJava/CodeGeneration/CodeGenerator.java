@@ -31,12 +31,14 @@ public class CodeGenerator implements Visitor<Object, Object> {
 	private static enum ClassDeclVisitStage {
 		STATIC_BLOCK,
 		FIELDS,
+		FIELDS_INIT,
 		METHODS,
 	}
 
 	@Override
 	public Object visitPackage(Package prog, Object arg){
 		prog.classDeclList.forEach(c -> c.visit(this, ClassDeclVisitStage.FIELDS));
+		prog.classDeclList.forEach(c -> c.visit(this, ClassDeclVisitStage.FIELDS_INIT));
 		
 		// generate calls to static blocks
 		prog.classDeclList.forEach(c -> c.visit(this, ClassDeclVisitStage.STATIC_BLOCK));
@@ -76,6 +78,10 @@ public class CodeGenerator implements Visitor<Object, Object> {
 				
 				cd.fieldDeclList.forEach(fd ->  fd.visit(this, cd.runtimeDescriptor));
 				break;
+			
+			case FIELDS_INIT:
+				cd.fieldDeclList.forEach(fd ->  fd.visit(this, null));
+				break;
 				
 			case METHODS:
 				cd.methodDeclList.forEach(md -> md.visit(this, null));
@@ -87,21 +93,29 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitFieldDecl(FieldDecl fd, Object arg){
-		ClassDescriptor rd = (ClassDescriptor)arg;
-		
-		VarDescriptor newVD = new VarDescriptor();
-		newVD.size = 1;
-		
-		if(fd.isStatic){
-			newVD.offset = staticSize;
-			staticSize += newVD.size;
-			Machine.emit(PUSH, 1); // an "empty" stack value
+		if(arg instanceof ClassDescriptor) {
+			ClassDescriptor rd = (ClassDescriptor)arg;
+			
+			VarDescriptor newVD = new VarDescriptor();
+			newVD.size = 1;
+			
+			if(fd.isStatic){
+				newVD.offset = staticSize;
+				staticSize += newVD.size;
+			}else{
+				newVD.offset = rd.objectSize;
+				rd.objectSize += newVD.size;
+			}
+			
+			fd.runtimeDescriptor = newVD;
 		}else{
-			newVD.offset = rd.objectSize;
-			rd.objectSize += newVD.size;
+			if(fd.isStatic){
+				if(fd.initExpression != null) {
+					fd.initExpression.visit(this, null);
+				}else
+					Machine.emit(PUSH, 1); // an "empty" stack value
+			}
 		}
-		
-		fd.runtimeDescriptor = newVD;
 		
 		return null;
 	}
@@ -222,11 +236,9 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitIxAssignStmt(IxAssignStmt stmt, Object arg){
-		MethodDecl md = (MethodDecl)arg;
-		
 		stmt.ref.visit(this, null); // put array onto stack
-		stmt.ix.visit(this, md); // put desired index onto stack
-		stmt.exp.visit(this, md); // put new value onto stack
+		stmt.ix.visit(this, null); // put desired index onto stack
+		stmt.exp.visit(this, null); // put new value onto stack
 		
 		Machine.emit(arrayupd);
 		
@@ -238,9 +250,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		MethodDecl md = (MethodDecl)arg;
 		
 		// each argument should be put onto the stack
-		stmt.argList.forEach(_arg -> _arg.visit(this, md));
-		
-		//stmt.methodRef.visit(this, null);
+		stmt.argList.forEach(_arg -> _arg.visit(this, null));
 		
 		MethodDecl calledMethod = (MethodDecl)stmt.methodRef.decl;
 		
@@ -261,7 +271,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		}else{ // assume built-in
 			if(calledMethod.name.equals("println"))
 				Machine.emit(putintnl);
-			else if(calledMethod.name.equals("exit")) // XXX: I think this will do it?
+			else if(calledMethod.name.equals("exit"))
 				Machine.emit(HALT);
 		}
 		
@@ -375,9 +385,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitUnaryExpr(UnaryExpr expr, Object arg){
-		MethodDecl md = (MethodDecl)arg;
-		
-		expr.expr.visit(this, md);
+		expr.expr.visit(this, null);
 		
 		switch(expr.operator.kind){
 			case NEG:
@@ -397,9 +405,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitBinaryExpr(BinaryExpr expr, Object arg){
-		MethodDecl md = (MethodDecl)arg;
-		
-		expr.left.visit(this, md);
+		expr.left.visit(this, null);
 		
 		// Bitwise special cases.
 		switch(expr.operator.kind){
@@ -438,7 +444,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 			default: // continue
 		}
 		
-		expr.right.visit(this, md);
+		expr.right.visit(this, null);
 		
 		switch(expr.operator.kind){
 			case MORE_THAN:
@@ -495,7 +501,6 @@ public class CodeGenerator implements Visitor<Object, Object> {
 	@Override
 	public Object visitRefExpr(RefExpr expr, Object arg){
 		expr.ref.visit(this, null);
-		
 		return null;
 	}
 
@@ -509,10 +514,8 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitCallExpr(CallExpr expr, Object arg){
-		MethodDecl md = (MethodDecl)arg;
-		
 		// each argument should be put onto the stack
-		expr.argList.forEach(_arg -> _arg.visit(this, md));
+		expr.argList.forEach(_arg -> _arg.visit(this, null));
 		
 		// then, we perform that beautiful call
 		MethodDecl calledMethod = (MethodDecl)expr.functionRef.decl;
@@ -543,15 +546,16 @@ public class CodeGenerator implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitNewObjectExpr(NewObjectExpr expr, Object arg){
-		MethodDecl md = (MethodDecl)arg;
 		ClassDecl cd = (ClassDecl)expr.classtype.classDecl;
 		
 		Machine.emit(LOADL, -1);
 		Machine.emit(LOADL, ((ClassDescriptor)cd.runtimeDescriptor).objectSize);
 		Machine.emit(newobj);
 		
+		// TODO: field initializations
+		
 		if(cd.constructorDecl != null){
-			expr.argList.forEach(_arg -> _arg.visit(this, md));
+			expr.argList.forEach(_arg -> _arg.visit(this, null));
 			
 			// This will duplicate the address of newly created object on the stack
 			Machine.emit(LOAD, ST, -1 - expr.argList.size());

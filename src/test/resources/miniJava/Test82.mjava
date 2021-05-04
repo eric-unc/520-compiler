@@ -1,0 +1,11 @@
+class Test82 {
+	public static int x = getX();
+	
+	public static int getX(){
+		return 11111;
+	}
+	
+	public static void main(String[] args){
+		System.out.println(x); // prints 11111
+	}
+}

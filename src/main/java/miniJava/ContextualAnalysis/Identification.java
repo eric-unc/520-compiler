@@ -13,6 +13,21 @@ public class Identification implements Visitor<Object, Object> {
 		this.table = new IdentificationTable(reporter);
 		ast.visit(this, null);
 	}
+	
+	private static MethodDecl makePsuedoMethod(FieldDecl fd) {
+		MethodDecl ret = new MethodDecl(
+				new FieldDecl(true,
+						fd.isStatic,
+						new BaseType(TypeKind.VOID, null),
+						"_psuedoFieldInitMethod", null),
+				new ParameterDeclList(),
+				new StatementList(),
+				null);
+		
+		ret.inClass = fd.inClass;
+		
+		return ret;
+	}
 
 	@Override
 	public Object visitPackage(Package prog, Object arg){
@@ -61,6 +76,13 @@ public class Identification implements Visitor<Object, Object> {
 		
 		ClassDecl context = (ClassDecl)arg;
 		fd.inClass = context;
+		
+		if(fd.initExpression != null){
+			fd.initExpression.visit(this, makePsuedoMethod(fd));
+			
+			if(!fd.isStatic)
+				context.toInitialize.add(fd);
+		}
 		
 		return null;
 	}

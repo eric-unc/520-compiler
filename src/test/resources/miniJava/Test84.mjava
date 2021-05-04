@@ -1,0 +1,9 @@
+class Test84 {
+	public int zed;
+	
+	public static int x = zed; // should error
+	
+	public static void main(String[] args){
+		System.out.println(x);
+	}
+}

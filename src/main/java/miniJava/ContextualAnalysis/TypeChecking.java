@@ -93,6 +93,11 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitFieldDecl(FieldDecl fd, Object arg){
+		if(fd.initExpression != null){
+			TypeDenoter initExprTD = (TypeDenoter)fd.initExpression.visit(this, null);
+			checkTypeDenoter(fd.initExpression.posn, fd.type, initExprTD);
+		}
+		
 		return fd.type;
 	}
 

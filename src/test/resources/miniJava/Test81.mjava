@@ -1,0 +1,7 @@
+class Test81 {
+	public static int x = 11111;
+	
+	public static void main(String[] args){
+		System.out.println(x); // prints 11111
+	}
+}

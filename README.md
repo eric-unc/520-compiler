@@ -12,6 +12,7 @@ The compiler parses for correct syntax, builds an AST, perform contextual analys
 * Constructor support, with support for parameters (see `ConstructorTest.java`).
 * System.exit support (see `SystemExitTest.java`). Doesn't do anything with the parameter, just halts.
 * Basic for loop support, with optional components (see `ForTest.java`).
+* Field initialization (currently only static initialization) (see `FieldInitializationTest.java`).
 
 ## Usage
 The compiler should be used through the command line, through arguments:
@@ -77,7 +78,7 @@ I have taken some test files from others, including [Ben Dod](https://github.com
 * Added `StaticBlockDecl.java`, accompanied with a `staticBlockDecl` field in `ClassDecl.java`.
 * Added `ConstructorDecl.java`, accompanied with a `constructorDecl` field in `ClassDecl.java`. Modified `NewObjectExpr.java` to include an `argList` field.
 * Added `ForStmt.java`, accompanied with an update to `Visitor.java` (and `ASTDisplay.java`)
-* Added `initExpression` field to `FieldDecl.java`.
+* Added `initExpression` field to `FieldDecl.java` and `toInitialize` field to `ClassDecl.java`.
 * Syntactical/code style changes/cleanup.
 
 ## Testing

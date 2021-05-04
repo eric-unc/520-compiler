@@ -1,0 +1,12 @@
+class Test85 {
+	
+	public static int x = zed(); // should error
+	
+	public int zed() {
+		return 88;
+	}
+	
+	public static void main(String[] args){
+		System.out.println(x);
+	}
+}

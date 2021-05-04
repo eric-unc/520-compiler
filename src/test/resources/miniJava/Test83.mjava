@@ -1,0 +1,21 @@
+class A {
+	public static int x = 20;
+}
+
+class Test83 {
+	public static int x = getX() + A.x + B.y();
+	
+	public static int getX(){
+		return 11100;
+	}
+	
+	public static void main(String[] args){
+		System.out.println(x); // prints 11125
+	}
+}
+
+class B {
+	public static int y(){
+		return 5;
+	}
+}
