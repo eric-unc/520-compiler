@@ -56,7 +56,13 @@ public class IdentificationTable {
 								"out",
 								null)
 				),
-				new MethodDeclList(),
+				new MethodDeclList(
+						new MethodDecl(
+								new FieldDecl(false, true, new BaseType(TypeKind.VOID, null), "exit", null),
+								new ParameterDeclList(new ParameterDecl(new BaseType(TypeKind.INT, null), "n", null)),
+								new StatementList(),
+								null)
+				),
 				null));
 	}
 	

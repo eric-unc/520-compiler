@@ -1,0 +1,7 @@
+class Test77 {
+	public static void main(String[] args){
+		int i = 11111;
+		System.exit(0);
+		int z = 2 / 0;
+	}
+}

@@ -60,6 +60,8 @@ public class Scanner {
 					return new Token(ELSE, "else", position);
 				case "while":
 					return new Token(WHILE, "while", position);
+				case "for":
+					return new Token(FOR, "for", position);
 				case "public":
 					return new Token(PUBLIC, "public", position);
 				case "private":

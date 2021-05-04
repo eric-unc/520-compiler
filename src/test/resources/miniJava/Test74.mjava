@@ -1,0 +1,8 @@
+class Test74 {
+	public static void main(String[] args){
+		int i = 0;
+		
+		for(i = 0; i <= 55555; i = i + 11111)
+			System.out.println(i); // prints 0, 11111, 22222, 33333, 44444, 55555
+	}
+}

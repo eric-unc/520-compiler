@@ -1,9 +1,9 @@
 class Test65 {
 	public static void main(String[] args){
 		Triangle t = new Triangle(1111, 2222, 3333);
-		System.out.println(t.l1);
-		System.out.println(t.l2);
-		System.out.println(t.l3);
+		System.out.println(t.l1); // should print 1111
+		System.out.println(t.l2); // should print 2222
+		System.out.println(t.l3); // should print 3333
 	}
 }
 

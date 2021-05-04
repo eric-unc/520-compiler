@@ -4,6 +4,6 @@ class Test69 {
 	}
 	
 	public static void main(String[] args){
-		Test69 t = new Test69();
+		Test69 t = new Test69(); // prints 555
 	}
 }

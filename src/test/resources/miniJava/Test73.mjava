@@ -1,0 +1,6 @@
+class Test73 {
+	public static void main(String[] args){
+		for(int i = 0; i <= 5; i = i + 1)
+			System.out.println(i); // prints 0, 1, 2, 3, 4, 5
+	}
+}

@@ -1,6 +1,6 @@
 class Test66 {
 	public static void main(String[] args){
-		Triangle t = new Triangle();
+		Triangle t = new Triangle(); // should fail
 		System.out.println(t.l1);
 		System.out.println(t.l2);
 		System.out.println(t.l3);

@@ -1,0 +1,11 @@
+class Test76 {
+	public static void main(String[] args){
+		int i = 11111;
+		
+		while(true){
+			System.out.println(i);
+			System.exit(0);
+			i = i + 11111;
+		}
+	}
+}

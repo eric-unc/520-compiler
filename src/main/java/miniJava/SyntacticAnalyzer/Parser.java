@@ -353,7 +353,8 @@ public class Parser {
 	/** Statement ::= SimpleStatement<strong>;</strong><br />
 	 		| <strong>{</strong> Statement* <strong>}</strong><br />
 			| <strong>if(</strong>Expression<strong>)</strong> Statement (<strong>else</strong> Statement)?<br />
-			| <strong>while(</strong>Expression<strong>)</strong> Statement
+			| <strong>while(</strong>Expression<strong>)</strong> Statement<br />
+			| <strong>for(</strong>PureStatement?<strong>;</strong> Expression?<strong>;</strong> PureStatement?<strong>)</strong> Statement
 	*/
 	private Statement parseStatement(){
 		HalfPosition start = scanner.getHalfPosition();
@@ -403,6 +404,18 @@ public class Parser {
 				Statement whileS = parseStatement();
 				return new WhileStmt(whileE, whileS, new SourcePosition(start, scanner.getHalfPosition()));
 			
+			case FOR:
+				takeIt();
+				take(L_PAREN);
+				Statement forInitS = currToken.getType() != SEMI ? parsePureStatement(SEMI) : null;
+				take(SEMI);
+				Expression forCond = currToken.getType() != SEMI ? parseExpression() : null;
+				take(SEMI);
+				Statement forIncreS = currToken.getType() != R_PAREN ? parsePureStatement(R_PAREN) : null;
+				take(R_PAREN);
+				Statement forS = parseStatement();
+				return new ForStmt(forInitS, forCond, forIncreS, forS, new SourcePosition(start, scanner.getHalfPosition()));
+				
 			default:
 				Statement ret = parsePureStatement(SEMI);
 				take(SEMI);

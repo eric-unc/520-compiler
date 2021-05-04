@@ -195,9 +195,16 @@ public class Identification implements Visitor<Object, Object> {
 		MethodDecl md = (MethodDecl)arg;
 		
 		table.openScope();
-		stmt.initStmt.visit(this, md);
-		stmt.cond.visit(this, md);
-		stmt.increStmt.visit(this, md);
+		
+		if(stmt.initStmt != null)
+			stmt.initStmt.visit(this, md);
+		
+		if(stmt.cond != null)
+			stmt.cond.visit(this, md);
+		
+		if(stmt.increStmt != null)
+			stmt.increStmt.visit(this, md);
+		
 		stmt.body.visit(this, md);
 		table.closeScope();
 		

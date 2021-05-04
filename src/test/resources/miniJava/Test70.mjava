@@ -4,9 +4,9 @@ class Test70 {
 	}
 	
 	public static void main(String[] args){
-		Test70 t = new Test70();
-		A a = new A();
-		B b = new B();
+		Test70 t = new Test70(); // should print 555
+		A a = new A(); // should print 666
+		B b = new B(); // should print 777
 	}
 }
 

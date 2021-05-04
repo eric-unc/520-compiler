@@ -2,7 +2,7 @@ class Test72 {
 	public static void main(String[] args){
 		A a = new A();
 		a.x = 1111;
-		System.out.println(a.x);
+		System.out.println(a.x); // prints 1111
 	}
 }
 

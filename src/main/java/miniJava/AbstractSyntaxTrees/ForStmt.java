@@ -10,7 +10,7 @@ public class ForStmt extends Statement {
 	
 	public ForStmt(Statement initStmt, Expression cond, Statement increStmt, Statement body, SourcePosition posn){
 		super(posn);
-		this.increStmt = initStmt;
+		this.initStmt = initStmt;
 		this.cond = cond;
 		this.increStmt = increStmt;
 		this.body = body;

@@ -261,6 +261,8 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		}else{ // assume built-in
 			if(calledMethod.name.equals("println"))
 				Machine.emit(putintnl);
+			else if(calledMethod.name.equals("exit")) // XXX: I think this will do it?
+				Machine.emit(HALT);
 		}
 		
 		// if we aren't doing anything with the return value, we need to yeet it
@@ -333,7 +335,9 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		
 		// first stmt can add stuff
 		int originalSize = ((MethodDescriptor)md.runtimeDescriptor).size;
-		stmt.initStmt.visit(this, md);
+		
+		if(stmt.initStmt != null)
+			stmt.initStmt.visit(this, md);
 		
 		// jump to eval
 		int toPatch_forEval = Machine.nextInstrAddr();
@@ -344,14 +348,20 @@ public class CodeGenerator implements Visitor<Object, Object> {
 		stmt.body.visit(this, md);
 		
 		// increment
-		stmt.increStmt.visit(this, null);
+		if(stmt.increStmt != null)
+			stmt.increStmt.visit(this, null);
 		
 		// eval conditional, and jump if true
-		int forEvalAddr = Machine.nextInstrAddr();
-		stmt.cond.visit(this, md);
-		Machine.emit(JUMPIF, 1, CB, bodyAddr);
-		
-		Machine.patch(toPatch_forEval, forEvalAddr);
+		if(stmt.cond != null) {
+			int forEvalAddr = Machine.nextInstrAddr();
+			stmt.cond.visit(this, md);
+			Machine.emit(JUMPIF, 1, CB, bodyAddr);
+			Machine.patch(toPatch_forEval, forEvalAddr);
+		}else{ // or just loop infinitely like a moron
+			int forFakeEvalAddr = Machine.nextInstrAddr();
+			Machine.emit(JUMP, CB, bodyAddr);
+			Machine.patch(toPatch_forEval, forFakeEvalAddr); // yes some of this is not very necessary.
+		}
 		
 		int added = ((MethodDescriptor)md.runtimeDescriptor).size - originalSize;
 		

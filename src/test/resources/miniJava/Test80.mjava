@@ -1,0 +1,12 @@
+class Test80 {
+	public static void main(String[] args){
+		int[] arr = new int[4];
+		
+		for(int i = 0; i < arr.length; i = i + 1)
+			arr[i] = i * 1111 + 5555;
+		
+		// prints 1111, 2222, 3333, 444
+		for(int i = 0; i < arr.length; i = i + 1)
+			System.out.println(arr[i]);
+	}
+}
