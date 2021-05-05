@@ -3,7 +3,6 @@ package miniJava.ContextualAnalysis;
 import miniJava.ErrorReporter;
 import miniJava.AbstractSyntaxTrees.*;
 import miniJava.AbstractSyntaxTrees.Package;
-import miniJava.ContextualAnalysis.AdvancedIdentifier.Type;
 
 public class Identification implements Visitor<Object, Object> {
 	private IdentificationTable table;
@@ -34,7 +33,7 @@ public class Identification implements Visitor<Object, Object> {
 	public Object visitPackage(Package prog, Object arg){
 		table.openScope();
 		
-		prog.classDeclList.forEach(table::enterClass);
+		prog.classDeclList.forEach(table::enter);
 		
 		prog.classDeclList.forEach(cd -> cd.visit(this, null));
 		
@@ -48,25 +47,23 @@ public class Identification implements Visitor<Object, Object> {
 		if(arg == null){
 			table.openScope();
 			
-			cd.fieldDeclList.forEach(table::enterVar);
-			cd.methodDeclList.forEach(table::enterMethod);
+			cd.fieldDeclList.forEach(table::enter);
+			cd.methodDeclList.forEach(table::enter);
 			
 			cd.fieldDeclList.forEach(fd -> fd.visit(this, cd));
 			cd.methodDeclList.forEach(md -> md.visit(this, cd));
 			
 			table.closeScope();
-			table.clearMethods();
 		}else{
-			AdvancedIdentifier searchingFor = (AdvancedIdentifier)arg;
+			Identifier searchingFor = (Identifier)arg;
 			
-			if(searchingFor.type == Type.VAR){
-				for(FieldDecl fd : cd.fieldDeclList)
-					if(fd.name.equals(searchingFor.spelling))
-						return fd;
-			}else
-				for(MethodDecl md : cd.methodDeclList)
-					if(md.name.equals(searchingFor.spelling))
-						return md;
+			for(FieldDecl fd : cd.fieldDeclList)
+				if(fd.name.equals(searchingFor.spelling))
+					return fd;
+			
+			for(MethodDecl md : cd.methodDeclList)
+				if(md.name.equals(searchingFor.spelling))
+					return md;
 			
 		}
 		
@@ -111,14 +108,14 @@ public class Identification implements Visitor<Object, Object> {
 	@Override
 	public Object visitParameterDecl(ParameterDecl pd, Object arg){
 		pd.type.visit(this, null);
-		table.enterVar(pd);
+		table.enter(pd);
 		return null;
 	}
 
 	@Override
 	public Object visitVarDecl(VarDecl decl, Object arg){
 		decl.type.visit(this, null);
-		table.enterVar(decl);
+		table.enter(decl);
 		return null;
 	}
 
@@ -129,7 +126,7 @@ public class Identification implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitClassType(ClassType type, Object arg){
-		type.classDecl = table.retrieveClass(type.className, null);
+		type.classDecl = table.retrieve(type.className, null);
 		return null;
 	}
 
@@ -373,7 +370,7 @@ public class Identification implements Visitor<Object, Object> {
 			switch(ld.type.typeKind){
 				case CLASS:
 					ClassType ct = (ClassType)ld.type;
-					ClassDecl cd = table.retrieveClass(ct.className, md);
+					ClassDecl cd = (ClassDecl)table.retrieve(ct.className, md);
 					MemberDecl d = (MemberDecl)cd.visit(this, ref.id);
 					
 					if(d == null){
@@ -404,7 +401,7 @@ public class Identification implements Visitor<Object, Object> {
 			switch(memd.type.typeKind){
 				case CLASS:
 					ClassType ct = (ClassType)memd.type;
-					ClassDecl cd = table.retrieveClass(ct.className, md);
+					ClassDecl cd = (ClassDecl)table.retrieve(ct.className, md);
 					MemberDecl d = (MemberDecl)cd.visit(this, ref.id);
 					
 					if(d == null){
@@ -436,10 +433,9 @@ public class Identification implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitIdentifier(Identifier id, Object arg){
-		//MethodDecl md = (MethodDecl)arg;
+		MethodDecl md = (MethodDecl)arg;
 		
-		//return table.retrieve(id, md);
-		return null;
+		return table.retrieve(id, md);
 	}
 
 	@Override

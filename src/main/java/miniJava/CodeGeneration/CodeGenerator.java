@@ -87,6 +87,7 @@ public class CodeGenerator implements Visitor<Object, Object> {
 				// creates a new constructor if there is none
 				if(cd.constructorDecl == null){
 					cd.constructorDecl = new ConstructorDecl(false, cd.name, new ParameterDeclList(), new StatementList(), null);
+					//cd.constructorDecl.runtimeDescriptor = new MethodDescriptor(0);
 					cd.methodDeclList.add(cd.constructorDecl);
 					cd.constructorDecl.inClass = cd;
 				}
