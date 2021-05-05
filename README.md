@@ -4,7 +4,7 @@ A "miniJava" compiler, as created for COMP 520, aimed at the mJAM VM.
 Note that partly owing to class requirements, time requirements, and mJAM restrictions, my code is not as perfect as I want it to be. Please forgive me.
 
 ## Features supported
-The compiler parses for correct syntax, builds an AST, perform contextual analysis (identification and type checking), on code generation. miniJava supports variables, integer and boolean operations, simple control logic, arrays, and some level of OOP.
+The compiler parses for correct syntax, builds an AST, perform contextual analysis (identification and type checking), on code generation. miniJava supports variables, integer and boolean operations, basic control logic, arrays, and some level of OOP. Working on simple overloading.
 
 ### Extensions (PA5)
 * Modulus (%) support (see `ModTest.java`).

@@ -147,7 +147,7 @@ class FieldInitializationTest {
 	}
 	
 	@Test
-	@DisplayName("Static initialization using method")
+	@DisplayName("Non-static initialization using method")
 	@FailOnSystemExit
 	void test87(){
 		System.out.println("Test 87");
@@ -172,7 +172,7 @@ class FieldInitializationTest {
 	}
 	
 	@Test
-	@DisplayName("Complex Static initialization")
+	@DisplayName("Complex non-static initialization")
 	@FailOnSystemExit
 	void test88(){
 		System.out.println("Test 88");
