@@ -1,0 +1,7 @@
+class Test89 {
+	static int Test89 = 11111; // this disgusts me too, but it works in java
+	
+	public static void main(String[] args){
+		System.out.println(Test89); // prints 11111
+	}
+}
