@@ -9,7 +9,7 @@ The compiler parses for correct syntax, builds an AST, perform contextual analys
 ### Extensions (PA5)
 * Modulus (%) support (see `ModTest.java`).
 * Static initialization block support (see `StaticInitBlockTest.java`).
-* Constructor support, with support for parameters (see `ConstructorTest.java`).
+* Constructor support, with support for parameters (see `ConstructorTest.java`). No support for overloading.
 * System.exit support (see `SystemExitTest.java`). Doesn't do anything with the parameter, just halts.
 * Basic for loop support, with optional components (see `ForTest.java`).
 * Field initialization, _including non-static initialization_ (see `FieldInitializationTest.java`).

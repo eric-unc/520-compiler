@@ -1,0 +1,12 @@
+Okay so...
+
+My project follows a particular structure. I have taken out the miniJava package for autograding purposes, but the entirety
+of my project is really in the "520-compiler" directory. It's divided like this:
+* `README.md` contains a good general description, with the scope of the project (listing extensions too), and also
+changes in the AST package (which there were a lot of).
+* `src/main/java` contains the source code for the compiler (the `miniJava` package).
+* `src/test/java` contains all of the JUnit 5 tests, meanwhile...
+* `src/test/resources` contains all of the sample source files used by those tests.
+
+To actually run the tests, you can use the Gradle "test" task. Or if using Gradle is too much of a PITA, you can just
+browse `build/reports/tests/test/packages/miniJava.html` to see that they do indeed pass.
