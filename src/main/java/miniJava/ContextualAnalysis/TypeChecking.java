@@ -1,5 +1,7 @@
 package miniJava.ContextualAnalysis;
 
+import java.util.ArrayList;
+
 import miniJava.ErrorReporter;
 import miniJava.AbstractSyntaxTrees.*;
 import miniJava.AbstractSyntaxTrees.Package;
@@ -60,6 +62,10 @@ public class TypeChecking implements Visitor<Object, Object> {
 	
 	private void expectedMethod(int lineNum){
 		reporter.addError("*** line " + lineNum + ": expected a method!");
+	}
+	
+	private void expectedMatchingMethod(int lineNum) {
+		reporter.addError("*** line " + lineNum + ": expected a method match for the number of parameters and types given!");
 	}
 	
 	private void expectedArgs(int lineNum, MethodDecl md, int attemptedNumOfArgs){
@@ -205,9 +211,37 @@ public class TypeChecking implements Visitor<Object, Object> {
 					checkTypeDenoter(passedArg.posn, (TypeDenoter)param.visit(this, null), (TypeDenoter)passedArg.visit(this, null));
 				}
 			}
-		}else{
+		}else if(stmt.methodRef.decl instanceof MultiMethodDecl){ // XXX
+			MultiMethodDecl mmd = (MultiMethodDecl)stmt.methodRef.decl;
+			MethodDecl found = null;
+			
+			// I only want to visit each expression once
+			ArrayList<TypeDenoter> argListTypes = new ArrayList<>();
+			stmt.argList.forEach(e -> argListTypes.add((TypeDenoter)e.visit(this, null)));
+			
+			
+			for(MethodDecl toTry : mmd.possibleDecls)
+				if(toTry.parameterDeclList.size() == argListTypes.size()){
+					boolean matches = true;
+					
+					for(int i = 0; i < toTry.parameterDeclList.size(); i++)
+						if(!toTry.parameterDeclList.get(i).type.equals(argListTypes.get(i))) {
+							matches = false;
+							break;
+						}
+					
+					if(matches){
+						found = toTry;
+						break;
+					}
+				}
+			
+			if(found == null)
+				expectedMatchingMethod(stmt.posn.getStartLineNum());
+			else
+				stmt.methodRef.decl = found;
+		}else
 			expectedMethod(stmt.posn.getStartLineNum());
-		}
 		
 		return null;
 	}

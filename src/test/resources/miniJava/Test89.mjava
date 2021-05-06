@@ -1,0 +1,15 @@
+class Test89 {
+	public static void meth(int x){
+		System.out.println(x);
+	}
+	
+	public static void meth(boolean x){
+		if(x)
+			System.out.println(22222);
+	}
+	
+	public static void main(String[] args){
+		meth(11111);
+		meth(true);
+	}
+}
