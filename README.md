@@ -13,6 +13,7 @@ The compiler parses for correct syntax, builds an AST, perform contextual analys
 * System.exit support (see `SystemExitTest.java`). Doesn't do anything with the parameter, just halts.
 * Basic for loop support, with optional components (see `ForTest.java`).
 * Field initialization, _including non-static initialization_ (see `FieldInitializationTest.java`).
+* Overloading of methods (see `OverloadingTest.java`). Right now it's pretty broken but it works in some select cases.
 
 ## Usage
 The compiler should be used through the command line, through arguments:

@@ -1,0 +1,67 @@
+class Test90 {
+	public static void meth(int x){
+		System.out.println(x);
+	}
+	
+	public static void meth(boolean x){
+		if(x)
+			System.out.println(22222);
+	}
+	
+	public static int meth(A a){
+		System.out.println(a.x);
+		return a.x;
+	}
+	
+	public static void main(String[] args){
+		A a = new A();
+		
+		meth(11111); // prints 11111
+		meth(true); // prints 22222
+		meth(a); // prints 33333
+		
+		B b = new B();
+		System.out.println(b.pop(false)); // prints 44444
+		System.out.println(b.pop(11111)); // prints 55555
+		System.out.println(b.pop(a)); // prints 77777
+		b.pop(); // prints 999
+	}
+}
+
+class A {
+	int x;
+	
+	public A() {
+		x = 33333;
+	}
+}
+
+class B {
+	int y;
+	
+	public B() {
+		y = 44444;
+	}
+	
+	public int pop(boolean actuallyPop){
+		int ret = y;
+		
+		if(actuallyPop)
+			y = 0;
+		
+		return ret;
+	}
+	
+	public int pop(int toAdd){
+		return y + toAdd;
+	}
+	
+	public int pop(A a){
+		return y + a.x;
+	}
+	
+	public void pop(){
+		this.y = 0;
+		System.out.println(999);
+	}
+}

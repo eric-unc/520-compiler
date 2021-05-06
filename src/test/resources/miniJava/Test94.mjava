@@ -1,0 +1,21 @@
+class Test94 {
+	public static void main(String[] args){
+		Happy h = new Happy();
+		
+		if(h.makesHappy(true))
+			System.out.println(11111);
+		
+		if(h.makesHappy(555))
+			System.out.println(22222);
+	}
+}
+
+class Happy {
+	public boolean makesHappy(boolean b){
+		return b;
+	}
+	
+	private boolean makesHappy(int i){
+		return i == 555;
+	}
+}

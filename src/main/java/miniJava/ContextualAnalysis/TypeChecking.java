@@ -154,8 +154,10 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitVardeclStmt(VarDeclStmt stmt, Object arg){
-		TypeDenoter declTD = (TypeDenoter)stmt.varDecl.visit(this, null);
-		TypeDenoter	expTD = (TypeDenoter)stmt.initExp.visit(this, null);
+		MethodDecl md = (MethodDecl)arg;
+		
+		TypeDenoter declTD = (TypeDenoter)stmt.varDecl.visit(this, md);
+		TypeDenoter	expTD = (TypeDenoter)stmt.initExp.visit(this, md);
 		
 		if(expTD != null)
 			checkTypeDenoter(expTD.posn, declTD, expTD);
@@ -167,13 +169,15 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitAssignStmt(AssignStmt stmt, Object arg){
+		MethodDecl md = (MethodDecl)arg;
+		
 		if(stmt.ref instanceof QualRef && stmt.ref.decl.name.equals("length") && ((QualRef)stmt.ref).ref.decl.type.typeKind == TypeKind.ARRAY){
 			expectedNonFinalVariable((QualRef)stmt.ref);
 			return null;
 		}
 			
-		TypeDenoter refTD = (TypeDenoter)stmt.ref.visit(this, null);
-		TypeDenoter expTD = (TypeDenoter)stmt.val.visit(this, null);
+		TypeDenoter refTD = (TypeDenoter)stmt.ref.visit(this, md);
+		TypeDenoter expTD = (TypeDenoter)stmt.val.visit(this, md);
 			
 		checkTypeDenoter(expTD.posn, refTD, expTD);
 		
@@ -182,15 +186,17 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitIxAssignStmt(IxAssignStmt stmt, Object arg){
+		MethodDecl md = (MethodDecl)arg;
+		
 		if(!(stmt.ref.decl.type instanceof ArrayType)){
 			expectedArrayType(stmt.ref);
 			return null;
 		}
 		
-		TypeDenoter ixTD = (TypeDenoter)stmt.ix.visit(this, null);
+		TypeDenoter ixTD = (TypeDenoter)stmt.ix.visit(this, md);
 		checkTypeKind(stmt.ix.posn, ixTD.typeKind, TypeKind.INT);
 		
-		TypeDenoter expTD = (TypeDenoter)stmt.exp.visit(this, null);
+		TypeDenoter expTD = (TypeDenoter)stmt.exp.visit(this, md);
 		checkTypeDenoter(expTD.posn, ((ArrayType)stmt.ref.decl.type).eltType, expTD);
 		
 		return null;
@@ -198,6 +204,8 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitCallStmt(CallStmt stmt, Object arg){
+		MethodDecl callingFrom = (MethodDecl)arg;
+		
 		if(stmt.methodRef.decl instanceof MethodDecl){
 			MethodDecl md = (MethodDecl)stmt.methodRef.decl;
 			
@@ -208,16 +216,16 @@ public class TypeChecking implements Visitor<Object, Object> {
 					Expression passedArg = stmt.argList.get(i);
 					ParameterDecl param = md.parameterDeclList.get(i);
 					
-					checkTypeDenoter(passedArg.posn, (TypeDenoter)param.visit(this, null), (TypeDenoter)passedArg.visit(this, null));
+					checkTypeDenoter(passedArg.posn, (TypeDenoter)param.visit(this, null), (TypeDenoter)passedArg.visit(this, callingFrom));
 				}
 			}
-		}else if(stmt.methodRef.decl instanceof MultiMethodDecl){ // XXX
+		}else if(stmt.methodRef.decl instanceof MultiMethodDecl){
 			MultiMethodDecl mmd = (MultiMethodDecl)stmt.methodRef.decl;
 			MethodDecl found = null;
 			
 			// I only want to visit each expression once
 			ArrayList<TypeDenoter> argListTypes = new ArrayList<>();
-			stmt.argList.forEach(e -> argListTypes.add((TypeDenoter)e.visit(this, null)));
+			stmt.argList.forEach(e -> argListTypes.add((TypeDenoter)e.visit(this, callingFrom)));
 			
 			
 			for(MethodDecl toTry : mmd.possibleDecls)
@@ -236,10 +244,18 @@ public class TypeChecking implements Visitor<Object, Object> {
 					}
 				}
 			
-			if(found == null)
+			if(found == null){
 				expectedMatchingMethod(stmt.posn.getStartLineNum());
-			else
-				stmt.methodRef.decl = found;
+				return null;
+			}
+			
+			stmt.methodRef.decl = found;
+			
+			if(callingFrom.isStatic && !found.isStatic)
+				reporter.addError("*** line " + stmt.methodRef.posn.getStartLineNum() + ": attempts to reference non-static " + found.name + " on line " + found.posn.getStartLineNum() + "!");
+			
+			if(callingFrom.isPrivate && callingFrom.inClass != found.inClass)
+				reporter.addError("*** line " + stmt.methodRef.posn.getStartLineNum() + ": attempts to reference private " + found.name + " on line " + found.posn.getStartLineNum() + "!");
 		}else
 			expectedMethod(stmt.posn.getStartLineNum());
 		
@@ -251,7 +267,7 @@ public class TypeChecking implements Visitor<Object, Object> {
 		MethodDecl md = (MethodDecl)arg;
 		
 		if(stmt.returnExpr != null) {
-			TypeDenoter rTD = (TypeDenoter)stmt.returnExpr.visit(this, null);
+			TypeDenoter rTD = (TypeDenoter)stmt.returnExpr.visit(this, md);
 			checkTypeDenoter(stmt.returnExpr.posn, md.type, rTD);
 		}else
 			checkTypeKind(stmt.posn, md.type.typeKind, TypeKind.VOID);
@@ -263,7 +279,7 @@ public class TypeChecking implements Visitor<Object, Object> {
 	public Object visitIfStmt(IfStmt stmt, Object arg){
 		MethodDecl md = (MethodDecl)arg;
 		
-		TypeDenoter condTD = (TypeDenoter)stmt.cond.visit(this, null);
+		TypeDenoter condTD = (TypeDenoter)stmt.cond.visit(this, md);
 		checkTypeKind(stmt.cond.posn, TypeKind.BOOLEAN, condTD.typeKind);
 		
 		checkNotSolitaryDeclaration(stmt.thenStmt);
@@ -281,7 +297,7 @@ public class TypeChecking implements Visitor<Object, Object> {
 	public Object visitWhileStmt(WhileStmt stmt, Object arg){
 		MethodDecl md = (MethodDecl)arg;
 		
-		TypeDenoter condTD = (TypeDenoter)stmt.cond.visit(this, null);
+		TypeDenoter condTD = (TypeDenoter)stmt.cond.visit(this, md);
 		checkTypeKind(stmt.cond.posn, TypeKind.BOOLEAN, condTD.typeKind);
 
 		checkNotSolitaryDeclaration(stmt.body);
@@ -298,7 +314,7 @@ public class TypeChecking implements Visitor<Object, Object> {
 			stmt.initStmt.visit(this, md);
 		
 		if(stmt.cond != null){
-			TypeDenoter condTD = (TypeDenoter)stmt.cond.visit(this, null);
+			TypeDenoter condTD = (TypeDenoter)stmt.cond.visit(this, md);
 			checkTypeKind(stmt.cond.posn, TypeKind.BOOLEAN, condTD.typeKind);
 		}
 		
@@ -313,7 +329,9 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitUnaryExpr(UnaryExpr expr, Object arg){
-		TypeDenoter e = (TypeDenoter)expr.expr.visit(this, null);
+		MethodDecl md = (MethodDecl)arg;
+		
+		TypeDenoter e = (TypeDenoter)expr.expr.visit(this, md);
 		
 		switch(expr.operator.kind){
 			case NEG:
@@ -331,8 +349,10 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitBinaryExpr(BinaryExpr expr, Object arg){
-		TypeDenoter left = (TypeDenoter)expr.left.visit(this, null);
-		TypeDenoter right = (TypeDenoter)expr.right.visit(this, null);
+		MethodDecl md = (MethodDecl)arg;
+		
+		TypeDenoter left = (TypeDenoter)expr.left.visit(this, md);
+		TypeDenoter right = (TypeDenoter)expr.right.visit(this, md);
 		
 		switch(expr.operator.kind){
 			case MORE_THAN:
@@ -376,7 +396,9 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitIxExpr(IxExpr expr, Object arg){
-		TypeDenoter refType = (TypeDenoter)expr.ref.visit(this, null);
+		MethodDecl md = (MethodDecl)arg;
+		
+		TypeDenoter refType = (TypeDenoter)expr.ref.visit(this, md);
 		
 		if(!(refType instanceof ArrayType)){
 			expectedArrayType(expr.ref);
@@ -392,6 +414,8 @@ public class TypeChecking implements Visitor<Object, Object> {
 
 	@Override
 	public Object visitCallExpr(CallExpr expr, Object arg){
+		MethodDecl callingFrom = (MethodDecl)arg;
+		
 		if(expr.functionRef.decl instanceof MethodDecl){
 			MethodDecl md = (MethodDecl)expr.functionRef.decl;
 			
@@ -402,11 +426,51 @@ public class TypeChecking implements Visitor<Object, Object> {
 					Expression passedArg = expr.argList.get(i);
 					ParameterDecl param = md.parameterDeclList.get(i);
 					
-					checkTypeDenoter(passedArg.posn, (TypeDenoter)param.visit(this, null), (TypeDenoter)passedArg.visit(this, null));
+					checkTypeDenoter(passedArg.posn, (TypeDenoter)param.visit(this, null), (TypeDenoter)passedArg.visit(this, callingFrom));
 				}
 				
 				return md.type;
 			}
+		}else if(expr.functionRef.decl instanceof MultiMethodDecl){
+			MultiMethodDecl mmd = (MultiMethodDecl)expr.functionRef.decl;
+			MethodDecl found = null;
+				
+			// I only want to visit each expression once
+			ArrayList<TypeDenoter> argListTypes = new ArrayList<>();
+			expr.argList.forEach(e -> argListTypes.add((TypeDenoter)e.visit(this, callingFrom)));
+
+			for(MethodDecl toTry : mmd.possibleDecls)
+				if(toTry.parameterDeclList.size() == argListTypes.size()){
+					boolean matches = true;
+						
+					for(int i = 0; i < toTry.parameterDeclList.size(); i++)
+						if(!toTry.parameterDeclList.get(i).type.equals(argListTypes.get(i))) {
+							matches = false;
+							break;
+						}
+						
+					if(matches){
+						found = toTry;
+						break;
+					}
+				}
+				
+			if(found == null) {
+				expectedMatchingMethod(expr.posn.getStartLineNum());
+				return null;
+			}
+			
+			expr.functionRef.decl = found;
+			
+			if(callingFrom.isStatic && !found.isStatic)
+				reporter.addError("*** line " + expr.functionRef.posn.getStartLineNum() + ": attempts to reference non-static " + found.name + " on line " + found.posn.getStartLineNum() + "!");
+			
+			if(callingFrom.isPrivate && callingFrom.inClass != found.inClass)
+				reporter.addError("*** line " + expr.functionRef.posn.getStartLineNum() + ": attempts to reference private " + found.name + " on line " + found.posn.getStartLineNum() + "!");
+			
+			
+			return found.type;
+			
 		}else{
 			expectedMethod(expr.posn.getStartLineNum());
 		}
@@ -457,7 +521,6 @@ public class TypeChecking implements Visitor<Object, Object> {
 		// yes, this is very hacky, i am sorry
 		ClassDecl cd = (ClassDecl)ref.decl;
 		return new ClassType(new Identifier(new Token(TokenType.IDEN, cd.name, cd.posn), cd), cd.posn);
-		//return ref.decl.type;
 	}
 
 	@Override

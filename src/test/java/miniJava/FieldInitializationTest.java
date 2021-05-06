@@ -65,7 +65,7 @@ class FieldInitializationTest {
 	}
 	
 	@Test
-	@DisplayName("Complex Static initialization")
+	@DisplayName("Complex static initialization")
 	@FailOnSystemExit
 	void test83(){
 		System.out.println("Test 83");

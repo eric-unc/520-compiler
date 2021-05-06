@@ -1,0 +1,15 @@
+class Test92 {
+	public static void meth(int x){
+		System.out.println(x);
+	}
+	
+	private static void meth(int x){
+		if(x > 0)
+			System.out.println(22222);
+	}
+	
+	public static void main(String[] args){
+		meth(11111);
+		meth(22222);
+	}
+}

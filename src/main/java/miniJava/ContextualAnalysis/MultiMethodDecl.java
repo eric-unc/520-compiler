@@ -24,6 +24,10 @@ public class MultiMethodDecl extends Declaration {
 		possibleDecls.add(possibleDecl);
 		possibleDecls.add(otherPossibleDecl);
 	}
+	
+	public void addDecl(MethodDecl md){
+		possibleDecls.add(md);
+	}
 
 	@Override
 	public <A, R> R visit(Visitor<A, R> v, A o){
